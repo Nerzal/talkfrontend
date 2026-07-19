@@ -56,7 +56,22 @@ export interface TableSlide {
   ascii?: string
 }
 
-export type Slide = TitleSlide | ContentSlide | CodeSlide | ImageSlide | BlankSlide | TableSlide
+export interface SpeakerSlide {
+  layout: 'speaker'
+  id: string
+  heading?: string
+  photo?: string
+  facts?: string[]
+  website?: string
+  linkedin?: string
+  github?: string
+  twitter?: string
+  bluesky?: string
+  mastodon?: string
+}
+
+export type Slide =
+  TitleSlide | ContentSlide | CodeSlide | ImageSlide | BlankSlide | TableSlide | SpeakerSlide
 
 export interface Talk {
   id: string
@@ -66,4 +81,9 @@ export interface Talk {
   month: number
   slides: Slide[]
   tags?: string[]
+}
+
+export interface DefaultSlides {
+  intro: Slide
+  end: Slide
 }

@@ -1,0 +1,308 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/DefaultSlides",
+  "definitions": {
+    "DefaultSlides": {
+      "type": "object",
+      "properties": {
+        "$schema": {
+          "type": "string"
+        },
+        "intro": {
+          "$ref": "#/definitions/Slide"
+        },
+        "end": {
+          "$ref": "#/definitions/Slide"
+        }
+      },
+      "required": [
+        "intro",
+        "end"
+      ],
+      "additionalProperties": false
+    },
+    "Slide": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/TitleSlide"
+        },
+        {
+          "$ref": "#/definitions/ContentSlide"
+        },
+        {
+          "$ref": "#/definitions/CodeSlide"
+        },
+        {
+          "$ref": "#/definitions/ImageSlide"
+        },
+        {
+          "$ref": "#/definitions/BlankSlide"
+        },
+        {
+          "$ref": "#/definitions/TableSlide"
+        },
+        {
+          "$ref": "#/definitions/SpeakerSlide"
+        }
+      ]
+    },
+    "TitleSlide": {
+      "type": "object",
+      "properties": {
+        "layout": {
+          "type": "string",
+          "const": "title"
+        },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "author": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "layout",
+        "id",
+        "title"
+      ],
+      "additionalProperties": false
+    },
+    "ContentSlide": {
+      "type": "object",
+      "properties": {
+        "layout": {
+          "type": "string",
+          "const": "content"
+        },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "bullets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "layout",
+        "id",
+        "title",
+        "bullets"
+      ],
+      "additionalProperties": false
+    },
+    "CodeSlide": {
+      "type": "object",
+      "properties": {
+        "layout": {
+          "type": "string",
+          "const": "code"
+        },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "layout",
+        "id",
+        "language",
+        "code"
+      ],
+      "additionalProperties": false
+    },
+    "ImageSlide": {
+      "type": "object",
+      "properties": {
+        "layout": {
+          "type": "string",
+          "const": "image"
+        },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "src": {
+          "type": "string"
+        },
+        "alt": {
+          "type": "string"
+        },
+        "caption": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "layout",
+        "id",
+        "src",
+        "alt"
+      ],
+      "additionalProperties": false
+    },
+    "BlankSlide": {
+      "type": "object",
+      "properties": {
+        "layout": {
+          "type": "string",
+          "const": "blank"
+        },
+        "id": {
+          "type": "string"
+        },
+        "heading": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "layout",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "TableSlide": {
+      "type": "object",
+      "properties": {
+        "layout": {
+          "type": "string",
+          "const": "table"
+        },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "statement": {
+          "type": "string"
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TableRow"
+          }
+        },
+        "empty": {
+          "type": "boolean"
+        },
+        "caption": {
+          "type": "string"
+        },
+        "ascii": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "layout",
+        "id",
+        "columns",
+        "rows"
+      ],
+      "additionalProperties": false
+    },
+    "TableRow": {
+      "type": "object",
+      "properties": {
+        "cells": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "variant": {
+          "$ref": "#/definitions/TableRowVariant"
+        }
+      },
+      "required": [
+        "cells"
+      ],
+      "additionalProperties": false
+    },
+    "TableRowVariant": {
+      "type": "string",
+      "enum": [
+        "normal",
+        "highlight",
+        "danger",
+        "deleted",
+        "warning"
+      ]
+    },
+    "SpeakerSlide": {
+      "type": "object",
+      "properties": {
+        "layout": {
+          "type": "string",
+          "const": "speaker"
+        },
+        "id": {
+          "type": "string"
+        },
+        "heading": {
+          "type": "string"
+        },
+        "photo": {
+          "type": "string"
+        },
+        "facts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "website": {
+          "type": "string"
+        },
+        "linkedin": {
+          "type": "string"
+        },
+        "github": {
+          "type": "string"
+        },
+        "twitter": {
+          "type": "string"
+        },
+        "bluesky": {
+          "type": "string"
+        },
+        "mastodon": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "layout",
+        "id"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

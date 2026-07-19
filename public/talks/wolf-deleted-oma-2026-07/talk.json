@@ -1,4 +1,5 @@
 {
+  "$schema": "../../../schemas/talk.schema.json",
   "id": "wolf-deleted-oma-2026-07",
   "title": "HILFE! Der Wolf hat Großmutter deleted",
   "description": "In der echten Welt werden Dinge nicht einfach geupdatet oder gelöscht. Wenn der Wolf im Märchen zuschlägt, ist das ein handfestes Ereignis – und kein schnödes DELETE FROM Großmutter WHERE id = 1. Inspiriert von Golo Roden.",

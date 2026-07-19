@@ -1,4 +1,4 @@
-.PHONY: dev build preview install test test-watch test-ui lint lint-fix format format-check clean help
+.PHONY: dev build preview install test test-watch test-ui lint lint-fix format format-check schema clean help
 
 .DEFAULT_GOAL := help
 
@@ -34,6 +34,9 @@ format: ## Format code with Prettier
 
 format-check: ## Check Prettier formatting
 	npm run format:check
+
+schema: ## Regenerate JSON schemas for talk data from src/data/types.ts
+	npm run schema
 
 clean: ## Remove build output
 	rm -rf dist

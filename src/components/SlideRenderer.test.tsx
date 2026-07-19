@@ -55,4 +55,16 @@ describe('SlideRenderer', () => {
     expect(screen.getByText('Questions?')).toBeDefined()
     expect(screen.getByText('github.com/nerzal')).toBeDefined()
   })
+
+  it('renders speaker layout with heading and links', () => {
+    const slide: Slide = {
+      id: 'sp1',
+      layout: 'speaker',
+      heading: 'Nerzal',
+      github: 'https://github.com/nerzal',
+    }
+    render(<SlideRenderer slide={slide} />)
+    expect(screen.getByText('Nerzal')).toBeDefined()
+    expect(screen.getByText('GitHub')).toBeDefined()
+  })
 })

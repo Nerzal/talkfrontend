@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
 import { useLoadTalks } from './useLoadTalks'
-import type { Talk } from '../data/types'
+import type { DefaultSlides, Talk } from '../data/types'
 
 const talk: Talk = {
   id: 'a',
@@ -9,6 +9,10 @@ const talk: Talk = {
   year: 2026,
   month: 1,
   slides: [{ id: 's1', layout: 'blank' }],
+}
+const defaultSlides: DefaultSlides = {
+  intro: { id: '__intro__', layout: 'title', title: 'Intro' },
+  end: { id: '__end__', layout: 'blank', heading: 'End' },
 }
 
 function jsonResponse(body: unknown, ok = true, status = 200): Response {
@@ -25,6 +29,8 @@ describe('useLoadTalks', () => {
       'fetch',
       vi.fn((url: string) => {
         if (url.endsWith('/index.json')) return Promise.resolve(jsonResponse(['a']))
+        if (url.endsWith('/default-slides.json'))
+          return Promise.resolve(jsonResponse(defaultSlides))
         return Promise.resolve(jsonResponse(talk))
       }),
     )
@@ -34,7 +40,10 @@ describe('useLoadTalks', () => {
     expect(result.current.status).toBe('loading')
 
     await waitFor(() => expect(result.current.status).toBe('success'))
-    expect(result.current).toEqual({ status: 'success', talks: [talk] })
+    expect(result.current).toEqual({
+      status: 'success',
+      talks: [{ ...talk, slides: [defaultSlides.intro, ...talk.slides, defaultSlides.end] }],
+    })
   })
 
   it('switches to error status on failure', async () => {

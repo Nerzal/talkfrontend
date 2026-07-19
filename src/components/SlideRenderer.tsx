@@ -5,6 +5,7 @@ import { CodeSlide } from './slides/CodeSlide'
 import { ImageSlide } from './slides/ImageSlide'
 import { BlankSlide } from './slides/BlankSlide'
 import { TableSlide } from './slides/TableSlide'
+import { SpeakerSlide } from './slides/SpeakerSlide'
 
 interface Props {
   slide: Slide
@@ -24,5 +25,7 @@ export function SlideRenderer({ slide }: Props) {
       return <BlankSlide slide={slide} />
     case 'table':
       return <TableSlide slide={slide} />
+    case 'speaker':
+      return <SpeakerSlide slide={slide} />
   }
 }

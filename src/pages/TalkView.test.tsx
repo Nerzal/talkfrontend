@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { TalkView } from './TalkView'
 import { TalksProvider } from '../data/TalksContext'
@@ -28,8 +28,15 @@ describe('TalkView', () => {
     await waitFor(() => expect(screen.getByText(/not found/i)).toBeDefined())
   })
 
-  it('renders the first slide of the wolf talk', async () => {
+  it('renders the default intro slide first', async () => {
     renderTalkView('wolf-deleted-oma-2026-07')
+    await waitFor(() => expect(screen.getByText(/Nerzal/)).toBeDefined())
+  })
+
+  it('renders the talk title slide after the intro', async () => {
+    renderTalkView('wolf-deleted-oma-2026-07')
+    await waitFor(() => screen.getByLabelText('Next slide'))
+    fireEvent.click(screen.getByLabelText('Next slide'))
     await waitFor(() => expect(screen.getByText(/Eine Geschichte über CRUD/)).toBeDefined())
   })
 
