@@ -10,5 +10,5 @@ async function fetchJson<T>(url: string): Promise<T> {
 
 export async function loadTalks(talksDir: string): Promise<Talk[]> {
   const ids = await fetchJson<string[]>(`${talksDir}/index.json`)
-  return Promise.all(ids.map(id => fetchJson<Talk>(`${talksDir}/${id}.json`)))
+  return Promise.all(ids.map((id) => fetchJson<Talk>(`${talksDir}/${id}.json`)))
 }

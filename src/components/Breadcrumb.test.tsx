@@ -7,7 +7,7 @@ function renderBreadcrumb(year: number, month?: number) {
   return render(
     <MemoryRouter>
       <Breadcrumb year={year} month={month} />
-    </MemoryRouter>
+    </MemoryRouter>,
   )
 }
 
@@ -39,7 +39,10 @@ describe('Breadcrumb', () => {
 
   it('rendert alle deutschen Monatsnamen korrekt', () => {
     const cases = [
-      [1, 'Januar'], [2, 'Februar'], [3, 'März'], [6, 'Juni'],
+      [1, 'Januar'],
+      [2, 'Februar'],
+      [3, 'März'],
+      [6, 'Juni'],
       [12, 'Dezember'],
     ] as const
     for (const [month, name] of cases) {

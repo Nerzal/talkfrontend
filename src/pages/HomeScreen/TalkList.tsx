@@ -24,7 +24,7 @@ export function TalkList({ year, month }: Props) {
           <p className="text-slate-500 text-xl">Keine Vorträge in diesem Monat.</p>
         ) : (
           <div className="flex flex-col gap-4">
-            {talks.map(talk => (
+            {talks.map((talk) => (
               <Link key={talk.id} to={`/talk/${talk.id}`}>
                 <div className="group bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-indigo-500 rounded-2xl p-6 transition-all">
                   <div className="flex items-start justify-between gap-4">
@@ -36,12 +36,17 @@ export function TalkList({ year, month }: Props) {
                     </span>
                   </div>
                   {talk.description && (
-                    <p className="text-slate-400 text-sm mt-2 leading-relaxed">{talk.description}</p>
+                    <p className="text-slate-400 text-sm mt-2 leading-relaxed">
+                      {talk.description}
+                    </p>
                   )}
                   {talk.tags && talk.tags.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-4">
-                      {talk.tags.map(tag => (
-                        <span key={tag} className="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full border border-slate-700">
+                      {talk.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full border border-slate-700"
+                        >
                           {tag}
                         </span>
                       ))}

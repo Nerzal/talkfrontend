@@ -14,7 +14,7 @@ function renderTalkView(id: string) {
           <Route path="/" element={<div>Home</div>} />
         </Routes>
       </TalksProvider>
-    </MemoryRouter>
+    </MemoryRouter>,
   )
 }
 
@@ -43,7 +43,7 @@ describe('TalkView', () => {
   it('deaktiviert Vorherige-Folie-Button auf der ersten Folie', async () => {
     renderTalkView('wolf-deleted-oma-2026-07')
     await waitFor(() => {
-      const prevBtn = screen.getByLabelText('Vorherige Folie') as HTMLButtonElement
+      const prevBtn: HTMLButtonElement = screen.getByLabelText('Vorherige Folie')
       expect(prevBtn.disabled).toBe(true)
     })
   })

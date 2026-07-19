@@ -15,8 +15,8 @@ export function mockTalksFetch() {
       return Promise.resolve({
         ok: true,
         status: 200,
-        json: async () => TALKS_FILES[filename],
+        json: () => Promise.resolve(TALKS_FILES[filename]),
       } as Response)
-    })
+    }),
   )
 }

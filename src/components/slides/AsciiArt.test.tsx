@@ -15,7 +15,7 @@ describe('AsciiArt', () => {
     const content = `Oben\n\nUnten`
     const { container } = render(<AsciiArt content={content} />)
     const divs = container.querySelectorAll('.font-mono')
-    const texts = Array.from(divs).map(d => d.textContent)
+    const texts = Array.from(divs).map((d) => d.textContent)
     expect(texts).toContain(' ')
   })
 

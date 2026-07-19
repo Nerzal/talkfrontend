@@ -18,7 +18,7 @@ export function MonthList({ year }: Props) {
         <Breadcrumb year={year} />
         <h1 className="text-5xl font-extrabold mb-12 tracking-tight">{year}</h1>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          {months.map(month => {
+          {months.map((month) => {
             const count = getTalksByYearAndMonth(talks, year, month).length
             return (
               <Link key={month} to={`/${year}/${month}`}>

@@ -18,7 +18,7 @@ describe('TalksProvider', () => {
     render(
       <TalksProvider>
         <Consumer />
-      </TalksProvider>
+      </TalksProvider>,
     )
     expect(screen.getByText(/geladen/i)).toBeDefined()
   })
@@ -28,17 +28,22 @@ describe('TalksProvider', () => {
     render(
       <TalksProvider>
         <Consumer />
-      </TalksProvider>
+      </TalksProvider>,
     )
     await waitFor(() => expect(screen.getByText('1 Talks geladen')).toBeDefined())
   })
 
   it('zeigt eine Fehlermeldung, wenn das Laden fehlschlägt', async () => {
-    vi.stubGlobal('fetch', vi.fn(() => Promise.resolve({ ok: false, status: 500, json: async () => null } as Response)))
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() =>
+        Promise.resolve({ ok: false, status: 500, json: () => Promise.resolve(null) } as Response),
+      ),
+    )
     render(
       <TalksProvider>
         <Consumer />
-      </TalksProvider>
+      </TalksProvider>,
     )
     await waitFor(() => expect(screen.getByText(/konnten nicht geladen werden/i)).toBeDefined())
   })

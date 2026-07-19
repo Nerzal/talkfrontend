@@ -8,7 +8,15 @@ interface Props {
   onBack: () => void
 }
 
-export function SlideControls({ slideIndex, totalSlides, isFirst, isLast, onPrev, onNext, onBack }: Props) {
+export function SlideControls({
+  slideIndex,
+  totalSlides,
+  isFirst,
+  isLast,
+  onPrev,
+  onNext,
+  onBack,
+}: Props) {
   return (
     <>
       <button

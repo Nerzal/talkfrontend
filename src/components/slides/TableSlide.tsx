@@ -9,9 +9,7 @@ interface Props {
 export function TableSlide({ slide }: Props) {
   return (
     <div className="flex-1 flex flex-col px-14 py-10 gap-5">
-      {slide.title && (
-        <h2 className="text-3xl font-bold text-white">{slide.title}</h2>
-      )}
+      {slide.title && <h2 className="text-3xl font-bold text-white">{slide.title}</h2>}
       {slide.statement && (
         <div className="flex items-center gap-3 bg-slate-900 border border-slate-700 rounded-lg px-5 py-3">
           <span className="text-slate-500 font-mono text-sm shrink-0">SQL ›</span>

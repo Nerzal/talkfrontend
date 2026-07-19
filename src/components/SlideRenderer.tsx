@@ -12,11 +12,17 @@ interface Props {
 
 export function SlideRenderer({ slide }: Props) {
   switch (slide.layout) {
-    case 'title':   return <TitleSlide slide={slide} />
-    case 'content': return <ContentSlide slide={slide} />
-    case 'code':    return <CodeSlide slide={slide} />
-    case 'image':   return <ImageSlide slide={slide} />
-    case 'blank':   return <BlankSlide slide={slide} />
-    case 'table':   return <TableSlide slide={slide} />
+    case 'title':
+      return <TitleSlide slide={slide} />
+    case 'content':
+      return <ContentSlide slide={slide} />
+    case 'code':
+      return <CodeSlide slide={slide} />
+    case 'image':
+      return <ImageSlide slide={slide} />
+    case 'blank':
+      return <BlankSlide slide={slide} />
+    case 'table':
+      return <TableSlide slide={slide} />
   }
 }

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { HomeScreen } from './index'
@@ -15,7 +15,7 @@ function renderAt(path: string) {
           <Route path="/" element={<HomeScreen />} />
         </Routes>
       </TalksProvider>
-    </MemoryRouter>
+    </MemoryRouter>,
   )
 }
 
@@ -33,7 +33,7 @@ describe('HomeScreen', () => {
     it('zeigt alle verfügbaren Jahre als Links', async () => {
       renderAt('/')
       await waitFor(() => {
-        const hrefs = screen.getAllByRole('link').map(l => l.getAttribute('href'))
+        const hrefs = screen.getAllByRole('link').map((l) => l.getAttribute('href'))
         expect(hrefs).toContain('/2026')
       })
     })
@@ -64,7 +64,9 @@ describe('HomeScreen', () => {
 
     it('zeigt den Wolf-Vortrag', async () => {
       renderAt('/2026/7')
-      await waitFor(() => expect(screen.getByText('HILFE! Der Wolf hat Großmutter deleted')).toBeDefined())
+      await waitFor(() =>
+        expect(screen.getByText('HILFE! Der Wolf hat Großmutter deleted')).toBeDefined(),
+      )
     })
 
     it('zeigt Folien-Anzahl des Vortrags', async () => {

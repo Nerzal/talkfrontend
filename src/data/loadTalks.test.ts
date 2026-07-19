@@ -2,11 +2,23 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 import { loadTalks } from './loadTalks'
 import type { Talk } from './types'
 
-const talkA: Talk = { id: 'a', title: 'Talk A', year: 2026, month: 1, slides: [{ id: 's1', layout: 'blank' }] }
-const talkB: Talk = { id: 'b', title: 'Talk B', year: 2026, month: 2, slides: [{ id: 's1', layout: 'blank' }] }
+const talkA: Talk = {
+  id: 'a',
+  title: 'Talk A',
+  year: 2026,
+  month: 1,
+  slides: [{ id: 's1', layout: 'blank' }],
+}
+const talkB: Talk = {
+  id: 'b',
+  title: 'Talk B',
+  year: 2026,
+  month: 2,
+  slides: [{ id: 's1', layout: 'blank' }],
+}
 
 function jsonResponse(body: unknown, ok = true, status = 200): Response {
-  return { ok, status, json: async () => body } as Response
+  return { ok, status, json: () => Promise.resolve(body) } as Response
 }
 
 afterEach(() => {
@@ -42,7 +54,10 @@ describe('loadTalks', () => {
   })
 
   it('wirft einen Fehler, wenn index.json nicht geladen werden kann', async () => {
-    vi.stubGlobal('fetch', vi.fn(() => Promise.resolve(jsonResponse(null, false, 404))))
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => Promise.resolve(jsonResponse(null, false, 404))),
+    )
 
     await expect(loadTalks('/talks')).rejects.toThrow(/index\.json/)
   })

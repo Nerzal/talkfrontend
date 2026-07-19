@@ -13,9 +13,7 @@ export function TitleSlide({ slide }: Props) {
       {slide.subtitle && (
         <p className="text-3xl text-slate-300 mt-6 font-light">{slide.subtitle}</p>
       )}
-      {slide.author && (
-        <p className="text-lg text-slate-500 mt-16">{slide.author}</p>
-      )}
+      {slide.author && <p className="text-lg text-slate-500 mt-16">{slide.author}</p>}
     </div>
   )
 }

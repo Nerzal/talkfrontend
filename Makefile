@@ -1,4 +1,4 @@
-.PHONY: dev build preview install test test-watch test-ui clean help
+.PHONY: dev build preview install test test-watch test-ui lint lint-fix format format-check clean help
 
 .DEFAULT_GOAL := help
 
@@ -22,6 +22,18 @@ test-watch: ## Tests im Watch-Modus ausführen
 
 test-ui: ## Vitest Browser-UI öffnen
 	npm run test:ui
+
+lint: ## ESLint prüfen
+	npm run lint
+
+lint-fix: ## ESLint prüfen und automatisch korrigieren
+	npm run lint:fix
+
+format: ## Code mit Prettier formatieren
+	npm run format
+
+format-check: ## Prettier-Formatierung prüfen
+	npm run format:check
 
 clean: ## Build-Output löschen
 	rm -rf dist

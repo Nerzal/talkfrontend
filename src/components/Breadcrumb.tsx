@@ -9,11 +9,15 @@ interface Props {
 export function Breadcrumb({ year, month }: Props) {
   return (
     <nav className="flex items-center gap-2 text-slate-500 text-sm mb-12">
-      <Link to="/" className="hover:text-white transition-colors">Vorträge</Link>
+      <Link to="/" className="hover:text-white transition-colors">
+        Vorträge
+      </Link>
       <span>›</span>
       {month !== undefined ? (
         <>
-          <Link to={`/${year}`} className="hover:text-white transition-colors">{year}</Link>
+          <Link to={`/${year}`} className="hover:text-white transition-colors">
+            {year}
+          </Link>
           <span>›</span>
           <span className="text-white">{monthName(month)}</span>
         </>

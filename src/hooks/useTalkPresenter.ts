@@ -18,14 +18,16 @@ export function useTalkPresenter(talk: Talk): TalkPresenter {
   const [slideIndex, setSlideIndex] = useState(0)
 
   const goNext = useCallback(() => {
-    setSlideIndex(i => Math.min(i + 1, talk.slides.length - 1))
+    setSlideIndex((i) => Math.min(i + 1, talk.slides.length - 1))
   }, [talk.slides.length])
 
   const goPrev = useCallback(() => {
-    setSlideIndex(i => Math.max(i - 1, 0))
+    setSlideIndex((i) => Math.max(i - 1, 0))
   }, [])
 
-  const goBack = useCallback(() => navigate(-1), [navigate])
+  const goBack = useCallback(() => {
+    void navigate(-1)
+  }, [navigate])
 
   usePresenter({ onNext: goNext, onPrev: goPrev, onExit: goBack })
 

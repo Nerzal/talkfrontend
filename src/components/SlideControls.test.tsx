@@ -20,13 +20,13 @@ describe('SlideControls', () => {
 
   it('Vorherige-Button ist deaktiviert auf der ersten Folie', () => {
     render(<SlideControls {...defaultProps} isFirst />)
-    const btn = screen.getByLabelText('Vorherige Folie') as HTMLButtonElement
+    const btn: HTMLButtonElement = screen.getByLabelText('Vorherige Folie')
     expect(btn.disabled).toBe(true)
   })
 
   it('Nächste-Button ist deaktiviert auf der letzten Folie', () => {
     render(<SlideControls {...defaultProps} isFirst={false} isLast />)
-    const btn = screen.getByLabelText('Nächste Folie') as HTMLButtonElement
+    const btn: HTMLButtonElement = screen.getByLabelText('Nächste Folie')
     expect(btn.disabled).toBe(true)
   })
 

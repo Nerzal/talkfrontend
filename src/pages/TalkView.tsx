@@ -28,11 +28,18 @@ function ActiveTalkView({ talk }: { talk: Talk }) {
 
   return (
     <div className="fixed inset-0 bg-black flex flex-col select-none">
-      <div key={slide.id} className="flex-1 flex flex-col" style={{ animation: 'slideIn 0.2s ease-out' }}>
+      <div
+        key={slide.id}
+        className="flex-1 flex flex-col"
+        style={{ animation: 'slideIn 0.2s ease-out' }}
+      >
         <SlideRenderer slide={slide} />
       </div>
       <div className="h-0.5 bg-slate-800">
-        <div className="h-full bg-indigo-500 transition-all duration-300" style={{ width: `${progress}%` }} />
+        <div
+          className="h-full bg-indigo-500 transition-all duration-300"
+          style={{ width: `${progress}%` }}
+        />
       </div>
       <SlideControls
         slideIndex={slideIndex}

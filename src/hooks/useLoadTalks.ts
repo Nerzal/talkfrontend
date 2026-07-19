@@ -15,12 +15,15 @@ export function useLoadTalks(): LoadTalksState {
     let cancelled = false
 
     loadTalks(TALKS_DIR)
-      .then(talks => {
+      .then((talks) => {
         if (!cancelled) setState({ status: 'success', talks })
       })
       .catch((err: unknown) => {
         if (!cancelled) {
-          setState({ status: 'error', message: err instanceof Error ? err.message : 'Unbekannter Fehler' })
+          setState({
+            status: 'error',
+            message: err instanceof Error ? err.message : 'Unbekannter Fehler',
+          })
         }
       })
 

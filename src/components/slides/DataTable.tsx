@@ -8,18 +8,18 @@ interface Props {
 
 const ROW_BG: Record<TableRowVariant, string> = {
   highlight: 'bg-emerald-950 border-t border-emerald-900',
-  danger:    'bg-red-950 border-t border-red-900',
-  deleted:   'bg-red-950/20 border-t border-slate-800',
-  warning:   'bg-amber-950 border-t border-amber-900',
-  normal:    'bg-slate-900 border-t border-slate-800',
+  danger: 'bg-red-950 border-t border-red-900',
+  deleted: 'bg-red-950/20 border-t border-slate-800',
+  warning: 'bg-amber-950 border-t border-amber-900',
+  normal: 'bg-slate-900 border-t border-slate-800',
 }
 
 const ROW_TEXT: Record<TableRowVariant, string> = {
   highlight: 'text-emerald-300',
-  danger:    'text-red-300',
-  deleted:   'text-slate-500',
-  warning:   'text-amber-300',
-  normal:    'text-slate-200',
+  danger: 'text-red-300',
+  deleted: 'text-slate-500',
+  warning: 'text-amber-300',
+  normal: 'text-slate-200',
 }
 
 export function DataTable({ columns, rows, empty }: Props) {
@@ -29,7 +29,10 @@ export function DataTable({ columns, rows, empty }: Props) {
         <thead>
           <tr className="bg-slate-800 border-b border-slate-700">
             {columns.map((col, i) => (
-              <th key={i} className="text-left px-6 py-4 text-slate-400 font-mono text-sm uppercase tracking-wider">
+              <th
+                key={i}
+                className="text-left px-6 py-4 text-slate-400 font-mono text-sm uppercase tracking-wider"
+              >
                 {col}
               </th>
             ))}
@@ -38,7 +41,10 @@ export function DataTable({ columns, rows, empty }: Props) {
         <tbody>
           {empty ? (
             <tr>
-              <td colSpan={columns.length} className="text-center py-12 text-slate-600 text-xl italic">
+              <td
+                colSpan={columns.length}
+                className="text-center py-12 text-slate-600 text-xl italic"
+              >
                 — 0 Zeilen —
               </td>
             </tr>
@@ -49,9 +55,11 @@ export function DataTable({ columns, rows, empty }: Props) {
                 <tr key={i} className={ROW_BG[variant]}>
                   {row.cells.map((cell, j) => (
                     <td key={j} className={`px-6 py-5 font-mono text-xl ${ROW_TEXT[variant]}`}>
-                      {variant === 'deleted'
-                        ? <span className="line-through opacity-50">{cell}</span>
-                        : cell}
+                      {variant === 'deleted' ? (
+                        <span className="line-through opacity-50">{cell}</span>
+                      ) : (
+                        cell
+                      )}
                     </td>
                   ))}
                 </tr>
