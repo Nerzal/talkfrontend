@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react'
 import { LoadingScreen } from './LoadingScreen'
 
 describe('LoadingScreen', () => {
-  it('zeigt einen Ladehinweis', () => {
+  it('shows a loading notice', () => {
     render(<LoadingScreen />)
-    expect(screen.getByText(/wird.*geladen|werden geladen/i)).toBeDefined()
+    expect(screen.getByText(/loading/i)).toBeDefined()
   })
 })

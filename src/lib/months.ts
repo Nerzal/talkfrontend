@@ -1,18 +1,18 @@
-export const MONTHS_DE = [
-  'Januar',
-  'Februar',
-  'März',
+export const MONTH_NAMES = [
+  'January',
+  'February',
+  'March',
   'April',
-  'Mai',
-  'Juni',
-  'Juli',
+  'May',
+  'June',
+  'July',
   'August',
   'September',
-  'Oktober',
+  'October',
   'November',
-  'Dezember',
+  'December',
 ] as const
 
 export function monthName(month: number): string {
-  return MONTHS_DE[month - 1] ?? `Monat ${month}`
+  return MONTH_NAMES[month - 1] ?? `Month ${month}`
 }

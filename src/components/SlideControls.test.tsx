@@ -13,46 +13,46 @@ const defaultProps = {
 }
 
 describe('SlideControls', () => {
-  it('zeigt den Folien-Zähler', () => {
+  it('shows the slide counter', () => {
     render(<SlideControls {...defaultProps} slideIndex={2} totalSlides={10} isFirst={false} />)
     expect(screen.getByText('3 / 10')).toBeDefined()
   })
 
-  it('Vorherige-Button ist deaktiviert auf der ersten Folie', () => {
+  it('disables the previous button on the first slide', () => {
     render(<SlideControls {...defaultProps} isFirst />)
-    const btn: HTMLButtonElement = screen.getByLabelText('Vorherige Folie')
+    const btn: HTMLButtonElement = screen.getByLabelText('Previous slide')
     expect(btn.disabled).toBe(true)
   })
 
-  it('Nächste-Button ist deaktiviert auf der letzten Folie', () => {
+  it('disables the next button on the last slide', () => {
     render(<SlideControls {...defaultProps} isFirst={false} isLast />)
-    const btn: HTMLButtonElement = screen.getByLabelText('Nächste Folie')
+    const btn: HTMLButtonElement = screen.getByLabelText('Next slide')
     expect(btn.disabled).toBe(true)
   })
 
-  it('ruft onNext auf bei Klick auf Nächste', () => {
+  it('calls onNext when clicking next', () => {
     const onNext = vi.fn()
     render(<SlideControls {...defaultProps} isFirst={false} onNext={onNext} />)
-    fireEvent.click(screen.getByLabelText('Nächste Folie'))
+    fireEvent.click(screen.getByLabelText('Next slide'))
     expect(onNext).toHaveBeenCalledOnce()
   })
 
-  it('ruft onPrev auf bei Klick auf Vorherige', () => {
+  it('calls onPrev when clicking previous', () => {
     const onPrev = vi.fn()
     render(<SlideControls {...defaultProps} isFirst={false} onPrev={onPrev} />)
-    fireEvent.click(screen.getByLabelText('Vorherige Folie'))
+    fireEvent.click(screen.getByLabelText('Previous slide'))
     expect(onPrev).toHaveBeenCalledOnce()
   })
 
-  it('ruft onBack auf bei Klick auf Schließen', () => {
+  it('calls onBack when clicking close', () => {
     const onBack = vi.fn()
     render(<SlideControls {...defaultProps} onBack={onBack} />)
-    fireEvent.click(screen.getByLabelText('Zurück zur Übersicht'))
+    fireEvent.click(screen.getByLabelText('Back to overview'))
     expect(onBack).toHaveBeenCalledOnce()
   })
 
-  it('zeigt Keyboard-Hinweis', () => {
+  it('shows keyboard hint', () => {
     render(<SlideControls {...defaultProps} />)
-    expect(screen.getByText(/Presenter-Fernbedienung/)).toBeDefined()
+    expect(screen.getByText(/presenter remote/)).toBeDefined()
   })
 })

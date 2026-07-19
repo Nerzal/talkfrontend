@@ -14,7 +14,7 @@ export function TalkView() {
   if (!talk) {
     return (
       <div className="fixed inset-0 bg-black flex items-center justify-center">
-        <p className="text-slate-400 text-xl">Vortrag nicht gefunden.</p>
+        <p className="text-slate-400 text-xl">Talk not found.</p>
       </div>
     )
   }

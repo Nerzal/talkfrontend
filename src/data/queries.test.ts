@@ -20,27 +20,27 @@ const talks: Talk[] = [
 ]
 
 describe('queries', () => {
-  it('getYears liefert eindeutige Jahre absteigend sortiert', () => {
+  it('getYears returns unique years sorted descending', () => {
     expect(getYears(talks)).toEqual([2026, 2025])
   })
 
-  it('getTalksByYear filtert nach Jahr', () => {
+  it('getTalksByYear filters by year', () => {
     expect(getTalksByYear(talks, 2026).map((t) => t.id)).toEqual(['b', 'c', 'd'])
   })
 
-  it('getMonthsByYear liefert eindeutige Monate aufsteigend sortiert', () => {
+  it('getMonthsByYear returns unique months sorted ascending', () => {
     expect(getMonthsByYear(talks, 2026)).toEqual([1, 7])
   })
 
-  it('getTalksByYearAndMonth filtert nach Jahr und Monat', () => {
+  it('getTalksByYearAndMonth filters by year and month', () => {
     expect(getTalksByYearAndMonth(talks, 2026, 1).map((t) => t.id)).toEqual(['b', 'c'])
   })
 
-  it('getTalkById findet einen Talk anhand seiner ID', () => {
+  it('getTalkById finds a talk by its ID', () => {
     expect(getTalkById(talks, 'd')?.id).toBe('d')
   })
 
-  it('getTalkById liefert undefined für unbekannte ID', () => {
+  it('getTalkById returns undefined for an unknown ID', () => {
     expect(getTalkById(talks, 'nope')).toBeUndefined()
   })
 })

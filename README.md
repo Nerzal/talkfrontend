@@ -1,114 +1,118 @@
 # talkfrontend
 
-Ein schlanker Web-Viewer für Vortragsfolien – im Stil einer Präsentation, aber als React-Web-App statt PowerPoint/Keynote. Folien werden nicht gebaut, sondern zur Laufzeit als JSON geladen, sodass neue Vorträge ohne Rebuild oder Deployment hinzugefügt werden können.
+A lightweight web viewer for talk slides — presentation-style, but as a React web app instead of PowerPoint/Keynote. Slides aren't bundled at build time; they're loaded as JSON at runtime, so new talks can be added without a rebuild or redeploy.
 
 ## Features
 
-- **Jahres-/Monats-/Vortragsübersicht** – Vorträge werden chronologisch nach Jahr und Monat durchsucht
-- **Fullscreen-Präsentationsmodus** mit Tastatur- und Presenter-Remote-Steuerung
-- **Sechs Folienlayouts**: Titel, Inhalt (Bullet-Liste), Code, Bild, Blank (Q&A/Abschluss) und Tabelle (inkl. ASCII-Art-Animation für z. B. SQL-Demos)
-- **Daten getrennt vom Code**: Vorträge liegen als reine JSON-Dateien in `public/talks` (oder auf einem beliebigen HTTP-Server) und werden per `fetch()` geladen – kein Rebuild nötig, um einen neuen Vortrag zu veröffentlichen
+- **Year/month/talk overview** – talks are browsed chronologically by year and month
+- **Fullscreen presentation mode** with keyboard and presenter-remote controls
+- **Six slide layouts**: title, content (bullet list), code, image, blank (Q&A/closing), and table (including an ASCII-art animation for e.g. SQL demos)
+- **Data separated from code**: talks live as plain JSON files in `public/talks` (or on any HTTP server) and are loaded via `fetch()` — no rebuild needed to publish a new talk
 
-## Tech-Stack
+## Tech stack
 
 - [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/) + [Vite 6](https://vite.dev/)
-- [Tailwind CSS v4](https://tailwindcss.com/) über das `@tailwindcss/vite`-Plugin (kein `tailwind.config.js` – Klassen werden automatisch aus dem Source erkannt)
+- [Tailwind CSS v4](https://tailwindcss.com/) via the `@tailwindcss/vite` plugin (no `tailwind.config.js` — classes are auto-detected from source)
 - [React Router v7](https://reactrouter.com/) (`BrowserRouter`)
-- [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/) für Tests
-- [ESLint](https://eslint.org/) (flat config, typegebunden) + [Prettier](https://prettier.io/) für Codequalität
+- [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/) for tests
+- [ESLint](https://eslint.org/) (flat config, type-aware) + [Prettier](https://prettier.io/) for code quality
 
-## Funktionsweise
+## How it works
 
 ### Routing
 
 ```
-/                 → Jahresübersicht
-/:year            → Monatsübersicht für ein Jahr
-/:year/:month     → Vortragsliste für einen Monat
-/talk/:id         → Fullscreen-Folienpräsentation
+/                 → year overview
+/:year            → month overview for a year
+/:year/:month     → talk list for a month
+/talk/:id         → fullscreen slide presentation
 ```
 
-`HomeScreen` liest die URL-Parameter aus und entscheidet, welche der drei Listenansichten gerendert wird.
+`HomeScreen` reads the URL params and decides which of the three list views to render.
 
-### Daten & Vortrag hinzufügen
+### Data & adding a talk
 
-Vorträge sind **nicht** im Bundle enthalten, sondern werden zur Laufzeit aus einem konfigurierbaren Ordner geladen (siehe [Konfiguration](#konfiguration)). Dieser Ordner braucht:
+Talks are **not** bundled into the app — they're loaded at runtime from a configurable directory (see [Configuration](#configuration)). That directory needs:
 
-- eine `index.json` – ein Array aller Vortrags-IDs
-- pro ID eine `<id>.json` – ein `Talk`-Objekt (Struktur siehe `src/data/types.ts`)
+- an `index.json` — an array of all talk IDs
+- one `<id>.json` per ID — a `Talk` object (shape defined in `src/data/types.ts`)
 
-Um einen neuen Vortrag zu veröffentlichen:
+To publish a new talk:
 
-1. `public/talks/<id>.json` anlegen (ein `Talk`-Objekt)
-2. die ID in `public/talks/index.json` eintragen
+1. Create `public/talks/<id>.json` (a `Talk` object)
+2. Add its ID to `public/talks/index.json`
 
-Kein Rebuild nötig – die Datei muss aber von Hand gegen `src/data/types.ts` validiert werden, da JSON nicht typgeprüft wird.
+No rebuild needed — but the file must be validated by hand against `src/data/types.ts`, since JSON isn't type-checked.
 
-Beispiel für ein minimales `Talk`-Objekt:
+Example of a minimal `Talk` object:
 
 ```json
 {
-  "id": "mein-vortrag-2026-01",
-  "title": "Mein Vortrag",
-  "description": "Kurzbeschreibung",
+  "id": "my-talk-2026-01",
+  "title": "My Talk",
+  "description": "Short description",
   "year": 2026,
   "month": 1,
-  "tags": ["beispiel"],
+  "tags": ["example"],
   "slides": [
-    { "id": "s1", "layout": "title", "title": "Mein Vortrag", "subtitle": "Untertitel" },
-    { "id": "s2", "layout": "content", "title": "Agenda", "bullets": ["Punkt 1", "Punkt 2"] },
-    { "id": "s3", "layout": "blank", "heading": "Fragen?", "body": "Danke fürs Zuhören!" }
+    { "id": "s1", "layout": "title", "title": "My Talk", "subtitle": "Subtitle" },
+    { "id": "s2", "layout": "content", "title": "Agenda", "bullets": ["Point 1", "Point 2"] },
+    { "id": "s3", "layout": "blank", "heading": "Questions?", "body": "Thanks for listening!" }
   ]
 }
 ```
 
-Verfügbare Folienlayouts: `title`, `content`, `code`, `image`, `blank`, `table` (siehe `src/data/types.ts` für alle Felder je Layout).
+Available slide layouts: `title`, `content`, `code`, `image`, `blank`, `table` (see `src/data/types.ts` for all fields per layout).
 
-### Tastatursteuerung im Präsentationsmodus
+### Keyboard controls in presentation mode
 
-| Taste                      | Aktion               |
-| -------------------------- | -------------------- |
-| `→`, `Leertaste`, `Bild ↓` | Nächste Folie        |
-| `←`, `Bild ↑`              | Vorherige Folie      |
-| `Esc`                      | Zurück zur Übersicht |
+| Key                       | Action           |
+| ------------------------- | ---------------- |
+| `→`, `Space`, `Page Down` | Next slide       |
+| `←`, `Page Up`            | Previous slide   |
+| `Esc`                     | Back to overview |
 
-`Bild ↑`/`Bild ↓` decken gängige Presenter-Remotes ab (z. B. Logitech Spotlight).
+`Page Up`/`Page Down` cover standard presenter remotes (e.g. Logitech Spotlight).
 
-## Konfiguration
+## Configuration
 
-Der Ordner, aus dem Vorträge geladen werden, wird per Umgebungsvariable gesteuert. `.env.example` kopieren:
+The directory talks are loaded from is controlled via an environment variable. Copy `.env.example`:
 
 ```bash
 cp .env.example .env
 ```
 
 ```dotenv
-# Relativer Pfad (aus public/ bedient) oder vollständige URL zu einem beliebigen HTTP-Server
+# Relative path (served from public/) or full URL to any HTTP server
 VITE_TALKS_DIR=/talks
 ```
 
-## Erste Schritte
+## Getting started
 
 ```bash
-make install   # Abhängigkeiten installieren
-make dev       # Dev-Server starten (http://localhost:5173)
+make install   # Install dependencies
+make dev       # Start dev server (http://localhost:5173)
 ```
 
-Alle verfügbaren Kommandos:
+All available commands:
 
-| `make`-Target       | npm-Skript             | Beschreibung                              |
-| ------------------- | ---------------------- | ----------------------------------------- |
-| `make dev`          | `npm run dev`          | Dev-Server starten                        |
-| `make build`        | `npm run build`        | TypeScript-Check + Production Build       |
-| `make preview`      | `npm run preview`      | Production Build lokal vorschauen         |
-| `make test`         | `npm run test`         | Tests einmalig ausführen (vitest run)     |
-| `make test-watch`   | `npm run test:watch`   | Tests im Watch-Modus                      |
-| `make test-ui`      | `npm run test:ui`      | Vitest Browser-UI öffnen                  |
-| `make lint`         | `npm run lint`         | ESLint prüfen                             |
-| `make lint-fix`     | `npm run lint:fix`     | ESLint prüfen und automatisch korrigieren |
-| `make format`       | `npm run format`       | Code mit Prettier formatieren             |
-| `make format-check` | `npm run format:check` | Prettier-Formatierung prüfen              |
-| `make install`      | `npm install`          | Abhängigkeiten installieren               |
-| `make clean`        | –                      | `dist/` löschen                           |
+| `make` target       | npm script             | Description                         |
+| ------------------- | ---------------------- | ----------------------------------- |
+| `make dev`          | `npm run dev`          | Start dev server                    |
+| `make build`        | `npm run build`        | TypeScript check + production build |
+| `make preview`      | `npm run preview`      | Preview production build locally    |
+| `make test`         | `npm run test`         | Run tests once (vitest run)         |
+| `make test-watch`   | `npm run test:watch`   | Run tests in watch mode             |
+| `make test-ui`      | `npm run test:ui`      | Open Vitest browser UI              |
+| `make lint`         | `npm run lint`         | Check with ESLint                   |
+| `make lint-fix`     | `npm run lint:fix`     | Check with ESLint and auto-fix      |
+| `make format`       | `npm run format`       | Format code with Prettier           |
+| `make format-check` | `npm run format:check` | Check Prettier formatting           |
+| `make install`      | `npm install`          | Install dependencies                |
+| `make clean`        | –                      | Remove `dist/`                      |
 
-`make` ohne Argument zeigt alle Targets mit Beschreibung an.
+Running `make` with no argument lists all targets with descriptions.
+
+## Project structure
+
+Details on architecture, data flow, and code conventions (IOSP, SOLID) live in [`CLAUDE.md`](./CLAUDE.md).

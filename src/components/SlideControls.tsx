@@ -22,7 +22,7 @@ export function SlideControls({
       <button
         onClick={onBack}
         className="absolute top-5 right-6 text-slate-600 hover:text-white text-2xl leading-none transition-colors cursor-pointer"
-        aria-label="Zurück zur Übersicht"
+        aria-label="Back to overview"
       >
         ✕
       </button>
@@ -31,7 +31,7 @@ export function SlideControls({
           onClick={onPrev}
           disabled={isFirst}
           className="text-slate-600 hover:text-white disabled:opacity-20 text-xl transition-colors cursor-pointer disabled:cursor-default"
-          aria-label="Vorherige Folie"
+          aria-label="Previous slide"
         >
           ←
         </button>
@@ -42,13 +42,13 @@ export function SlideControls({
           onClick={onNext}
           disabled={isLast}
           className="text-slate-600 hover:text-white disabled:opacity-20 text-xl transition-colors cursor-pointer disabled:cursor-default"
-          aria-label="Nächste Folie"
+          aria-label="Next slide"
         >
           →
         </button>
       </div>
       <div className="absolute bottom-4 left-6 text-slate-700 text-xs">
-        ← → Space · Presenter-Fernbedienung
+        ← → Space · presenter remote
       </div>
     </>
   )

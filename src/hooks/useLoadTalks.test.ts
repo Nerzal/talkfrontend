@@ -20,7 +20,7 @@ afterEach(() => {
 })
 
 describe('useLoadTalks', () => {
-  it('startet im Status loading und wechselt bei Erfolg zu success', async () => {
+  it('starts in loading status and switches to success on success', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn((url: string) => {
@@ -37,7 +37,7 @@ describe('useLoadTalks', () => {
     expect(result.current).toEqual({ status: 'success', talks: [talk] })
   })
 
-  it('wechselt bei einem Fehler in den Status error', async () => {
+  it('switches to error status on failure', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn(() => Promise.resolve(jsonResponse(null, false, 500))),

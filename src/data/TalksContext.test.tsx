@@ -9,31 +9,31 @@ afterEach(() => {
 
 function Consumer() {
   const talks = useTalks()
-  return <p>{talks.length} Talks geladen</p>
+  return <p>{talks.length} talks loaded</p>
 }
 
 describe('TalksProvider', () => {
-  it('zeigt zunächst den Ladebildschirm', () => {
+  it('shows the loading screen initially', () => {
     mockTalksFetch()
     render(
       <TalksProvider>
         <Consumer />
       </TalksProvider>,
     )
-    expect(screen.getByText(/geladen/i)).toBeDefined()
+    expect(screen.getByText(/loading/i)).toBeDefined()
   })
 
-  it('rendert die Kinder mit den geladenen Talks sobald verfügbar', async () => {
+  it('renders children with the loaded talks once available', async () => {
     mockTalksFetch()
     render(
       <TalksProvider>
         <Consumer />
       </TalksProvider>,
     )
-    await waitFor(() => expect(screen.getByText('1 Talks geladen')).toBeDefined())
+    await waitFor(() => expect(screen.getByText('1 talks loaded')).toBeDefined())
   })
 
-  it('zeigt eine Fehlermeldung, wenn das Laden fehlschlägt', async () => {
+  it('shows an error message when loading fails', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn(() =>
@@ -45,12 +45,12 @@ describe('TalksProvider', () => {
         <Consumer />
       </TalksProvider>,
     )
-    await waitFor(() => expect(screen.getByText(/konnten nicht geladen werden/i)).toBeDefined())
+    await waitFor(() => expect(screen.getByText(/could not be loaded/i)).toBeDefined())
   })
 })
 
 describe('useTalks', () => {
-  it('wirft einen Fehler außerhalb von TalksProvider', () => {
+  it('throws an error outside of TalksProvider', () => {
     const { result } = renderHook(() => {
       try {
         return useTalks()

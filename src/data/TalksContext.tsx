@@ -22,7 +22,7 @@ export function TalksProvider({ children }: Props) {
 export function useTalks(): Talk[] {
   const talks = useContext(TalksContext)
   if (talks === null) {
-    throw new Error('useTalks() muss innerhalb von <TalksProvider> aufgerufen werden')
+    throw new Error('useTalks() must be called within <TalksProvider>')
   }
   return talks
 }

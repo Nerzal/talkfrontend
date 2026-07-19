@@ -22,7 +22,7 @@ export function useLoadTalks(): LoadTalksState {
         if (!cancelled) {
           setState({
             status: 'error',
-            message: err instanceof Error ? err.message : 'Unbekannter Fehler',
+            message: err instanceof Error ? err.message : 'Unknown error',
           })
         }
       })

@@ -3,13 +3,13 @@ import { render, screen } from '@testing-library/react'
 import { ErrorScreen } from './ErrorScreen'
 
 describe('ErrorScreen', () => {
-  it('zeigt die übergebene Fehlermeldung', () => {
-    render(<ErrorScreen message="Netzwerkfehler beim Laden" />)
-    expect(screen.getByText('Netzwerkfehler beim Laden')).toBeDefined()
+  it('shows the given error message', () => {
+    render(<ErrorScreen message="Network error while loading" />)
+    expect(screen.getByText('Network error while loading')).toBeDefined()
   })
 
-  it('zeigt einen allgemeinen Fehlerhinweis', () => {
-    render(<ErrorScreen message="irgendein Fehler" />)
-    expect(screen.getByText(/konnten nicht geladen werden/i)).toBeDefined()
+  it('shows a generic error notice', () => {
+    render(<ErrorScreen message="some error" />)
+    expect(screen.getByText(/could not be loaded/i)).toBeDefined()
   })
 })

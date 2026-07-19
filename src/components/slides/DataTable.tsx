@@ -45,7 +45,7 @@ export function DataTable({ columns, rows, empty }: Props) {
                 colSpan={columns.length}
                 className="text-center py-12 text-slate-600 text-xl italic"
               >
-                — 0 Zeilen —
+                — 0 rows —
               </td>
             </tr>
           ) : (

@@ -24,13 +24,13 @@ beforeEach(() => {
 })
 
 describe('HomeScreen', () => {
-  describe('YearList (Pfad: /)', () => {
-    it('zeigt die Hauptüberschrift', async () => {
+  describe('YearList (path: /)', () => {
+    it('shows the main heading', async () => {
       renderAt('/')
-      await waitFor(() => expect(screen.getByRole('heading', { name: 'Vorträge' })).toBeDefined())
+      await waitFor(() => expect(screen.getByRole('heading', { name: 'Talks' })).toBeDefined())
     })
 
-    it('zeigt alle verfügbaren Jahre als Links', async () => {
+    it('shows all available years as links', async () => {
       renderAt('/')
       await waitFor(() => {
         const hrefs = screen.getAllByRole('link').map((l) => l.getAttribute('href'))
@@ -39,42 +39,42 @@ describe('HomeScreen', () => {
     })
   })
 
-  describe('MonthList (Pfad: /:year)', () => {
-    it('zeigt das Jahr als Überschrift', async () => {
+  describe('MonthList (path: /:year)', () => {
+    it('shows the year as heading', async () => {
       renderAt('/2026')
       await waitFor(() => expect(screen.getByRole('heading', { name: '2026' })).toBeDefined())
     })
 
-    it('zeigt den Monat Juli für 2026', async () => {
+    it('shows July for 2026', async () => {
       renderAt('/2026')
-      await waitFor(() => expect(screen.getByText('Juli')).toBeDefined())
+      await waitFor(() => expect(screen.getByText('July')).toBeDefined())
     })
 
-    it('enthält Breadcrumb mit Link zur Hauptseite', async () => {
+    it('includes a breadcrumb with a link to the home page', async () => {
       renderAt('/2026')
-      await waitFor(() => expect(screen.getByRole('link', { name: 'Vorträge' })).toBeDefined())
+      await waitFor(() => expect(screen.getByRole('link', { name: 'Talks' })).toBeDefined())
     })
   })
 
-  describe('TalkList (Pfad: /:year/:month)', () => {
-    it('zeigt Monatsüberschrift', async () => {
+  describe('TalkList (path: /:year/:month)', () => {
+    it('shows the month heading', async () => {
       renderAt('/2026/7')
       await waitFor(() => expect(screen.getByRole('heading', { level: 1 })).toBeDefined())
     })
 
-    it('zeigt den Wolf-Vortrag', async () => {
+    it('shows the wolf talk', async () => {
       renderAt('/2026/7')
       await waitFor(() =>
         expect(screen.getByText('HILFE! Der Wolf hat Großmutter deleted')).toBeDefined(),
       )
     })
 
-    it('zeigt Folien-Anzahl des Vortrags', async () => {
+    it('shows the talk slide count', async () => {
       renderAt('/2026/7')
-      await waitFor(() => expect(screen.getByText(/Folien/)).toBeDefined())
+      await waitFor(() => expect(screen.getByText(/slides/)).toBeDefined())
     })
 
-    it('enthält Link zum Vortrag', async () => {
+    it('includes a link to the talk', async () => {
       renderAt('/2026/7')
       await waitFor(() => {
         const link = screen.getByRole('link', { name: /Wolf/ })
@@ -82,14 +82,14 @@ describe('HomeScreen', () => {
       })
     })
 
-    it('zeigt Tags des Vortrags', async () => {
+    it('shows the talk tags', async () => {
       renderAt('/2026/7')
       await waitFor(() => expect(screen.getByText('event-sourcing')).toBeDefined())
     })
 
-    it('zeigt Meldung bei leerem Monat', async () => {
+    it('shows a message for an empty month', async () => {
       renderAt('/2026/1')
-      await waitFor(() => expect(screen.getByText(/Keine Vorträge/)).toBeDefined())
+      await waitFor(() => expect(screen.getByText(/No talks/)).toBeDefined())
     })
   })
 })

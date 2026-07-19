@@ -23,32 +23,32 @@ beforeEach(() => {
 })
 
 describe('TalkView', () => {
-  it('zeigt Fehlermeldung für unbekannte Vortrag-ID', async () => {
-    renderTalkView('existiert-nicht')
-    await waitFor(() => expect(screen.getByText(/nicht gefunden/i)).toBeDefined())
+  it('shows an error message for an unknown talk ID', async () => {
+    renderTalkView('does-not-exist')
+    await waitFor(() => expect(screen.getByText(/not found/i)).toBeDefined())
   })
 
-  it('rendert die erste Folie des Wolf-Vortrags', async () => {
+  it('renders the first slide of the wolf talk', async () => {
     renderTalkView('wolf-deleted-oma-2026-07')
     await waitFor(() => expect(screen.getByText(/Eine Geschichte über CRUD/)).toBeDefined())
   })
 
-  it('zeigt den Fortschrittsbalken und Navigation', async () => {
+  it('shows the progress bar and navigation', async () => {
     renderTalkView('wolf-deleted-oma-2026-07')
-    await waitFor(() => expect(screen.getByLabelText('Nächste Folie')).toBeDefined())
-    expect(screen.getByLabelText('Vorherige Folie')).toBeDefined()
-    expect(screen.getByLabelText('Zurück zur Übersicht')).toBeDefined()
+    await waitFor(() => expect(screen.getByLabelText('Next slide')).toBeDefined())
+    expect(screen.getByLabelText('Previous slide')).toBeDefined()
+    expect(screen.getByLabelText('Back to overview')).toBeDefined()
   })
 
-  it('deaktiviert Vorherige-Folie-Button auf der ersten Folie', async () => {
+  it('disables the previous-slide button on the first slide', async () => {
     renderTalkView('wolf-deleted-oma-2026-07')
     await waitFor(() => {
-      const prevBtn: HTMLButtonElement = screen.getByLabelText('Vorherige Folie')
+      const prevBtn: HTMLButtonElement = screen.getByLabelText('Previous slide')
       expect(prevBtn.disabled).toBe(true)
     })
   })
 
-  it('zeigt Folien-Zähler', async () => {
+  it('shows the slide counter', async () => {
     renderTalkView('wolf-deleted-oma-2026-07')
     await waitFor(() => expect(screen.getByText(/1 \//)).toBeDefined())
   })

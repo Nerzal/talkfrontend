@@ -21,7 +21,7 @@ export function TalkList({ year, month }: Props) {
           {monthName(month)} {year}
         </h1>
         {talks.length === 0 ? (
-          <p className="text-slate-500 text-xl">Keine Vorträge in diesem Monat.</p>
+          <p className="text-slate-500 text-xl">No talks this month.</p>
         ) : (
           <div className="flex flex-col gap-4">
             {talks.map((talk) => (
@@ -32,7 +32,7 @@ export function TalkList({ year, month }: Props) {
                       {talk.title}
                     </h3>
                     <span className="text-slate-500 text-sm shrink-0 mt-0.5">
-                      {talk.slides.length} Folien
+                      {talk.slides.length} slides
                     </span>
                   </div>
                   {talk.description && (

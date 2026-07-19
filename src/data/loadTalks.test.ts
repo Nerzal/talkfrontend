@@ -26,12 +26,12 @@ afterEach(() => {
 })
 
 describe('loadTalks', () => {
-  it('lädt index.json und anschließend jeden Talk aus dem konfigurierten Ordner', async () => {
+  it('loads index.json and then every talk from the configured directory', async () => {
     const fetchMock = vi.fn((url: string) => {
       if (url === '/talks/index.json') return Promise.resolve(jsonResponse(['a', 'b']))
       if (url === '/talks/a.json') return Promise.resolve(jsonResponse(talkA))
       if (url === '/talks/b.json') return Promise.resolve(jsonResponse(talkB))
-      throw new Error(`unerwartete URL: ${url}`)
+      throw new Error(`unexpected URL: ${url}`)
     })
     vi.stubGlobal('fetch', fetchMock)
 
@@ -40,11 +40,11 @@ describe('loadTalks', () => {
     expect(talks).toEqual([talkA, talkB])
   })
 
-  it('respektiert einen anderen konfigurierten Ordner', async () => {
+  it('respects a different configured directory', async () => {
     const fetchMock = vi.fn((url: string) => {
       if (url === 'https://example.com/data/index.json') return Promise.resolve(jsonResponse(['a']))
       if (url === 'https://example.com/data/a.json') return Promise.resolve(jsonResponse(talkA))
-      throw new Error(`unerwartete URL: ${url}`)
+      throw new Error(`unexpected URL: ${url}`)
     })
     vi.stubGlobal('fetch', fetchMock)
 
@@ -53,7 +53,7 @@ describe('loadTalks', () => {
     expect(talks).toEqual([talkA])
   })
 
-  it('wirft einen Fehler, wenn index.json nicht geladen werden kann', async () => {
+  it('throws an error when index.json cannot be loaded', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn(() => Promise.resolve(jsonResponse(null, false, 404))),
@@ -62,7 +62,7 @@ describe('loadTalks', () => {
     await expect(loadTalks('/talks')).rejects.toThrow(/index\.json/)
   })
 
-  it('wirft einen Fehler, wenn ein einzelner Talk nicht geladen werden kann', async () => {
+  it('throws an error when a single talk cannot be loaded', async () => {
     const fetchMock = vi.fn((url: string) => {
       if (url === '/talks/index.json') return Promise.resolve(jsonResponse(['a']))
       return Promise.resolve(jsonResponse(null, false, 500))

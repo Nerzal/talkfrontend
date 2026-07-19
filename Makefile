@@ -2,42 +2,42 @@
 
 .DEFAULT_GOAL := help
 
-install: ## Abhängigkeiten installieren
+install: ## Install dependencies
 	npm install
 
-dev: ## Dev-Server starten (http://localhost:5173)
+dev: ## Start dev server (http://localhost:5173)
 	npm run dev
 
-build: ## TypeScript-Check + Production Build
+build: ## TypeScript check + production build
 	npm run build
 
-preview: ## Production Build lokal vorschauen (build vorher nötig)
+preview: ## Preview production build locally (build first)
 	npm run preview
 
-test: ## Tests einmalig ausführen
+test: ## Run tests once
 	npm run test
 
-test-watch: ## Tests im Watch-Modus ausführen
+test-watch: ## Run tests in watch mode
 	npm run test:watch
 
-test-ui: ## Vitest Browser-UI öffnen
+test-ui: ## Open Vitest browser UI
 	npm run test:ui
 
-lint: ## ESLint prüfen
+lint: ## Check with ESLint
 	npm run lint
 
-lint-fix: ## ESLint prüfen und automatisch korrigieren
+lint-fix: ## Check with ESLint and auto-fix
 	npm run lint:fix
 
-format: ## Code mit Prettier formatieren
+format: ## Format code with Prettier
 	npm run format
 
-format-check: ## Prettier-Formatierung prüfen
+format-check: ## Check Prettier formatting
 	npm run format:check
 
-clean: ## Build-Output löschen
+clean: ## Remove build output
 	rm -rf dist
 
-help: ## Verfügbare Targets anzeigen
+help: ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-14s\033[0m %s\n", $$1, $$2}'

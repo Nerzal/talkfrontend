@@ -25,7 +25,7 @@ export function MonthList({ year }: Props) {
                 <div className="group relative bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-indigo-500 rounded-2xl p-6 transition-all">
                   <div className="text-2xl font-bold">{monthName(month)}</div>
                   <div className="text-slate-400 mt-1 text-sm">
-                    {count} Vortrag{count !== 1 ? 'e' : ''}
+                    {count} talk{count !== 1 ? 's' : ''}
                   </div>
                   <span className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-700 group-hover:text-indigo-400 transition-colors">
                     →
