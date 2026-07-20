@@ -126,6 +126,26 @@ cp .env.example .env
 VITE_TALKS_DIR=/talks
 ```
 
+## Docker
+
+A pre-built image is published to GHCR: `ghcr.io/nerzal/talkfrontend`. It ships with **no talk data of the maintainer's own** — just an empty `index.json` and generic placeholder branding — so it's safe for anyone to run as-is.
+
+Talks are fetched by the browser at runtime from `dist/talks` on whatever server hosts the app, so you can supply your own without rebuilding the image: bind-mount a directory (containing your own `index.json`, `default-slides.json`, and `<id>/talk.json` folders — see [Data & adding a talk](#data--adding-a-talk)) over `/app/dist/talks`:
+
+```bash
+docker run -p 8080:8080 \
+  -v $(pwd)/my-talks:/app/dist/talks:ro \
+  ghcr.io/nerzal/talkfrontend:edge
+```
+
+Available tags: `edge` (latest `main`), and `1.2.3`/`1.2`/`1`/`latest` for tagged releases.
+
+To build your own image with talks baked in at build time instead, pass `VITE_TALKS_DIR` as a build arg pointing at an absolute URL to your own talk-hosting server:
+
+```bash
+docker build --build-arg VITE_TALKS_DIR=https://example.com/talks -t my-talkfrontend .
+```
+
 ## Getting started
 
 ```bash

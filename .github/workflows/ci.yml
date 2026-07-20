@@ -33,9 +33,21 @@ jobs:
       - run: npm ci
       - run: make test
 
+  schema:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: make schema
+      - run: git diff --exit-code -- schemas/
+
   build:
     runs-on: ubuntu-latest
-    needs: [lint, test]
+    needs: [lint, test, schema]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
