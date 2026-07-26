@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { getYears, getTalksByYear } from '../../data/queries'
 import { useTalks } from '../../data/TalksContext'
+import { ViewToggle } from './ViewToggle'
 
 export function YearList() {
   const talks = useTalks()
@@ -9,6 +10,7 @@ export function YearList() {
   return (
     <div className="min-h-screen bg-slate-950 text-white">
       <div className="max-w-4xl mx-auto px-4 py-8 sm:px-8 sm:py-16">
+        <ViewToggle active="year" />
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-6 sm:mb-12 tracking-tight">
           Talks
         </h1>

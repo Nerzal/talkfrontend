@@ -5,18 +5,20 @@ import {
   getMonthsByYear,
   getTalksByYearAndMonth,
   getTalkById,
+  getTags,
+  getTalksByTag,
 } from './queries'
 import type { Talk } from './types'
 
-function makeTalk(id: string, year: number, month: number): Talk {
-  return { id, title: id, year, month, slides: [{ id: 's1', layout: 'blank' }] }
+function makeTalk(id: string, year: number, month: number, tags?: string[]): Talk {
+  return { id, title: id, year, month, slides: [{ id: 's1', layout: 'blank' }], tags }
 }
 
 const talks: Talk[] = [
-  makeTalk('a', 2025, 3),
-  makeTalk('b', 2026, 1),
+  makeTalk('a', 2025, 3, ['go']),
+  makeTalk('b', 2026, 1, ['go', 'architecture']),
   makeTalk('c', 2026, 1),
-  makeTalk('d', 2026, 7),
+  makeTalk('d', 2026, 7, ['architecture']),
 ]
 
 describe('queries', () => {
@@ -42,5 +44,21 @@ describe('queries', () => {
 
   it('getTalkById returns undefined for an unknown ID', () => {
     expect(getTalkById(talks, 'nope')).toBeUndefined()
+  })
+
+  it('getTags returns unique tags sorted alphabetically', () => {
+    expect(getTags(talks)).toEqual(['architecture', 'go'])
+  })
+
+  it('getTags returns an empty array when no talk has tags', () => {
+    expect(getTags([makeTalk('e', 2026, 1)])).toEqual([])
+  })
+
+  it('getTalksByTag filters by tag', () => {
+    expect(getTalksByTag(talks, 'architecture').map((t) => t.id)).toEqual(['b', 'd'])
+  })
+
+  it('getTalksByTag returns an empty array for an unknown tag', () => {
+    expect(getTalksByTag(talks, 'nope')).toEqual([])
   })
 })

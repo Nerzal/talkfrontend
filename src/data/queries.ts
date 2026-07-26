@@ -19,3 +19,11 @@ export function getTalksByYearAndMonth(talks: Talk[], year: number, month: numbe
 export function getTalkById(talks: Talk[], id: string): Talk | undefined {
   return talks.find((t) => t.id === id)
 }
+
+export function getTags(talks: Talk[]): string[] {
+  return [...new Set(talks.flatMap((t) => t.tags ?? []))].sort((a, b) => a.localeCompare(b))
+}
+
+export function getTalksByTag(talks: Talk[], tag: string): Talk[] {
+  return talks.filter((t) => t.tags?.includes(tag))
+}
