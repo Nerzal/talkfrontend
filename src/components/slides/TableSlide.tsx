@@ -8,7 +8,7 @@ interface Props {
 
 export function TableSlide({ slide }: Props) {
   return (
-    <div className="flex-1 flex flex-col px-4 py-6 sm:px-14 sm:py-10 gap-3 sm:gap-5 overflow-auto">
+    <div className="flex-1 min-h-0 flex flex-col px-4 py-6 sm:px-14 sm:py-10 gap-3 sm:gap-5 overflow-y-auto md:overflow-hidden">
       {slide.title && (
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">{slide.title}</h2>
       )}

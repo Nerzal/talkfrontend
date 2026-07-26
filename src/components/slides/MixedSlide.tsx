@@ -53,7 +53,7 @@ function Block({ block }: { block: ContentBlock }) {
 
 export function MixedSlide({ slide }: Props) {
   return (
-    <div className="flex-1 flex flex-col justify-center gap-4 sm:gap-6 px-6 py-8 sm:px-16 sm:py-12 overflow-auto">
+    <div className="flex-1 min-h-0 flex flex-col justify-start sm:justify-center gap-4 sm:gap-6 px-6 py-8 sm:px-16 sm:py-12 overflow-y-auto sm:overflow-hidden">
       {slide.blocks.map((block, i) => (
         <Block key={i} block={block} />
       ))}

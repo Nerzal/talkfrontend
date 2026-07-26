@@ -31,7 +31,7 @@ function ActiveTalkView({ talk }: { talk: Talk }) {
     <div className="fixed inset-0 bg-black flex flex-col select-none">
       <div
         key={slide.id}
-        className="flex-1 flex flex-col"
+        className="flex-1 flex flex-col min-h-0"
         style={{ animation: 'slideIn 0.2s ease-out' }}
       >
         <SlideRenderer slide={slide} stepIndex={stepIndex} />

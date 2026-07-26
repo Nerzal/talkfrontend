@@ -46,7 +46,7 @@ export function SpeakerSlide({ slide }: Props) {
   const links = getLinks(slide)
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center text-center px-6 py-8 sm:px-16 sm:py-12 gap-6 sm:gap-10 md:gap-14 overflow-auto">
+    <div className="flex-1 min-h-0 flex flex-col items-center justify-start sm:justify-center text-center px-6 py-8 sm:px-16 sm:py-12 gap-6 sm:gap-10 md:gap-14 overflow-y-auto sm:overflow-hidden">
       {slide.heading && (
         <h1 className="text-4xl sm:text-6xl md:text-8xl font-extrabold text-white tracking-tight">
           {slide.heading}
