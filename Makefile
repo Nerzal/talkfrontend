@@ -1,4 +1,4 @@
-.PHONY: dev build preview install test test-watch test-ui lint lint-fix format format-check schema clean help
+.PHONY: dev build preview install test test-watch test-ui lint lint-fix format format-check schema talks-index clean help
 
 .DEFAULT_GOAL := help
 
@@ -37,6 +37,9 @@ format-check: ## Check Prettier formatting
 
 schema: ## Regenerate JSON schemas for talk data from src/data/types.ts
 	npm run schema
+
+talks-index: ## Regenerate public/talks/index.json from the talk folders on disk
+	npm run talks:index
 
 clean: ## Remove build output
 	rm -rf dist

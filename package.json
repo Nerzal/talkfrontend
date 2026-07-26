@@ -4,7 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "predev": "npm run talks:index",
     "dev": "vite",
+    "prebuild": "npm run talks:index",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest run",
@@ -14,7 +16,8 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "schema": "node scripts/generate-schemas.cjs"
+    "schema": "node scripts/generate-schemas.cjs",
+    "talks:index": "node scripts/generate-talks-index.cjs"
   },
   "dependencies": {
     "@shikijs/magic-move": "^4.3.1",
@@ -33,6 +36,7 @@
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.0.0",
     "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.0.0",
     "@types/prismjs": "^1.26.6",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
