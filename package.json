@@ -17,10 +17,14 @@
     "schema": "node scripts/generate-schemas.cjs"
   },
   "dependencies": {
+    "@shikijs/magic-move": "^4.3.1",
+    "js-yaml": "^5.2.1",
+    "prismjs": "^1.30.0",
     "qrcode-generator": "^2.0.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.0.0",
+    "shiki": "^4.3.1",
     "simple-icons": "^16.27.0"
   },
   "devDependencies": {
@@ -28,6 +32,8 @@
     "@tailwindcss/vite": "^4.0.0",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.0.0",
+    "@types/js-yaml": "^4.0.9",
+    "@types/prismjs": "^1.26.6",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.3.0",

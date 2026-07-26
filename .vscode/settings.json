@@ -3,10 +3,6 @@
     {
       "fileMatch": ["/public/talks/index.json"],
       "url": "./schemas/talks-index.schema.json"
-    },
-    {
-      "fileMatch": ["/public/talks/default-slides.json"],
-      "url": "./schemas/default-slides.schema.json"
     }
   ]
 }

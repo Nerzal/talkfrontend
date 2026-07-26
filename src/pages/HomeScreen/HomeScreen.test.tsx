@@ -71,7 +71,7 @@ describe('HomeScreen', () => {
 
     it('shows the talk slide count', async () => {
       renderAt('/2026/7')
-      await waitFor(() => expect(screen.getByText(/slides/)).toBeDefined())
+      await waitFor(() => expect(screen.getAllByText(/slides/).length).toBeGreaterThan(0))
     })
 
     it('includes a link to the talk', async () => {

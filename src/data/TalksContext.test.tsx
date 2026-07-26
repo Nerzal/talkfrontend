@@ -30,7 +30,7 @@ describe('TalksProvider', () => {
         <Consumer />
       </TalksProvider>,
     )
-    await waitFor(() => expect(screen.getByText('1 talks loaded')).toBeDefined())
+    await waitFor(() => expect(screen.getByText('2 talks loaded')).toBeDefined())
   })
 
   it('shows an error message when loading fails', async () => {

@@ -19,6 +19,8 @@ export interface CodeSlide {
   title?: string
   language: string
   code: string
+  /** Additional versions of the code, morphed through one at a time (Shiki Magic Move) before advancing to the next slide. */
+  steps?: string[]
 }
 
 export interface ImageSlide {
@@ -56,6 +58,18 @@ export interface TableSlide {
   ascii?: string
 }
 
+export type ContentBlock =
+  | { type: 'heading'; level: 1 | 2; text: string }
+  | { type: 'bullets'; items: string[] }
+  | { type: 'paragraph'; text: string }
+  | { type: 'code'; language: string; code: string }
+
+export interface MixedSlide {
+  layout: 'mixed'
+  id: string
+  blocks: ContentBlock[]
+}
+
 export interface SpeakerSlide {
   layout: 'speaker'
   id: string
@@ -71,7 +85,14 @@ export interface SpeakerSlide {
 }
 
 export type Slide =
-  TitleSlide | ContentSlide | CodeSlide | ImageSlide | BlankSlide | TableSlide | SpeakerSlide
+  | TitleSlide
+  | ContentSlide
+  | CodeSlide
+  | ImageSlide
+  | BlankSlide
+  | TableSlide
+  | SpeakerSlide
+  | MixedSlide
 
 export interface Talk {
   id: string

@@ -1,5 +1,58 @@
 @import 'tailwindcss';
 
+/* Prism.js token colors, tuned to the app's slate/emerald code-block palette. */
+code[class*='language-'] {
+  color: #6ee7b7;
+}
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #64748b;
+  font-style: italic;
+}
+.token.punctuation {
+  color: #94a3b8;
+}
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #fca5a5;
+}
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #fcd34d;
+}
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #93c5fd;
+}
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #c4b5fd;
+}
+.token.function,
+.token.class-name {
+  color: #67e8f9;
+}
+.token.regex,
+.token.important,
+.token.variable {
+  color: #fdba74;
+}
+
 @keyframes slideIn {
   from {
     opacity: 0;

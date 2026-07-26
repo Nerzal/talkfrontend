@@ -37,7 +37,7 @@ describe('TalkView', () => {
     renderTalkView('wolf-deleted-oma-2026-07')
     await waitFor(() => screen.getByLabelText('Next slide'))
     fireEvent.click(screen.getByLabelText('Next slide'))
-    await waitFor(() => expect(screen.getByText(/Eine Geschichte über CRUD/)).toBeDefined())
+    await waitFor(() => expect(screen.getByText(/Rotkäppchen, CRUD und die Sprache/)).toBeDefined())
   })
 
   it('shows the progress bar and navigation', async () => {

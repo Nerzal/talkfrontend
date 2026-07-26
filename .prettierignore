@@ -1,4 +1,5 @@
 dist
 node_modules
 public/talks
+docker/default-talks
 schemas

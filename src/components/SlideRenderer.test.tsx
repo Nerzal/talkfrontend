@@ -39,9 +39,9 @@ describe('SlideRenderer', () => {
       language: 'typescript',
       code: 'const x = 42',
     }
-    render(<SlideRenderer slide={slide} />)
+    const { container } = render(<SlideRenderer slide={slide} />)
     expect(screen.getByText('Example')).toBeDefined()
-    expect(screen.getByText('const x = 42')).toBeDefined()
+    expect(container.querySelector('code')?.textContent).toBe('const x = 42')
   })
 
   it('renders blank layout with heading', () => {
@@ -66,5 +66,19 @@ describe('SlideRenderer', () => {
     render(<SlideRenderer slide={slide} />)
     expect(screen.getByText('Nerzal')).toBeDefined()
     expect(screen.getByText('GitHub')).toBeDefined()
+  })
+
+  it('renders mixed layout with combined blocks', () => {
+    const slide: Slide = {
+      id: 'm1',
+      layout: 'mixed',
+      blocks: [
+        { type: 'heading', level: 1, text: 'Mixed heading' },
+        { type: 'bullets', items: ['One'] },
+      ],
+    }
+    render(<SlideRenderer slide={slide} />)
+    expect(screen.getByText('Mixed heading')).toBeDefined()
+    expect(screen.getByText('One')).toBeDefined()
   })
 })

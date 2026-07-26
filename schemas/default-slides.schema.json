@@ -43,6 +43,9 @@
         },
         {
           "$ref": "#/definitions/SpeakerSlide"
+        },
+        {
+          "$ref": "#/definitions/MixedSlide"
         }
       ]
     },
@@ -119,6 +122,13 @@
         },
         "code": {
           "type": "string"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Additional versions of the code, morphed through one at a time (Shiki Magic Move) before advancing to the next slide."
         }
       },
       "required": [
@@ -303,6 +313,117 @@
         "id"
       ],
       "additionalProperties": false
+    },
+    "MixedSlide": {
+      "type": "object",
+      "properties": {
+        "layout": {
+          "type": "string",
+          "const": "mixed"
+        },
+        "id": {
+          "type": "string"
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContentBlock"
+          }
+        }
+      },
+      "required": [
+        "layout",
+        "id",
+        "blocks"
+      ],
+      "additionalProperties": false
+    },
+    "ContentBlock": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "heading"
+            },
+            "level": {
+              "type": "number",
+              "enum": [
+                1,
+                2
+              ]
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "level",
+            "text"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "bullets"
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "type",
+            "items"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "paragraph"
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "text"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "code"
+            },
+            "language": {
+              "type": "string"
+            },
+            "code": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "language",
+            "code"
+          ],
+          "additionalProperties": false
+        }
+      ]
     }
   }
 }

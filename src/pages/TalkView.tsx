@@ -23,7 +23,8 @@ export function TalkView() {
 }
 
 function ActiveTalkView({ talk }: { talk: Talk }) {
-  const { slideIndex, isFirst, isLast, progress, goNext, goPrev, goBack } = useTalkPresenter(talk)
+  const { slideIndex, stepIndex, isFirst, isLast, progress, goNext, goPrev, goBack } =
+    useTalkPresenter(talk)
   const slide = talk.slides[slideIndex]
 
   return (
@@ -33,7 +34,7 @@ function ActiveTalkView({ talk }: { talk: Talk }) {
         className="flex-1 flex flex-col"
         style={{ animation: 'slideIn 0.2s ease-out' }}
       >
-        <SlideRenderer slide={slide} />
+        <SlideRenderer slide={slide} stepIndex={stepIndex} />
       </div>
       <div className="h-0.5 bg-slate-800">
         <div

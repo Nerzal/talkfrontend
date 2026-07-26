@@ -8,16 +8,37 @@ const talk: Talk = {
   title: 'Talk A',
   year: 2026,
   month: 1,
-  slides: [{ id: 's1', layout: 'blank' }],
+  slides: [{ id: 's01', layout: 'blank' }],
 }
 const defaultSlides: DefaultSlides = {
-  intro: { id: '__intro__', layout: 'title', title: 'Intro' },
-  end: { id: '__end__', layout: 'blank', heading: 'End' },
+  intro: { id: 'intro', layout: 'title', title: 'Intro' },
+  end: { id: 'end', layout: 'blank', heading: 'End' },
 }
 
 function jsonResponse(body: unknown, ok = true, status = 200): Response {
   return { ok, status, json: () => Promise.resolve(body) } as Response
 }
+
+function textResponse(body: string, ok = true, status = 200): Response {
+  return { ok, status, text: () => Promise.resolve(body) } as Response
+}
+
+const talkMarkdown = `---
+id: a
+title: Talk A
+year: 2026
+month: 1
+---
+
+--- blank
+`
+
+const defaultSlidesMarkdown = `--- title intro
+# Intro
+
+--- blank end
+# End
+`
 
 afterEach(() => {
   vi.unstubAllGlobals()
@@ -29,9 +50,9 @@ describe('useLoadTalks', () => {
       'fetch',
       vi.fn((url: string) => {
         if (url.endsWith('/index.json')) return Promise.resolve(jsonResponse(['a']))
-        if (url.endsWith('/default-slides.json'))
-          return Promise.resolve(jsonResponse(defaultSlides))
-        return Promise.resolve(jsonResponse(talk))
+        if (url.endsWith('/default-slides.md'))
+          return Promise.resolve(textResponse(defaultSlidesMarkdown))
+        return Promise.resolve(textResponse(talkMarkdown))
       }),
     )
 
