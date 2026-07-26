@@ -153,9 +153,9 @@ VITE_TALKS_DIR=/talks
 
 ## Docker
 
-A pre-built image is published to GHCR: `ghcr.io/nerzal/talkfrontend`. It ships with **no talk data of the maintainer's own** — just an empty `index.json` and generic placeholder branding — so it's safe for anyone to run as-is.
+A pre-built image is published to GHCR: `ghcr.io/nerzal/talkfrontend`. It ships with **no talk data of the maintainer's own** — the [publish workflow](.github/workflows/docker-publish.yml) builds the image, then swaps `dist/talks` for `docker/default-talks` (an empty `index.json` and generic placeholder branding) before it's pushed — so it's safe for anyone to run as-is.
 
-Talks are fetched by the browser at runtime from `dist/talks` on whatever server hosts the app, so you can supply your own without rebuilding the image: bind-mount a directory (containing your own `index.json`, `default-slides.md`, and `<id>/talk.md` folders — see [Data & adding a talk](#data--adding-a-talk)) over `/app/dist/talks`:
+Talks are fetched by the browser at runtime from `dist/talks` on whatever server hosts the app, so you can supply your own without rebuilding the image: bind-mount a directory (containing your own `index.json`, `default-slides.md`, and `<id>/talk.md` folders — see [Data & adding a talk](#data--adding-a-talk)) over `/app/dist/talks`, which shadows the placeholder data baked into the image:
 
 ```bash
 docker run -p 8080:8080 \
