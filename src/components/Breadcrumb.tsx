@@ -8,7 +8,7 @@ interface Props {
 
 export function Breadcrumb({ year, month }: Props) {
   return (
-    <nav className="flex items-center gap-2 text-slate-500 text-sm mb-12">
+    <nav className="flex items-center gap-2 text-slate-500 text-sm mb-6 sm:mb-12">
       <Link to="/" className="hover:text-white transition-colors">
         Talks
       </Link>

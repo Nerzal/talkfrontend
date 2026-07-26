@@ -105,9 +105,13 @@ export default function MagicMoveCodeSlide({ slide, stepIndex }: Props) {
   }, [isKnownLanguage])
 
   return (
-    <div className="flex-1 flex flex-col px-12 py-10">
-      {slide.title && <h2 className="text-3xl font-bold text-white mb-6">{slide.title}</h2>}
-      <div className="flex-1 bg-slate-950 border border-slate-800 rounded-xl p-8 overflow-auto">
+    <div className="flex-1 flex flex-col px-4 py-6 sm:px-12 sm:py-10">
+      {slide.title && (
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3 sm:mb-6">
+          {slide.title}
+        </h2>
+      )}
+      <div className="flex-1 bg-slate-950 border border-slate-800 rounded-xl p-4 sm:p-8 overflow-auto">
         {highlighter ? (
           <ShikiMagicMove
             highlighter={highlighter}
@@ -115,12 +119,12 @@ export default function MagicMoveCodeSlide({ slide, stepIndex }: Props) {
             theme={THEME}
             code={code}
             options={{ duration: 500, stagger: 5 }}
-            className="text-sm font-mono leading-relaxed"
+            className="text-xs sm:text-sm font-mono leading-relaxed"
           />
         ) : (
           <pre>
             <code
-              className={`language-${slide.language} text-sm font-mono leading-relaxed whitespace-pre`}
+              className={`language-${slide.language} text-xs sm:text-sm font-mono leading-relaxed whitespace-pre`}
               dangerouslySetInnerHTML={{ __html: highlightCode(code, slide.language) }}
             />
           </pre>

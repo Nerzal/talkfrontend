@@ -18,7 +18,8 @@ export function QrCode({ value, size = DEFAULT_SIZE }: Props) {
       viewBox={`0 0 ${moduleCount} ${moduleCount}`}
       width={size}
       height={size}
-      className="rounded-md bg-white p-1"
+      className="rounded-md bg-white p-1 max-w-full h-auto"
+      style={{ width: '100%', height: 'auto', maxWidth: size }}
     >
       {matrix.map((row, r) =>
         row.map(

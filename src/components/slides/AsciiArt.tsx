@@ -15,7 +15,7 @@ export function AsciiArt({ content }: Props) {
 
   return (
     <div
-      className="flex-1 self-stretch flex items-center justify-center bg-slate-950 rounded-2xl p-6 text-center"
+      className="flex-1 self-stretch flex items-center justify-center bg-slate-950 rounded-2xl p-3 sm:p-6 text-center overflow-x-auto"
       style={{
         border: '2px dashed rgba(251,191,36,0.4)',
         boxShadow: '0 0 40px rgba(251,191,36,0.06)',
@@ -26,7 +26,9 @@ export function AsciiArt({ content }: Props) {
           <div
             key={i}
             className={`font-mono leading-relaxed whitespace-pre ${
-              isDramatic(line) ? 'text-amber-100 font-bold text-lg' : 'text-amber-300 text-base'
+              isDramatic(line)
+                ? 'text-amber-100 font-bold text-sm sm:text-lg'
+                : 'text-amber-300 text-xs sm:text-base'
             }`}
             style={{
               animation: isDramatic(line)

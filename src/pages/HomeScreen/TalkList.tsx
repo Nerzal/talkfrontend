@@ -15,23 +15,23 @@ export function TalkList({ year, month }: Props) {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
-      <div className="max-w-4xl mx-auto px-8 py-16">
+      <div className="max-w-4xl mx-auto px-4 py-8 sm:px-8 sm:py-16">
         <Breadcrumb year={year} month={month} />
-        <h1 className="text-5xl font-extrabold mb-12 tracking-tight">
+        <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold mb-6 sm:mb-12 tracking-tight">
           {monthName(month)} {year}
         </h1>
         {talks.length === 0 ? (
-          <p className="text-slate-500 text-xl">No talks this month.</p>
+          <p className="text-slate-500 text-lg sm:text-xl">No talks this month.</p>
         ) : (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3 sm:gap-4">
             {talks.map((talk) => (
               <Link key={talk.id} to={`/talk/${talk.id}`}>
-                <div className="group bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-indigo-500 rounded-2xl p-6 transition-all">
-                  <div className="flex items-start justify-between gap-4">
-                    <h3 className="text-xl font-bold group-hover:text-indigo-300 transition-colors">
+                <div className="group bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-indigo-500 rounded-2xl p-4 sm:p-6 transition-all">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-1 sm:gap-4">
+                    <h3 className="text-lg sm:text-xl font-bold group-hover:text-indigo-300 transition-colors">
                       {talk.title}
                     </h3>
-                    <span className="text-slate-500 text-sm shrink-0 mt-0.5">
+                    <span className="text-slate-500 text-xs sm:text-sm shrink-0 sm:mt-0.5">
                       {talk.slides.length} slides
                     </span>
                   </div>

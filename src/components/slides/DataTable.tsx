@@ -24,14 +24,14 @@ const ROW_TEXT: Record<TableRowVariant, string> = {
 
 export function DataTable({ columns, rows, empty }: Props) {
   return (
-    <div className="border border-slate-700 rounded-xl overflow-hidden">
-      <table className="w-full">
+    <div className="border border-slate-700 rounded-xl overflow-x-auto">
+      <table className="w-full min-w-[420px]">
         <thead>
           <tr className="bg-slate-800 border-b border-slate-700">
             {columns.map((col, i) => (
               <th
                 key={i}
-                className="text-left px-6 py-4 text-slate-400 font-mono text-sm uppercase tracking-wider"
+                className="text-left px-3 py-2 sm:px-6 sm:py-4 text-slate-400 font-mono text-xs sm:text-sm uppercase tracking-wider"
               >
                 {col}
               </th>
@@ -43,7 +43,7 @@ export function DataTable({ columns, rows, empty }: Props) {
             <tr>
               <td
                 colSpan={columns.length}
-                className="text-center py-12 text-slate-600 text-xl italic"
+                className="text-center py-8 sm:py-12 text-slate-600 text-base sm:text-xl italic"
               >
                 — 0 rows —
               </td>
@@ -54,7 +54,10 @@ export function DataTable({ columns, rows, empty }: Props) {
               return (
                 <tr key={i} className={ROW_BG[variant]}>
                   {row.cells.map((cell, j) => (
-                    <td key={j} className={`px-6 py-5 font-mono text-xl ${ROW_TEXT[variant]}`}>
+                    <td
+                      key={j}
+                      className={`px-3 py-3 sm:px-6 sm:py-5 font-mono text-sm sm:text-xl ${ROW_TEXT[variant]}`}
+                    >
                       {variant === 'deleted' ? (
                         <span className="line-through opacity-50">{cell}</span>
                       ) : (
