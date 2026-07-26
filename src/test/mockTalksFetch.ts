@@ -1,11 +1,10 @@
 import { vi } from 'vitest'
-import talksIndex from '../../public/talks/index.json'
 import defaultSlidesMarkdown from '../../public/talks/default-slides.md?raw'
 import featureTourMarkdown from '../../public/talks/feature-tour-2026-07/talk.md?raw'
 import wolfDeletedOmaMarkdown from '../../public/talks/wolf-deleted-oma-2026-07/talk.md?raw'
 
 const JSON_FILES: Record<string, unknown> = {
-  'index.json': talksIndex,
+  'index.json': ['feature-tour-2026-07', 'wolf-deleted-oma-2026-07'],
 }
 const TEXT_FILES: Record<string, string> = {
   'default-slides.md': defaultSlidesMarkdown,

@@ -1,0 +1,22 @@
+func (s *Service) onLogin(this js.Value, args []js.Value) interface{} {
+	userInput := input.FromElement(s.userInput).Value()
+	passwordInput := input.FromElement(s.passwordInput).Value()
+
+	if userInput != userName {
+		handleInvalidCredentials()
+		return nil
+	}
+
+	if passwordInput != password {
+		handleInvalidCredentials()
+		return nil
+	}
+
+	// Goroutine is needed, as blocking operations like this are not allowed inside of async javascript handlers
+	// This event handler is called from javascript -> gluecode -> Go
+	go func() {
+		s.events <- Event{UserName: userInput}
+	}()
+
+	return nil
+}
