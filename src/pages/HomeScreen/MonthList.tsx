@@ -15,7 +15,7 @@ export function MonthList({ year }: Props) {
   return (
     <div className="min-h-screen bg-slate-950 text-white">
       <div className="max-w-4xl mx-auto px-4 py-8 sm:px-8 sm:py-16">
-        <Breadcrumb year={year} />
+        <Breadcrumb crumbs={[{ label: 'Talks', to: '/' }, { label: String(year) }]} />
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-6 sm:mb-12 tracking-tight">
           {year}
         </h1>

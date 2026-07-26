@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom'
 import { getTalksByTag } from '../../data/queries'
+import { Breadcrumb } from '../../components/Breadcrumb'
 import { TalkCard } from '../../components/TalkCard'
 import { useTalks } from '../../data/TalksContext'
-import { TagBreadcrumb } from './TagBreadcrumb'
 
 export function TagTalkList() {
   const params = useParams()
@@ -13,7 +13,9 @@ export function TagTalkList() {
   return (
     <div className="min-h-screen bg-slate-950 text-white">
       <div className="max-w-4xl mx-auto px-4 py-8 sm:px-8 sm:py-16">
-        <TagBreadcrumb tag={tag} />
+        <Breadcrumb
+          crumbs={[{ label: 'Talks', to: '/' }, { label: 'Tags', to: '/tags' }, { label: tag }]}
+        />
         <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold mb-6 sm:mb-12 tracking-tight break-words">
           {tag}
         </h1>

@@ -16,7 +16,13 @@ export function TalkList({ year, month }: Props) {
   return (
     <div className="min-h-screen bg-slate-950 text-white">
       <div className="max-w-4xl mx-auto px-4 py-8 sm:px-8 sm:py-16">
-        <Breadcrumb year={year} month={month} />
+        <Breadcrumb
+          crumbs={[
+            { label: 'Talks', to: '/' },
+            { label: String(year), to: `/${year}` },
+            { label: monthName(month) },
+          ]}
+        />
         <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold mb-6 sm:mb-12 tracking-tight">
           {monthName(month)} {year}
         </h1>
