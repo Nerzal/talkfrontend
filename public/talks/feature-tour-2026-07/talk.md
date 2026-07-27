@@ -12,6 +12,11 @@ tags: [dokumentation, demo]
 ## Wie du eine Präsentation als Markdown schreibst
 Diese Folien sind selbst das Beispiel
 
++++ notes
+Das ist ein Sprechernotiz-Beispiel: alles nach einer alleinstehenden "+++ notes"-Zeile
+landet in `notes` und ist nur im Presenter-View (/talk/:id/presenter) sichtbar,
+nie im normalen Zuschauer-View.
+
 --- content
 # Was du hier siehst
 
@@ -19,6 +24,8 @@ Diese Folien sind selbst das Beispiel
 - Jede Folie zeigt ein Feature UND erklärt direkt daneben, wie man es schreibt
 - Quelldatei: `public/talks/feature-tour-2026-07/talk.md`
 - Es gibt acht Layouts: title, content, code, image, blank, table, speaker, mixed
+- Bullet-Listen können außerdem Schritt für Schritt per Klick erscheinen (Fragments)
+- Presenter-Werkzeuge (Notizen, Zeichnen, Recording, Kamera, Sync) – dazu später mehr Folien
 
 --- content
 # Grundgerüst einer talk.md
@@ -201,6 +208,65 @@ func add(a, b int) int {
 ```
 
 --- content
+# Click-Animationen: Fragments
+
+- `- ` zeigt einen Punkt sofort mit dem Rest der Folie
+- `-> ` markiert ihn stattdessen als Fragment
+- Ein Fragment bleibt unsichtbar, bis du weiterklickst oder → drückst
+- Fragmente zählen wie die Code-Schritte als eigene Steps einer Folie
+- Funktioniert in content- und mixed-Folien, für jede Bullet-Liste
+
+--- content
+# Live-Beispiel (→ drücken)
+
+- Diese Zeile ist sofort sichtbar
+-> Diese Zeile erscheint beim ersten Klick
+-> Und diese beim zweiten
+-> Erst danach geht's weiter zur nächsten Folie
+
+--- content
+# Presenter View
+
+- Eigene Route `/talk/:id/presenter`, öffnet sich als neues Fenster
+- Zeigt aktuelle und nächste Folie nebeneinander – als echte Vorschau, kein Nachbau
+- Dazu Sprechernotizen und ein Timer (Start/Pause/Reset)
+- "Open audience view" öffnet `/talk/:id` in einem zweiten Tab, beide bleiben live synchron
+
+--- content
+# Speaker Notes im Markdown
+
+- Jede Folie kann mit einer alleinstehenden `+++ notes`-Zeile enden
+- Alles danach wird `notes` – nur im Presenter-View sichtbar, nie im Publikum
+- Diese Folie hier hat selbst solche Notizen – wirf im Presenter-View einen Blick darauf
+
++++ notes
+Genau das ist eine Sprechernotiz: Sie taucht nur hier auf, nie im normalen Talk-View.
+
+--- content
+# Zeichnen & Annotationen
+
+- Der "Pen"-Button im Presenter-View aktiviert ein SVG-Overlay auf der Folie
+- Striche speichern normalisierte (0..1) Koordinaten, unabhängig von der Fenstergröße
+- Fertige Striche landen live im Audience-Fenster, "Clear drawing" leert sie dort ebenfalls
+- Striche werden automatisch zurückgesetzt, sobald die Folie wechselt
+
+--- content
+# Aufnahme & Kamera-Overlay
+
+- Der Record-Button nutzt `getDisplayMedia` + `MediaRecorder` – komplett im Browser
+- Die Aufnahme lädt als `.webm`-Datei herunter, kein Server ist beteiligt
+- Der Kamera-Button blendet eine kleine Picture-in-Picture-Webcam-Blase ein
+- Beide Buttons verschwinden automatisch, wenn der Browser die jeweilige API nicht unterstützt
+
+--- content
+# Presenter- & Audience-Sync
+
+- `usePresenterChannel` verbindet Presenter- und Audience-Fenster per `BroadcastChannel`
+- Navigation und Zeichenstriche synchronisieren sich live, sobald beide Fenster offen sind
+- Bewusst begrenzt auf denselben Browser, dasselbe Gerät
+- Keine echte Fernsteuerung von einem zweiten Gerät – dafür bräuchte es einen Signaling-Server
+
+--- content
 # default-slides.md: Intro & Outro
 
 - Genau zwei Folien, ganz ohne Frontmatter am Anfang
@@ -210,4 +276,4 @@ func add(a, b int) int {
 
 --- blank
 # Das war's!
-Wirf einen Blick in public/talks/feature-tour-2026-07/talk.md – diese Präsentation ist selbst das Beispiel für alle acht Layouts.
+Wirf einen Blick in public/talks/feature-tour-2026-07/talk.md – diese Präsentation ist selbst das Beispiel für alle acht Layouts, Fragments und die Presenter-Werkzeuge.

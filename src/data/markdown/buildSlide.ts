@@ -1,6 +1,7 @@
 import { load } from 'js-yaml'
 import type { Slide, TableRow } from '../types'
 import type { SlideChunk } from './splitSlides'
+import { extractNotes } from './extractNotes'
 import {
   parseTitleBody,
   parseContentBody,
@@ -42,24 +43,26 @@ function tableRows(value: unknown): TableRow[] {
  */
 export function buildSlide(chunk: SlideChunk, index: number): Slide {
   const id = chunk.id ?? `s${String(index + 1).padStart(2, '0')}`
+  const { body, notes } = extractNotes(chunk.body)
 
   switch (chunk.layout) {
     case 'title': {
-      const parsed = parseTitleBody(chunk.body)
+      const parsed = parseTitleBody(body)
       return {
         layout: 'title',
         id,
         title: parsed.title ?? '',
         subtitle: parsed.subtitle,
         author: parsed.author,
+        notes,
       }
     }
     case 'content': {
-      const parsed = parseContentBody(chunk.body)
-      return { layout: 'content', id, title: parsed.title ?? '', bullets: parsed.bullets }
+      const parsed = parseContentBody(body)
+      return { layout: 'content', id, title: parsed.title ?? '', bullets: parsed.bullets, notes }
     }
     case 'code': {
-      const parsed = parseCodeBody(chunk.body)
+      const parsed = parseCodeBody(body)
       return {
         layout: 'code',
         id,
@@ -67,13 +70,14 @@ export function buildSlide(chunk: SlideChunk, index: number): Slide {
         language: parsed.language ?? 'text',
         code: parsed.code ?? '',
         steps: parsed.steps,
+        notes,
       }
     }
     case 'mixed': {
-      return { layout: 'mixed', id, blocks: parseMixedBody(chunk.body) }
+      return { layout: 'mixed', id, blocks: parseMixedBody(body), notes }
     }
     case 'image': {
-      const parsed = parseImageBody(chunk.body)
+      const parsed = parseImageBody(body)
       return {
         layout: 'image',
         id,
@@ -81,14 +85,15 @@ export function buildSlide(chunk: SlideChunk, index: number): Slide {
         src: parsed.src ?? '',
         alt: parsed.alt ?? '',
         caption: parsed.caption,
+        notes,
       }
     }
     case 'blank': {
-      const parsed = parseBlankBody(chunk.body)
-      return { layout: 'blank', id, heading: parsed.heading, body: parsed.body }
+      const parsed = parseBlankBody(body)
+      return { layout: 'blank', id, heading: parsed.heading, body: parsed.body, notes }
     }
     case 'table': {
-      const config = (load(chunk.body) ?? {}) as Record<string, unknown>
+      const config = (load(body) ?? {}) as Record<string, unknown>
       return {
         layout: 'table',
         id,
@@ -99,10 +104,11 @@ export function buildSlide(chunk: SlideChunk, index: number): Slide {
         empty: bool(config.empty),
         caption: str(config.caption),
         ascii: str(config.ascii),
+        notes,
       }
     }
     case 'speaker': {
-      const config = (load(chunk.body) ?? {}) as Record<string, unknown>
+      const config = (load(body) ?? {}) as Record<string, unknown>
       return {
         layout: 'speaker',
         id,
@@ -115,6 +121,7 @@ export function buildSlide(chunk: SlideChunk, index: number): Slide {
         twitter: str(config.twitter),
         bluesky: str(config.bluesky),
         mastodon: str(config.mastodon),
+        notes,
       }
     }
     default:

@@ -9,7 +9,6 @@ const defaultProps = {
   isLast: false,
   onPrev: vi.fn(),
   onNext: vi.fn(),
-  onBack: vi.fn(),
 }
 
 describe('SlideControls', () => {
@@ -42,13 +41,6 @@ describe('SlideControls', () => {
     render(<SlideControls {...defaultProps} isFirst={false} onPrev={onPrev} />)
     fireEvent.click(screen.getByLabelText('Previous slide'))
     expect(onPrev).toHaveBeenCalledOnce()
-  })
-
-  it('calls onBack when clicking close', () => {
-    const onBack = vi.fn()
-    render(<SlideControls {...defaultProps} onBack={onBack} />)
-    fireEvent.click(screen.getByLabelText('Back to overview'))
-    expect(onBack).toHaveBeenCalledOnce()
   })
 
   it('shows keyboard hint', () => {

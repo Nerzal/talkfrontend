@@ -5,27 +5,11 @@ interface Props {
   isLast: boolean
   onPrev: () => void
   onNext: () => void
-  onBack: () => void
 }
 
-export function SlideControls({
-  slideIndex,
-  totalSlides,
-  isFirst,
-  isLast,
-  onPrev,
-  onNext,
-  onBack,
-}: Props) {
+export function SlideControls({ slideIndex, totalSlides, isFirst, isLast, onPrev, onNext }: Props) {
   return (
     <>
-      <button
-        onClick={onBack}
-        className="absolute top-2 right-2 sm:top-5 sm:right-6 text-slate-600 hover:text-white text-2xl leading-none transition-colors cursor-pointer p-3 -m-1"
-        aria-label="Back to overview"
-      >
-        ✕
-      </button>
       <div className="absolute bottom-2 right-2 sm:bottom-4 sm:right-6 flex items-center gap-2 sm:gap-4">
         <button
           onClick={onPrev}

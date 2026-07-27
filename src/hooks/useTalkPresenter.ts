@@ -1,7 +1,8 @@
 import { useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import type { Talk } from '../data/types'
+import type { Slide, Talk } from '../data/types'
 import { usePresenter } from './usePresenter'
+import { flattenBulletBlocks } from '../lib/assignFragmentOrder'
 
 interface TalkPresenter {
   slideIndex: number
@@ -12,14 +13,33 @@ interface TalkPresenter {
   goNext: () => void
   goPrev: () => void
   goBack: () => void
+  /** Overrides the current position directly — used to follow a presenter view's navigation. */
+  setNav: (slideIndex: number, stepIndex: number) => void
+}
+
+interface UseTalkPresenterOptions {
+  /** Overrides how Escape/the back button exit — defaults to browser-history back(). Used by PresenterView, which opens in a fresh window.open() tab with no history to go back to. */
+  onExit?: () => void
+}
+
+function fragmentCount(slide: Slide): number {
+  const bullets =
+    slide.layout === 'content'
+      ? slide.bullets
+      : slide.layout === 'mixed'
+        ? flattenBulletBlocks(slide.blocks)
+        : []
+  return bullets.filter((bullet) => bullet.fragment).length
 }
 
 function stepCount(talk: Talk, slideIndex: number): number {
   const slide = talk.slides[slideIndex]
-  return slide.layout === 'code' && slide.steps ? slide.steps.length + 1 : 1
+  if (slide.layout === 'code' && slide.steps) return slide.steps.length + 1
+  const fragments = fragmentCount(slide)
+  return fragments > 0 ? fragments + 1 : 1
 }
 
-export function useTalkPresenter(talk: Talk): TalkPresenter {
+export function useTalkPresenter(talk: Talk, options?: UseTalkPresenterOptions): TalkPresenter {
   const navigate = useNavigate()
   const [slideIndex, setSlideIndex] = useState(0)
   const [stepIndex, setStepIndex] = useState(0)
@@ -45,9 +65,16 @@ export function useTalkPresenter(talk: Talk): TalkPresenter {
     setStepIndex(0)
   }, [stepIndex, slideIndex])
 
-  const goBack = useCallback(() => {
+  const navigateBack = useCallback(() => {
     void navigate(-1)
   }, [navigate])
+
+  const goBack = options?.onExit ?? navigateBack
+
+  const setNav = useCallback((newSlideIndex: number, newStepIndex: number) => {
+    setSlideIndex(newSlideIndex)
+    setStepIndex(newStepIndex)
+  }, [])
 
   usePresenter({ onNext: goNext, onPrev: goPrev, onExit: goBack })
 
@@ -60,5 +87,6 @@ export function useTalkPresenter(talk: Talk): TalkPresenter {
     goNext,
     goPrev,
     goBack,
+    setNav,
   }
 }

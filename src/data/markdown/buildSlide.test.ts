@@ -28,7 +28,7 @@ describe('buildSlide', () => {
       layout: 'content',
       id: 's02',
       title: 'Agenda',
-      bullets: ['One', 'Two'],
+      bullets: [{ text: 'One' }, { text: 'Two' }],
     })
   })
 
@@ -71,7 +71,7 @@ describe('buildSlide', () => {
       id: 's01',
       blocks: [
         { type: 'heading', level: 1, text: 'Heading' },
-        { type: 'bullets', items: ['One', 'Two'] },
+        { type: 'bullets', items: [{ text: 'One' }, { text: 'Two' }] },
         { type: 'code', language: 'go', code: 'func main() {}' },
       ],
     })
@@ -149,6 +149,31 @@ github: https://github.com/nerzal`,
       bluesky: undefined,
       mastodon: undefined,
     })
+  })
+
+  it('splits off speaker notes from a prose-layout body', () => {
+    const chunk: SlideChunk = {
+      layout: 'content',
+      body: '# Agenda\n- One\n- Two\n+++ notes\nMention the Q3 numbers here.',
+    }
+
+    expect(buildSlide(chunk, 1)).toEqual({
+      layout: 'content',
+      id: 's02',
+      title: 'Agenda',
+      bullets: [{ text: 'One' }, { text: 'Two' }],
+      notes: 'Mention the Q3 numbers here.',
+    })
+  })
+
+  it('splits off speaker notes from a YAML-body layout', () => {
+    const chunk: SlideChunk = {
+      layout: 'speaker',
+      body: 'heading: Tobi\n+++ notes\nSlow down, big finish.',
+    }
+
+    const slide = buildSlide(chunk, 0)
+    expect(slide.notes).toBe('Slow down, big finish.')
   })
 
   it('throws a descriptive error for an unknown layout', () => {

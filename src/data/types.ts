@@ -1,21 +1,30 @@
-export interface TitleSlide {
-  layout: 'title'
+interface SlideBase {
   id: string
+  /** Speaker notes, shown only in the presenter view, never to the audience. */
+  notes?: string
+}
+
+export interface TitleSlide extends SlideBase {
+  layout: 'title'
   title: string
   subtitle?: string
   author?: string
 }
 
-export interface ContentSlide {
-  layout: 'content'
-  id: string
-  title: string
-  bullets: string[]
+export interface Bullet {
+  text: string
+  /** Hidden until revealed one at a time via click/arrow key, instead of shown immediately with the rest of the slide. */
+  fragment?: boolean
 }
 
-export interface CodeSlide {
+export interface ContentSlide extends SlideBase {
+  layout: 'content'
+  title: string
+  bullets: Bullet[]
+}
+
+export interface CodeSlide extends SlideBase {
   layout: 'code'
-  id: string
   title?: string
   language: string
   code: string
@@ -23,18 +32,16 @@ export interface CodeSlide {
   steps?: string[]
 }
 
-export interface ImageSlide {
+export interface ImageSlide extends SlideBase {
   layout: 'image'
-  id: string
   title?: string
   src: string
   alt: string
   caption?: string
 }
 
-export interface BlankSlide {
+export interface BlankSlide extends SlideBase {
   layout: 'blank'
-  id: string
   heading?: string
   body?: string
 }
@@ -46,9 +53,8 @@ export interface TableRow {
   variant?: TableRowVariant
 }
 
-export interface TableSlide {
+export interface TableSlide extends SlideBase {
   layout: 'table'
-  id: string
   title?: string
   statement?: string
   columns: string[]
@@ -60,19 +66,17 @@ export interface TableSlide {
 
 export type ContentBlock =
   | { type: 'heading'; level: 1 | 2; text: string }
-  | { type: 'bullets'; items: string[] }
+  | { type: 'bullets'; items: Bullet[] }
   | { type: 'paragraph'; text: string }
   | { type: 'code'; language: string; code: string }
 
-export interface MixedSlide {
+export interface MixedSlide extends SlideBase {
   layout: 'mixed'
-  id: string
   blocks: ContentBlock[]
 }
 
-export interface SpeakerSlide {
+export interface SpeakerSlide extends SlideBase {
   layout: 'speaker'
-  id: string
   heading?: string
   photo?: string
   facts?: string[]

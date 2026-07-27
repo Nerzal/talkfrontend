@@ -23,12 +23,40 @@ describe('SlideRenderer', () => {
       id: 'c1',
       layout: 'content',
       title: 'Agenda',
-      bullets: ['Point A', 'Point B', 'Point C'],
+      bullets: [{ text: 'Point A' }, { text: 'Point B' }, { text: 'Point C' }],
     }
     render(<SlideRenderer slide={slide} />)
     expect(screen.getByText('Agenda')).toBeDefined()
     expect(screen.getByText('Point A')).toBeDefined()
     expect(screen.getByText('Point C')).toBeDefined()
+  })
+
+  it('reveals fragment bullets on content layout only once stepIndex reaches their order', () => {
+    const slide: Slide = {
+      id: 'c2',
+      layout: 'content',
+      title: 'Agenda',
+      bullets: [
+        { text: 'Always visible' },
+        { text: 'First fragment', fragment: true },
+        { text: 'Second fragment', fragment: true },
+      ],
+    }
+    const { rerender } = render(<SlideRenderer slide={slide} stepIndex={0} />)
+
+    const opacityOf = (text: string) =>
+      screen.getByText(text).closest('li')?.className.includes('opacity-0')
+
+    expect(opacityOf('Always visible')).toBe(false)
+    expect(opacityOf('First fragment')).toBe(true)
+    expect(opacityOf('Second fragment')).toBe(true)
+
+    rerender(<SlideRenderer slide={slide} stepIndex={1} />)
+    expect(opacityOf('First fragment')).toBe(false)
+    expect(opacityOf('Second fragment')).toBe(true)
+
+    rerender(<SlideRenderer slide={slide} stepIndex={2} />)
+    expect(opacityOf('Second fragment')).toBe(false)
   })
 
   it('renders code layout with code content', () => {
@@ -74,7 +102,7 @@ describe('SlideRenderer', () => {
       layout: 'mixed',
       blocks: [
         { type: 'heading', level: 1, text: 'Mixed heading' },
-        { type: 'bullets', items: ['One'] },
+        { type: 'bullets', items: [{ text: 'One' }] },
       ],
     }
     render(<SlideRenderer slide={slide} />)

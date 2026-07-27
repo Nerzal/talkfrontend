@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { HomeScreen } from './pages/HomeScreen'
 import { TalkView } from './pages/TalkView'
+import { PresenterView } from './pages/PresenterView'
 import { TalksProvider } from './data/TalksContext'
 import { TagList } from './pages/HomeScreen/TagList'
 import { TagTalkList } from './pages/HomeScreen/TagTalkList'
@@ -10,6 +11,7 @@ export function App() {
     <BrowserRouter>
       <TalksProvider>
         <Routes>
+          <Route path="/talk/:id/presenter" element={<PresenterView />} />
           <Route path="/talk/:id" element={<TalkView />} />
           <Route path="/tags/:tag" element={<TagTalkList />} />
           <Route path="/tags" element={<TagList />} />

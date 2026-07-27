@@ -94,3 +94,43 @@ describe('useTalkPresenter', () => {
     expect(result.current.isFirst).toBe(true)
   })
 })
+
+describe('useTalkPresenter with fragment bullets', () => {
+  const fragmentTalk: Talk = {
+    id: 'f',
+    title: 'F',
+    year: 2026,
+    month: 1,
+    slides: [
+      {
+        id: 's1',
+        layout: 'content',
+        title: 'Agenda',
+        bullets: [
+          { text: 'Always visible' },
+          { text: 'First fragment', fragment: true },
+          { text: 'Second fragment', fragment: true },
+        ],
+      },
+      { id: 's2', layout: 'blank' },
+    ],
+  }
+
+  it('steps through fragment bullets one at a time before advancing to the next slide', () => {
+    const { result } = renderHook(() => useTalkPresenter(fragmentTalk), { wrapper })
+
+    expect(result.current.stepIndex).toBe(0)
+
+    act(() => result.current.goNext())
+    expect(result.current.slideIndex).toBe(0)
+    expect(result.current.stepIndex).toBe(1)
+
+    act(() => result.current.goNext())
+    expect(result.current.slideIndex).toBe(0)
+    expect(result.current.stepIndex).toBe(2)
+
+    act(() => result.current.goNext())
+    expect(result.current.slideIndex).toBe(1)
+    expect(result.current.stepIndex).toBe(0)
+  })
+})

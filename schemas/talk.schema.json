@@ -76,12 +76,16 @@
     "TitleSlide": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Speaker notes, shown only in the presenter view, never to the audience."
+        },
         "layout": {
           "type": "string",
           "const": "title"
-        },
-        "id": {
-          "type": "string"
         },
         "title": {
           "type": "string"
@@ -94,8 +98,8 @@
         }
       },
       "required": [
-        "layout",
         "id",
+        "layout",
         "title"
       ],
       "additionalProperties": false
@@ -103,12 +107,16 @@
     "ContentSlide": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Speaker notes, shown only in the presenter view, never to the audience."
+        },
         "layout": {
           "type": "string",
           "const": "content"
-        },
-        "id": {
-          "type": "string"
         },
         "title": {
           "type": "string"
@@ -116,27 +124,47 @@
         "bullets": {
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/definitions/Bullet"
           }
         }
       },
       "required": [
-        "layout",
+        "bullets",
         "id",
-        "title",
-        "bullets"
+        "layout",
+        "title"
+      ],
+      "additionalProperties": false
+    },
+    "Bullet": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "fragment": {
+          "type": "boolean",
+          "description": "Hidden until revealed one at a time via click/arrow key, instead of shown immediately with the rest of the slide."
+        }
+      },
+      "required": [
+        "text"
       ],
       "additionalProperties": false
     },
     "CodeSlide": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Speaker notes, shown only in the presenter view, never to the audience."
+        },
         "layout": {
           "type": "string",
           "const": "code"
-        },
-        "id": {
-          "type": "string"
         },
         "title": {
           "type": "string"
@@ -156,22 +184,26 @@
         }
       },
       "required": [
-        "layout",
+        "code",
         "id",
         "language",
-        "code"
+        "layout"
       ],
       "additionalProperties": false
     },
     "ImageSlide": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Speaker notes, shown only in the presenter view, never to the audience."
+        },
         "layout": {
           "type": "string",
           "const": "image"
-        },
-        "id": {
-          "type": "string"
         },
         "title": {
           "type": "string"
@@ -187,22 +219,26 @@
         }
       },
       "required": [
-        "layout",
+        "alt",
         "id",
-        "src",
-        "alt"
+        "layout",
+        "src"
       ],
       "additionalProperties": false
     },
     "BlankSlide": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Speaker notes, shown only in the presenter view, never to the audience."
+        },
         "layout": {
           "type": "string",
           "const": "blank"
-        },
-        "id": {
-          "type": "string"
         },
         "heading": {
           "type": "string"
@@ -212,20 +248,24 @@
         }
       },
       "required": [
-        "layout",
-        "id"
+        "id",
+        "layout"
       ],
       "additionalProperties": false
     },
     "TableSlide": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Speaker notes, shown only in the presenter view, never to the audience."
+        },
         "layout": {
           "type": "string",
           "const": "table"
-        },
-        "id": {
-          "type": "string"
         },
         "title": {
           "type": "string"
@@ -256,9 +296,9 @@
         }
       },
       "required": [
-        "layout",
-        "id",
         "columns",
+        "id",
+        "layout",
         "rows"
       ],
       "additionalProperties": false
@@ -294,12 +334,16 @@
     "SpeakerSlide": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Speaker notes, shown only in the presenter view, never to the audience."
+        },
         "layout": {
           "type": "string",
           "const": "speaker"
-        },
-        "id": {
-          "type": "string"
         },
         "heading": {
           "type": "string"
@@ -333,20 +377,24 @@
         }
       },
       "required": [
-        "layout",
-        "id"
+        "id",
+        "layout"
       ],
       "additionalProperties": false
     },
     "MixedSlide": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Speaker notes, shown only in the presenter view, never to the audience."
+        },
         "layout": {
           "type": "string",
           "const": "mixed"
-        },
-        "id": {
-          "type": "string"
         },
         "blocks": {
           "type": "array",
@@ -356,9 +404,9 @@
         }
       },
       "required": [
-        "layout",
+        "blocks",
         "id",
-        "blocks"
+        "layout"
       ],
       "additionalProperties": false
     },
@@ -399,7 +447,7 @@
             "items": {
               "type": "array",
               "items": {
-                "type": "string"
+                "$ref": "#/definitions/Bullet"
               }
             }
           },

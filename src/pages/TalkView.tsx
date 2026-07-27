@@ -1,10 +1,15 @@
+import { useCallback, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import type { Talk } from '../data/types'
 import { getTalkById } from '../data/queries'
 import { useTalks } from '../data/TalksContext'
 import { useTalkPresenter } from '../hooks/useTalkPresenter'
+import { usePresenterChannel } from '../hooks/usePresenterChannel'
+import { useSlideStrokes } from '../hooks/useSlideStrokes'
 import { SlideRenderer } from '../components/SlideRenderer'
 import { SlideControls } from '../components/SlideControls'
+import { TalkViewTopBar } from '../components/TalkViewTopBar'
+import { DrawingCanvas } from '../components/DrawingCanvas'
 
 export function TalkView() {
   const { id } = useParams<{ id: string }>()
@@ -23,18 +28,39 @@ export function TalkView() {
 }
 
 function ActiveTalkView({ talk }: { talk: Talk }) {
-  const { slideIndex, stepIndex, isFirst, isLast, progress, goNext, goPrev, goBack } =
+  const { slideIndex, stepIndex, isFirst, isLast, progress, goNext, goPrev, goBack, setNav } =
     useTalkPresenter(talk)
   const slide = talk.slides[slideIndex]
+  const [strokes, setStrokes] = useSlideStrokes(slide.id)
+
+  const { post } = usePresenterChannel(talk.id, (msg) => {
+    if (msg.type === 'nav') {
+      setNav(msg.slideIndex, msg.stepIndex)
+    } else if (msg.type === 'draw-stroke' && msg.slideId === slide.id) {
+      setStrokes((s) => [...s, { points: msg.points, color: msg.color }])
+    } else if (msg.type === 'draw-clear' && msg.slideId === slide.id) {
+      setStrokes([])
+    }
+  })
+
+  useEffect(() => {
+    post({ type: 'request-state' })
+  }, [post])
+
+  const openPresenterView = useCallback(() => {
+    window.open(`/talk/${talk.id}/presenter`, '_blank', 'noopener')
+  }, [talk.id])
 
   return (
     <div className="fixed inset-0 bg-black flex flex-col select-none">
+      <TalkViewTopBar onBack={goBack} onOpenPresenter={openPresenterView} talkId={talk.id} />
       <div
         key={slide.id}
-        className="flex-1 flex flex-col min-h-0"
+        className="relative flex-1 flex flex-col min-h-0"
         style={{ animation: 'slideIn 0.2s ease-out' }}
       >
         <SlideRenderer slide={slide} stepIndex={stepIndex} />
+        <DrawingCanvas strokes={strokes} />
       </div>
       <div className="h-0.5 bg-slate-800">
         <div
@@ -49,7 +75,6 @@ function ActiveTalkView({ talk }: { talk: Talk }) {
         isLast={isLast}
         onPrev={goPrev}
         onNext={goNext}
-        onBack={goBack}
       />
     </div>
   )

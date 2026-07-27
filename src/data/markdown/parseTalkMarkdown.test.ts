@@ -33,7 +33,12 @@ tags: [example, demo]
       tags: ['example', 'demo'],
       slides: [
         { layout: 'title', id: 's01', title: 'My Talk', subtitle: 'Subtitle', author: undefined },
-        { layout: 'content', id: 's02', title: 'Agenda', bullets: ['Point 1', 'Point 2'] },
+        {
+          layout: 'content',
+          id: 's02',
+          title: 'Agenda',
+          bullets: [{ text: 'Point 1' }, { text: 'Point 2' }],
+        },
       ],
     })
   })

@@ -1,10 +1,11 @@
+import { isFenceBoundary } from './fence'
+
 export interface SlideChunk {
   layout: string
   id?: string
   body: string
 }
 
-const FENCE_PATTERN = /^```/
 const SEPARATOR_PATTERN = /^---\s+(\S+)(?:\s+(\S+))?\s*$/
 
 /**
@@ -32,7 +33,7 @@ export function splitSlides(source: string): SlideChunk[] {
   }
 
   for (const line of lines) {
-    if (FENCE_PATTERN.test(line.trim())) {
+    if (isFenceBoundary(line)) {
       inFence = !inFence
     }
     const match = !inFence ? SEPARATOR_PATTERN.exec(line) : null

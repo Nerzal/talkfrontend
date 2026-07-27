@@ -28,7 +28,23 @@ describe('parseContentBody', () => {
   it('reads the title and bullet list', () => {
     const body = '# Agenda\n\n- Point 1\n- Point 2\n'
 
-    expect(parseContentBody(body)).toEqual({ title: 'Agenda', bullets: ['Point 1', 'Point 2'] })
+    expect(parseContentBody(body)).toEqual({
+      title: 'Agenda',
+      bullets: [{ text: 'Point 1' }, { text: 'Point 2' }],
+    })
+  })
+
+  it('reads "-> " bullets as fragments', () => {
+    const body = '# Agenda\n- Always visible\n-> Revealed on click\n-> Revealed next\n'
+
+    expect(parseContentBody(body)).toEqual({
+      title: 'Agenda',
+      bullets: [
+        { text: 'Always visible' },
+        { text: 'Revealed on click', fragment: true },
+        { text: 'Revealed next', fragment: true },
+      ],
+    })
   })
 })
 
@@ -81,9 +97,20 @@ func main() {}
     expect(parseMixedBody(body)).toEqual([
       { type: 'heading', level: 1, text: 'Big heading' },
       { type: 'paragraph', text: 'Some intro text.' },
-      { type: 'bullets', items: ['Point 1', 'Point 2'] },
+      { type: 'bullets', items: [{ text: 'Point 1' }, { text: 'Point 2' }] },
       { type: 'heading', level: 2, text: 'Smaller heading' },
       { type: 'code', language: 'go', code: 'func main() {}' },
+    ])
+  })
+
+  it('reads "-> " bullets in a bullet list as fragments', () => {
+    const body = '- Always visible\n-> Revealed on click\n'
+
+    expect(parseMixedBody(body)).toEqual([
+      {
+        type: 'bullets',
+        items: [{ text: 'Always visible' }, { text: 'Revealed on click', fragment: true }],
+      },
     ])
   })
 

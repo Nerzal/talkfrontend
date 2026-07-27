@@ -1,4 +1,4 @@
-import type { ContentBlock } from '../types'
+import type { Bullet, ContentBlock } from '../types'
 
 const H1_PATTERN = /^#\s+(.+)$/m
 const IMAGE_PATTERN = /!\[([^\]]*)\]\(([^)]+)\)/
@@ -35,13 +35,20 @@ export function parseTitleBody(body: string): TitleBody {
 
 export interface ContentBody {
   title?: string
-  bullets: string[]
+  bullets: Bullet[]
 }
 
-/** "# Title" heading, then a "- item" bullet list. */
+/** "- item" shows immediately with the rest of the slide; "-> item" is a fragment, revealed one at a time via click/arrow key before the next slide. Returns null for a non-bullet line. */
+function parseBulletLine(line: string): Bullet | null {
+  if (line.startsWith('-> ')) return { text: line.slice(3).trim(), fragment: true }
+  if (line.startsWith('- ')) return { text: line.slice(2).trim() }
+  return null
+}
+
+/** "# Title" heading, then a bullet list — see `parseBulletLine` for the "- "/"-> " bullet syntax. */
 export function parseContentBody(body: string): ContentBody {
   let title: string | undefined
-  const bullets: string[] = []
+  const bullets: Bullet[] = []
   for (const raw of body.split('\n')) {
     const line = raw.trim()
     if (!line) continue
@@ -49,9 +56,8 @@ export function parseContentBody(body: string): ContentBody {
       title = line.slice(2).trim()
       continue
     }
-    if (line.startsWith('- ')) {
-      bullets.push(line.slice(2).trim())
-    }
+    const bullet = parseBulletLine(line)
+    if (bullet) bullets.push(bullet)
   }
   return { title, bullets }
 }
@@ -146,10 +152,12 @@ export function parseMixedBody(body: string): ContentBlock[] {
       continue
     }
 
-    if (line.startsWith('- ')) {
-      const items: string[] = []
-      while (i < lines.length && lines[i].trim().startsWith('- ')) {
-        items.push(lines[i].trim().slice(2).trim())
+    if (parseBulletLine(line)) {
+      const items: Bullet[] = []
+      while (i < lines.length) {
+        const bullet = parseBulletLine(lines[i].trim())
+        if (!bullet) break
+        items.push(bullet)
         i++
       }
       blocks.push({ type: 'bullets', items })
@@ -159,7 +167,7 @@ export function parseMixedBody(body: string): ContentBlock[] {
     const paragraphLines: string[] = []
     while (i < lines.length) {
       const next = lines[i].trim()
-      if (!next || next.startsWith('- ') || /^#{1,2}\s/.test(next) || /^```/.test(next)) break
+      if (!next || parseBulletLine(next) || /^#{1,2}\s/.test(next) || /^```/.test(next)) break
       paragraphLines.push(next)
       i++
     }

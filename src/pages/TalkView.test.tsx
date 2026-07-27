@@ -1,9 +1,18 @@
-import { describe, it, expect, beforeEach } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { TalkView } from './TalkView'
 import { TalksProvider } from '../data/TalksContext'
 import { mockTalksFetch } from '../test/mockTalksFetch'
+import { usePresenterChannel } from '../hooks/usePresenterChannel'
+import type { PresenterMessage } from '../hooks/usePresenterChannel'
+
+vi.mock('../hooks/usePresenterChannel', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../hooks/usePresenterChannel')>()
+  return { ...actual, usePresenterChannel: vi.fn(actual.usePresenterChannel) }
+})
+
+type Handler = (msg: PresenterMessage, post: (msg: PresenterMessage) => void) => void
 
 function renderTalkView(id: string) {
   return render(
@@ -18,8 +27,15 @@ function renderTalkView(id: string) {
   )
 }
 
+let capturedHandler: Handler | undefined
+
 beforeEach(() => {
   mockTalksFetch()
+  capturedHandler = undefined
+  vi.mocked(usePresenterChannel).mockImplementation((_talkId, onMessage) => {
+    capturedHandler = onMessage
+    return { post: vi.fn(), supported: true }
+  })
 })
 
 describe('TalkView', () => {
@@ -58,5 +74,52 @@ describe('TalkView', () => {
   it('shows the slide counter', async () => {
     renderTalkView('wolf-deleted-oma-2026-07')
     await waitFor(() => expect(screen.getByText(/1 \//)).toBeDefined())
+  })
+
+  it('opens the presenter view in a new tab', async () => {
+    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null)
+    renderTalkView('wolf-deleted-oma-2026-07')
+    await waitFor(() => expect(screen.getByLabelText('Open presenter view')).toBeDefined())
+
+    fireEvent.click(screen.getByLabelText('Open presenter view'))
+
+    expect(openSpy).toHaveBeenCalledWith(
+      '/talk/wolf-deleted-oma-2026-07/presenter',
+      '_blank',
+      'noopener',
+    )
+  })
+
+  it('follows a "nav" message from the presenter-sync channel', async () => {
+    renderTalkView('wolf-deleted-oma-2026-07')
+    await waitFor(() => expect(screen.getByText(/1 \//)).toBeDefined())
+
+    act(() => {
+      capturedHandler?.({ type: 'nav', slideIndex: 1, stepIndex: 0 }, vi.fn())
+    })
+
+    await waitFor(() => expect(screen.getByText(/Rotkäppchen, CRUD und die Sprache/)).toBeDefined())
+  })
+
+  it('renders received drawing strokes as an overlay', async () => {
+    renderTalkView('wolf-deleted-oma-2026-07')
+    await waitFor(() => expect(screen.getByText(/1 \//)).toBeDefined())
+
+    act(() => {
+      capturedHandler?.(
+        {
+          type: 'draw-stroke',
+          slideId: 'intro',
+          points: [
+            { x: 0.1, y: 0.1 },
+            { x: 0.5, y: 0.5 },
+          ],
+          color: '#f97316',
+        },
+        vi.fn(),
+      )
+    })
+
+    await waitFor(() => expect(document.querySelector('polyline')).not.toBeNull())
   })
 })

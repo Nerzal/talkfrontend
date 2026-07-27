@@ -18,7 +18,7 @@ export function SlideRenderer({ slide, stepIndex = 0 }: Props) {
     case 'title':
       return <TitleSlide slide={slide} />
     case 'content':
-      return <ContentSlide slide={slide} />
+      return <ContentSlide slide={slide} stepIndex={stepIndex} />
     case 'code':
       return <CodeSlide slide={slide} stepIndex={stepIndex} />
     case 'image':
@@ -30,6 +30,6 @@ export function SlideRenderer({ slide, stepIndex = 0 }: Props) {
     case 'speaker':
       return <SpeakerSlide slide={slide} />
     case 'mixed':
-      return <MixedSlide slide={slide} />
+      return <MixedSlide slide={slide} stepIndex={stepIndex} />
   }
 }
