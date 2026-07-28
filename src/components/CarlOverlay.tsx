@@ -5,30 +5,26 @@ import { randomDelayMs, randomQuote, randomSide, type CarlSide } from '../lib/ca
 interface Props {
   presentationEnabled: boolean
   currentSlideAllowsCarl: boolean
+  slideIndex: number
 }
 
-const MIN_INTERVAL_MS = 90_000
-const MAX_INTERVAL_MS = 240_000
+const MIN_INTERVAL_MS = 40_000
+const MAX_INTERVAL_MS = 360_000
 const VISIBLE_DURATION_MS = 7_000
-const MAX_APPEARANCES = 4
+const MAX_APPEARANCES = 5
 
 const QUOTES = [
-  // Deine Originale
   'Wurde Agentic AI schon erwähnt?',
   'Sieht so aus, als würdest du eine Präsentation halten.',
   'Soll ich das für dich in die Cloud verschieben?',
-  'Hast du schon mit einem Chatbot darüber gesprochen?',
   'Bist du bald fertig?',
-  'Der da hat das "GOLD ABO" hihihihi!',
+  'Er trinkt wieder Bier, oder? ODER?',
   'Produktiv-Datenbank erfolgreich gelöscht.',
   'Hallo! Ich bin Karl.',
   'Die Slide sieht wie ein Datum aus! 03.05.1965 oder?',
-
-  // KI & Agenten-Wahnsinn
   'Dein KI-Agent diskutiert gerade mit meinem KI-Agenten über dein Gehalt.',
   'AGI ist für nächsten Dienstag angekündigt. Soll ich den Termin eintragen?',
   'Warnung: Diese Slide wurde zu 99 % von mir halluziniert.',
-  'Brauchst du Hilfe? Dein Senior-Dev-Agent hat sich gerade selbst gekündigt.',
   'Ich habe deinen Code vorsichtshalber in Rust neu geschrieben. Gern geschehen!',
 ]
 
@@ -53,7 +49,7 @@ const SHOWN_TRANSFORM: Record<CarlSide, string> = {
   right: 'translateX(0)',
 }
 
-export function CarlOverlay({ presentationEnabled, currentSlideAllowsCarl }: Props) {
+export function CarlOverlay({ presentationEnabled, currentSlideAllowsCarl, slideIndex }: Props) {
   const enabled = presentationEnabled && currentSlideAllowsCarl
   const [visible, setVisible] = useState(false)
   const [side, setSide] = useState<CarlSide>('bottom')
@@ -61,7 +57,13 @@ export function CarlOverlay({ presentationEnabled, currentSlideAllowsCarl }: Pro
   const appearTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const appearanceCountRef = useRef(0)
+  const slideIndexRef = useRef(slideIndex)
+  const lastShownSlideIndexRef = useRef<number | null>(null)
   const [prevEnabled, setPrevEnabled] = useState(enabled)
+
+  useEffect(() => {
+    slideIndexRef.current = slideIndex
+  }, [slideIndex])
 
   if (enabled !== prevEnabled) {
     setPrevEnabled(enabled)
@@ -77,7 +79,15 @@ export function CarlOverlay({ presentationEnabled, currentSlideAllowsCarl }: Pro
       appearTimeoutRef.current = setTimeout(
         () => {
           if (appearanceCountRef.current >= MAX_APPEARANCES) return
+          if (slideIndexRef.current === lastShownSlideIndexRef.current) {
+            // Already shown once on this slide — a re-appearance attempt
+            // resets the timer instead of showing again, so Karl never
+            // appears twice on the same slide.
+            scheduleAppearance()
+            return
+          }
           appearanceCountRef.current += 1
+          lastShownSlideIndexRef.current = slideIndexRef.current
           setSide(randomSide())
           setQuote(randomQuote(QUOTES))
           setVisible(true)

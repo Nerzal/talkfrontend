@@ -87,6 +87,7 @@ function ActiveTalkView({ talk }: { talk: Talk }) {
       <CarlOverlay
         presentationEnabled={talk.clippy === true}
         currentSlideAllowsCarl={slideIndex >= 3}
+        slideIndex={slideIndex}
       />
       <div className="h-0.5 bg-slate-800">
         <div
