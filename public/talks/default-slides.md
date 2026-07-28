@@ -18,6 +18,4 @@
 - Speaker
 - Spielkind
 
-[website](https://blog.noobygames.de)
-[linkedin](https://www.linkedin.com/in/tobias-theel-3353a9181/)
-[github](https://github.com/nerzal)
+[talk](https://talks.noobygames.de)
