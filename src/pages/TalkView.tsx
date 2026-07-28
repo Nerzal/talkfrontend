@@ -35,10 +35,12 @@ function ActiveTalkView({ talk }: { talk: Talk }) {
   const [strokes, setStrokes] = useSlideStrokes(slide.id)
   const remoteNavRef = useRef(false)
 
-  const { post } = usePresenterChannel(talk.id, (msg) => {
+  const { post } = usePresenterChannel(talk.id, (msg, reply) => {
     if (msg.type === 'nav') {
       remoteNavRef.current = true
       setNav(msg.slideIndex, msg.stepIndex)
+    } else if (msg.type === 'request-state') {
+      reply({ type: 'nav', slideIndex, stepIndex })
     } else if (msg.type === 'draw-stroke' && msg.slideId === slide.id) {
       setStrokes((s) => [...s, { points: msg.points, color: msg.color }])
     } else if (msg.type === 'draw-clear' && msg.slideId === slide.id) {

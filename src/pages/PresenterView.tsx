@@ -71,6 +71,10 @@ function ActivePresenterView({ talk }: { talk: Talk }) {
   }
   const { post } = usePresenterChannel(talk.id, onChannelMessage)
 
+  useEffect(() => {
+    post({ type: 'request-state' })
+  }, [post])
+
   // Mirror this view's own navigation (keyboard/click, either here or in the
   // audience window) to the other window — but not when this slideIndex/
   // stepIndex change was itself just applied from an incoming 'nav' message,

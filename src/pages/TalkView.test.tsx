@@ -142,6 +142,21 @@ describe('TalkView', () => {
     await waitFor(() => expect(screen.getByText(/Nerzal/)).toBeDefined())
   })
 
+  it('replies to a "request-state" message with its current slide position', async () => {
+    renderTalkView('wolf-deleted-oma-2026-07')
+    await waitFor(() => expect(screen.getByLabelText('Next slide')).toBeDefined())
+
+    fireEvent.click(screen.getByLabelText('Next slide'))
+    await waitFor(() => expect(screen.getByText(/Nerzal/)).toBeDefined())
+
+    const reply = vi.fn()
+    act(() => {
+      capturedHandler?.({ type: 'request-state' }, reply)
+    })
+
+    expect(reply).toHaveBeenCalledWith({ type: 'nav', slideIndex: 1, stepIndex: 0 })
+  })
+
   it('broadcasts a "nav" message when navigating locally, but not on mount', async () => {
     renderTalkView('wolf-deleted-oma-2026-07')
     await waitFor(() => expect(screen.getByLabelText('Next slide')).toBeDefined())

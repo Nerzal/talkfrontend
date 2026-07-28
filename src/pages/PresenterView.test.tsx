@@ -167,6 +167,28 @@ describe('PresenterView', () => {
     expect(closeSpy).not.toHaveBeenCalled()
   })
 
+  it("requests the audience view's current state on mount", async () => {
+    renderPresenterView('wolf-deleted-oma-2026-07')
+    await waitFor(() => expect(screen.getByText('Next →')).toBeDefined())
+
+    expect(postSpy).toHaveBeenCalledWith({ type: 'request-state' })
+  })
+
+  it('replies to a "request-state" message with its current slide position', async () => {
+    renderPresenterView('wolf-deleted-oma-2026-07')
+    await waitFor(() => expect(screen.getByText('Next →')).toBeDefined())
+
+    fireEvent.click(screen.getByText('Next →'))
+    await waitFor(() => expect(screen.getByText(/Slide 2 \//)).toBeDefined())
+
+    const reply = vi.fn()
+    act(() => {
+      capturedHandler?.({ type: 'request-state' }, reply)
+    })
+
+    expect(reply).toHaveBeenCalledWith({ type: 'nav', slideIndex: 1, stepIndex: 0 })
+  })
+
   it('broadcasts a "nav" message when navigating locally, but not on mount', async () => {
     renderPresenterView('wolf-deleted-oma-2026-07')
     await waitFor(() => expect(screen.getByText('Next →')).toBeDefined())
