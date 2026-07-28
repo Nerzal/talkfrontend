@@ -220,6 +220,38 @@ github: https://github.com/nerzal`,
     expect(slide.background).toBe('assets/bg.jpg')
   })
 
+  it('sets the background from an image line tagged "background", leaving the rest of the body intact', () => {
+    const chunk: SlideChunk = {
+      layout: 'content',
+      body: '# Agenda\n- One\n![alt](assets/bg.jpg) background',
+    }
+
+    expect(buildSlide(chunk, 0)).toEqual({
+      layout: 'content',
+      id: 's01',
+      title: 'Agenda',
+      bullets: [{ text: 'One' }],
+      background: 'assets/bg.jpg',
+    })
+  })
+
+  it('reads left/right/under positions on images inside a mixed slide', () => {
+    const chunk: SlideChunk = {
+      layout: 'mixed',
+      body: '![alt](left.png) left\nSome text\n![alt](right.png) right',
+    }
+
+    expect(buildSlide(chunk, 0)).toEqual({
+      layout: 'mixed',
+      id: 's01',
+      blocks: [
+        { type: 'image', src: 'left.png', alt: 'alt', position: 'left' },
+        { type: 'paragraph', text: 'Some text' },
+        { type: 'image', src: 'right.png', alt: 'alt', position: 'right' },
+      ],
+    })
+  })
+
   it('infers the layout from the body when the chunk has no explicit layout', () => {
     const chunk: SlideChunk = { body: '# Agenda\n- One\n- Two' }
 

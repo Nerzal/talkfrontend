@@ -4,7 +4,7 @@ import { parseStructuredYaml } from './structuredYaml'
 
 const HEADING2_PATTERN = /^##\s+.+$/
 const BULLET_PATTERN = /^(?:-|->)\s+.+$/
-const IMAGE_PATTERN = /!\[[^\]]*]\([^)]+\)/
+const IMAGE_PATTERN = /!\[[^\]]*]\([^)]+\)(?:\s+(?:background|left|right|under))?/i
 const TABLE_SEPARATOR_LINE = /^\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)+\|?$/
 const STANDALONE_LINK_PATTERN = /^\[([^\]]+)]\(([^)]+)\)$/
 

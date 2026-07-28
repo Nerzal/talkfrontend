@@ -18,6 +18,7 @@ export function parseTalkMarkdown(source: string): Talk {
     year: Number(data.year),
     month: Number(data.month),
     tags: Array.isArray(data.tags) ? data.tags.map(String) : undefined,
+    clippy: typeof data.clippy === 'boolean' ? data.clippy : undefined,
     slides,
   }
 }

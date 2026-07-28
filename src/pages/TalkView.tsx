@@ -10,6 +10,7 @@ import { SlideRenderer } from '../components/SlideRenderer'
 import { SlideControls } from '../components/SlideControls'
 import { TalkViewTopBar } from '../components/TalkViewTopBar'
 import { DrawingCanvas } from '../components/DrawingCanvas'
+import { CarlOverlay } from '../components/CarlOverlay'
 
 export function TalkView() {
   const { id } = useParams<{ id: string }>()
@@ -81,6 +82,7 @@ function ActiveTalkView({ talk }: { talk: Talk }) {
         <SlideRenderer slide={slide} stepIndex={stepIndex} />
         <DrawingCanvas strokes={strokes} />
       </div>
+      <CarlOverlay presentationEnabled={talk.clippy === true} currentSlideAllowsCarl={slideIndex >= 3} />
       <div className="h-0.5 bg-slate-800">
         <div
           className="h-full bg-indigo-500 transition-all duration-300"

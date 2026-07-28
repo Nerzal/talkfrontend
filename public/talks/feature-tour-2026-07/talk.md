@@ -242,6 +242,22 @@ func add(a, b int) int {
 ```
 
 ---
+# Bild-Position in mixed-Folien
+
+- Ein eigenständiges Bild kann eine Positions-Angabe bekommen: `![Alt](pfad) links|rechts|unter`
+- `left`/`right` stellt das Bild in eine eigene Spalte neben den restlichen Inhalt
+- `under` (Standard, auch ohne Angabe) rendert das Bild ganz normal im Textfluss
+- `background` funktioniert überall (nicht nur bei mixed) als Alternative zu `+++ background <pfad>`
+
+---
+# Live-Beispiel: Bild links
+
+![Ein Beispielfoto](assets/example.jpg) left
+
+- Dieser Text steht rechts neben dem Bild
+- Erzeugt allein durch das `left` nach dem Bildpfad
+
+---
 # Click-Animationen: Fragments
 
 - `- ` zeigt einen Punkt sofort mit dem Rest der Folie
@@ -318,9 +334,21 @@ Dieser Text steht vor einem Hintergrundbild – erzeugt allein durch `+++ backgr
 # default-slides.md: Intro & Outro
 
 - Genau zwei Folien, ganz ohne Frontmatter am Anfang
-- `--- speaker intro` und `--- speaker end` – das zweite Wort in der Trennzeile ist die feste ID
+- `--- intro` und `--- end` – das Wort in der Trennzeile ist die feste ID, Layout wird wie überall erkannt
 - Werden automatisch vor und nach jedem Talk eingefügt
 - Einmal pflegen, gilt für alle Talks
+
+---
+# Pre-Intro-Folie
+
+- Manchmal soll etwas noch vor der gemeinsamen Intro-Folie stehen (Titelkarte, Sponsor-Hinweis, Triggerwarnung, ...)
+- Dafür eine eigene Folie im Talk mit der reservierten ID `0` markieren, z. B. `--- 0`
+- Egal an welcher Stelle im Dokument sie steht: sie landet immer ganz vorne, noch vor der Intro-Folie
+- Höchstens eine Pre-Intro-Folie pro Talk
+
+--- 0
+# Diese Folie steht vor der Intro
+Erzeugt allein durch die ID `0` – unabhängig davon, wo sie im Dokument steht.
 
 ---
 # Das war's!

@@ -1,6 +1,7 @@
 import { lazy, Suspense, useMemo } from 'react'
 import type { CodeSlide as CodeSlideData } from '../../data/types'
 import { highlightCode } from '../../lib/highlightCode'
+import { renderInlineMarkdown } from '../../lib/renderInlineMarkdown'
 
 interface Props {
   slide: CodeSlideData
@@ -16,7 +17,7 @@ function StaticCodeSlide({ slide, code }: { slide: CodeSlideData; code: string }
     <div className="flex-1 min-h-0 flex flex-col px-4 py-6 sm:px-12 sm:py-10">
       {slide.title && (
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3 sm:mb-6">
-          {slide.title}
+          {renderInlineMarkdown(slide.title)}
         </h2>
       )}
       <pre className="flex-1 bg-slate-950 border border-slate-800 rounded-xl p-4 sm:p-8 overflow-auto">

@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react'
 import type { SpeakerSlide as SpeakerSlideData } from '../../data/types'
+import { renderInlineMarkdown } from '../../lib/renderInlineMarkdown'
 import { QrCode } from './QrCode'
 import { WebsiteIcon, GithubIcon, XIcon, BlueskyIcon, MastodonIcon } from './socialIcons'
 
@@ -49,7 +50,7 @@ export function SpeakerSlide({ slide }: Props) {
     <div className="flex-1 min-h-0 flex flex-col items-center justify-start sm:justify-center text-center px-6 py-8 sm:px-16 sm:py-12 gap-6 sm:gap-10 md:gap-14 overflow-y-auto sm:overflow-hidden">
       {slide.heading && (
         <h1 className="text-4xl sm:text-6xl md:text-8xl font-extrabold text-white tracking-tight">
-          {slide.heading}
+          {renderInlineMarkdown(slide.heading)}
         </h1>
       )}
 
@@ -67,7 +68,7 @@ export function SpeakerSlide({ slide }: Props) {
               {slide.facts.map((fact) => (
                 <li key={fact} className="flex items-start gap-3">
                   <span className="text-indigo-400">▹</span>
-                  <span>{fact}</span>
+                  <span>{renderInlineMarkdown(fact)}</span>
                 </li>
               ))}
             </ul>

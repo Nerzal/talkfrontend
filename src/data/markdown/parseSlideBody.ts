@@ -1,8 +1,11 @@
-import type { Bullet, ContentBlock, TableRow, TableRowVariant } from '../types'
+import type { Bullet, ContentBlock, ImageBlockPosition, TableRow, TableRowVariant } from '../types'
 import { isFenceBoundary } from './fence'
 
 const H1_PATTERN = /^#\s+(.+)$/m
-const IMAGE_PATTERN = /!\[([^\]]*)\]\(([^)]+)\)/
+/** Trailing "background"/"left"/"right"/"under" position keyword is consumed but ignored here — only parseMixedBody's own image handling acts on it (background is already stripped by extractBackground before any layout parser runs). */
+const IMAGE_PATTERN = /!\[([^\]]*)\]\(([^)]+)\)(?:\s+(?:background|left|right|under))?/i
+/** A standalone image line in a "mixed" slide, e.g. "![alt](path) left" — the whole line must be just the image (+ optional position), so it isn't confused with an image mentioned mid-paragraph. */
+const MIXED_IMAGE_PATTERN = /^!\[([^\]]*)]\(([^)]+)\)(?:\s+(left|right|under))?$/i
 
 export interface TitleBody {
   title?: string
@@ -111,9 +114,13 @@ export function parseImageBody(body: string): ImageBody {
 
 /**
  * Free-form Markdown → an ordered list of blocks (heading, bullets,
- * paragraph, fenced code), so a "mixed" slide can combine them in any
- * order. Fence-aware: lines inside a code block are never read as headings
- * or bullets.
+ * paragraph, fenced code, image), so a "mixed" slide can combine them in
+ * any order. A standalone image line can carry a trailing position keyword
+ * ("![alt](path) left"/"right"/"under", default "under") controlling where
+ * MixedSlide.tsx places it relative to the rest of the slide's content — a
+ * "background"-tagged image is never seen here, since extractBackground
+ * strips it from the body before any layout parser runs. Fence-aware: lines
+ * inside a code block are never read as headings, bullets, or images.
  */
 export function parseMixedBody(body: string): ContentBlock[] {
   const lines = body.split('\n')
@@ -153,6 +160,14 @@ export function parseMixedBody(body: string): ContentBlock[] {
       continue
     }
 
+    const imageMatch = MIXED_IMAGE_PATTERN.exec(line)
+    if (imageMatch) {
+      const position = (imageMatch[3]?.toLowerCase() as ImageBlockPosition | undefined) ?? 'under'
+      blocks.push({ type: 'image', src: imageMatch[2], alt: imageMatch[1], position })
+      i++
+      continue
+    }
+
     if (parseBulletLine(line)) {
       const items: Bullet[] = []
       while (i < lines.length) {
@@ -168,7 +183,14 @@ export function parseMixedBody(body: string): ContentBlock[] {
     const paragraphLines: string[] = []
     while (i < lines.length) {
       const next = lines[i].trim()
-      if (!next || parseBulletLine(next) || /^#{1,2}\s/.test(next) || /^```/.test(next)) break
+      if (
+        !next ||
+        parseBulletLine(next) ||
+        /^#{1,2}\s/.test(next) ||
+        /^```/.test(next) ||
+        MIXED_IMAGE_PATTERN.test(next)
+      )
+        break
       paragraphLines.push(next)
       i++
     }

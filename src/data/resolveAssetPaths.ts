@@ -20,6 +20,14 @@ export function resolveSlideAssets(slide: Slide, baseUrl: string): Slide {
   if (result.layout === 'table' && result.image) {
     result = { ...result, image: resolvePath(result.image, baseUrl) }
   }
+  if (result.layout === 'mixed') {
+    result = {
+      ...result,
+      blocks: result.blocks.map((block) =>
+        block.type === 'image' ? { ...block, src: resolvePath(block.src, baseUrl) } : block,
+      ),
+    }
+  }
   if (result.background) {
     result = { ...result, background: resolvePath(result.background, baseUrl) }
   }

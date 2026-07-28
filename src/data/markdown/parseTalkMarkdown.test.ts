@@ -57,5 +57,22 @@ month: 1
 
     expect(talk.description).toBeUndefined()
     expect(talk.tags).toBeUndefined()
+    expect(talk.clippy).toBeUndefined()
+  })
+
+  it('parses "clippy: true" to enable the Karl Klammer easter egg', () => {
+    const source = `---
+id: fun-talk
+title: Fun Talk
+year: 2026
+month: 1
+clippy: true
+---
+
+--- blank
+`
+    const talk = parseTalkMarkdown(source)
+
+    expect(talk.clippy).toBe(true)
   })
 })

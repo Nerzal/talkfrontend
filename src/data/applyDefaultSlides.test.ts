@@ -38,4 +38,27 @@ describe('applyDefaultSlides', () => {
 
     expect(talk.slides).toEqual([{ id: 's1', layout: 'blank' }])
   })
+
+  it('pins a slide with id "0" before the default intro slide', () => {
+    const talk = makeTalk([
+      { id: '0', layout: 'title', title: 'Content warning' },
+      { id: 's1', layout: 'blank' },
+    ])
+
+    const result = applyDefaultSlides(talk, defaults)
+
+    expect(result.slides.map((s) => s.id)).toEqual(['0', '__intro__', 's1', '__end__'])
+  })
+
+  it('keeps a "0"-id slide out of its original document position', () => {
+    const talk = makeTalk([
+      { id: 's1', layout: 'blank' },
+      { id: '0', layout: 'title', title: 'Content warning' },
+      { id: 's2', layout: 'blank' },
+    ])
+
+    const result = applyDefaultSlides(talk, defaults)
+
+    expect(result.slides.map((s) => s.id)).toEqual(['0', '__intro__', 's1', 's2', '__end__'])
+  })
 })

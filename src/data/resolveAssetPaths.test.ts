@@ -70,6 +70,39 @@ describe('resolveSlideAssets', () => {
     expect(result).toEqual(slide)
   })
 
+  it('prefixes a relative image block src inside a mixed slide with the base URL', () => {
+    const slide: Talk['slides'][number] = {
+      id: 's1',
+      layout: 'mixed',
+      blocks: [
+        { type: 'paragraph', text: 'Hi' },
+        { type: 'image', src: 'assets/wolf.png', alt: 'A wolf', position: 'left' },
+      ],
+    }
+
+    const result = resolveSlideAssets(slide, '/talks/my-talk')
+
+    expect(result).toEqual({
+      ...slide,
+      blocks: [
+        { type: 'paragraph', text: 'Hi' },
+        { type: 'image', src: '/talks/my-talk/assets/wolf.png', alt: 'A wolf', position: 'left' },
+      ],
+    })
+  })
+
+  it('leaves an absolute image block src inside a mixed slide unchanged', () => {
+    const slide: Talk['slides'][number] = {
+      id: 's1',
+      layout: 'mixed',
+      blocks: [{ type: 'image', src: '/wolf.png', alt: 'A wolf', position: 'under' }],
+    }
+
+    const result = resolveSlideAssets(slide, '/talks/my-talk')
+
+    expect(result).toEqual(slide)
+  })
+
   it('leaves slides of other layouts unchanged', () => {
     const slide: Talk['slides'][number] = { id: 's1', layout: 'blank', heading: 'Hi' }
 

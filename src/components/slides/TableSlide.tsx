@@ -1,4 +1,5 @@
 import type { TableSlide as TableSlideData } from '../../data/types'
+import { renderInlineMarkdown } from '../../lib/renderInlineMarkdown'
 import { AsciiArt } from './AsciiArt'
 import { DataTable } from './DataTable'
 
@@ -10,7 +11,9 @@ export function TableSlide({ slide }: Props) {
   return (
     <div className="flex-1 min-h-0 flex flex-col px-4 py-6 sm:px-14 sm:py-10 gap-3 sm:gap-5 overflow-y-auto md:overflow-hidden">
       {slide.title && (
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">{slide.title}</h2>
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
+          {renderInlineMarkdown(slide.title)}
+        </h2>
       )}
       {slide.statement && (
         <div className="flex items-center gap-2 sm:gap-3 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 sm:px-5 sm:py-3 overflow-x-auto">
@@ -35,7 +38,9 @@ export function TableSlide({ slide }: Props) {
         )}
       </div>
       {slide.caption && (
-        <p className="text-center text-slate-400 text-sm sm:text-lg italic">{slide.caption}</p>
+        <p className="text-center text-slate-400 text-sm sm:text-lg italic">
+          {renderInlineMarkdown(slide.caption)}
+        </p>
       )}
     </div>
   )

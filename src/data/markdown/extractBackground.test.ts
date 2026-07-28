@@ -46,4 +46,28 @@ describe('extractBackground', () => {
       background: 'assets/bg.jpg',
     })
   })
+
+  it('strips a standalone "![alt](path) background" image line and returns its path', () => {
+    expect(extractBackground('# Title\nbody text\n![a wolf](assets/bg.jpg) background')).toEqual({
+      body: '# Title\nbody text',
+      background: 'assets/bg.jpg',
+    })
+  })
+
+  it('is case-insensitive on the image-line "background" keyword', () => {
+    expect(extractBackground('![alt](assets/bg.jpg) BACKGROUND')).toEqual({
+      body: '',
+      background: 'assets/bg.jpg',
+    })
+  })
+
+  it('does not treat an image line tagged "left" or "right" as a background image', () => {
+    const body = '![alt](assets/a.png) left\n![alt](assets/b.png) right'
+    expect(extractBackground(body)).toEqual({ body })
+  })
+
+  it('ignores "![alt](path) background"-looking lines inside fenced code blocks', () => {
+    const body = ['```text', '![alt](assets/bg.jpg) background', '```'].join('\n')
+    expect(extractBackground(body)).toEqual({ body })
+  })
 })

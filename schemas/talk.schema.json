@@ -34,6 +34,10 @@
           "items": {
             "type": "string"
           }
+        },
+        "clippy": {
+          "type": "boolean",
+          "description": "Shows Karl Klammer, a Clippy-style mascot, occasionally during the presentation."
         }
       },
       "required": [
@@ -533,8 +537,42 @@
             "code"
           ],
           "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "image"
+            },
+            "src": {
+              "type": "string"
+            },
+            "alt": {
+              "type": "string"
+            },
+            "position": {
+              "$ref": "#/definitions/ImageBlockPosition"
+            }
+          },
+          "required": [
+            "type",
+            "src",
+            "alt",
+            "position"
+          ],
+          "additionalProperties": false
         }
       ]
+    },
+    "ImageBlockPosition": {
+      "type": "string",
+      "enum": [
+        "under",
+        "left",
+        "right"
+      ],
+      "description": "Where an inline image sits relative to a mixed slide's other content — see the `![alt](src) <position>` syntax in parseMixedBody. Defaults to `under`."
     }
   }
 }

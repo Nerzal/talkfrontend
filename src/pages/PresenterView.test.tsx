@@ -97,12 +97,13 @@ describe('PresenterView', () => {
 
   it('shows the talk title and slide counter', async () => {
     renderPresenterView('wolf-deleted-oma-2026-07')
-    await waitFor(() => expect(screen.getByText(/Rotkäppchen/)).toBeDefined())
+    await waitFor(() => expect(screen.getByText(/HILFE!/)).toBeDefined())
     expect(screen.getByText(/Slide 1 \//)).toBeDefined()
   })
 
   it('shows a placeholder when the current slide has no speaker notes', async () => {
-    renderPresenterView('wolf-deleted-oma-2026-07')
+    mockFragmentTalkFetch()
+    renderPresenterView('frag-test')
     await waitFor(() => expect(screen.getByText('No notes for this slide.')).toBeDefined())
   })
 

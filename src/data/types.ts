@@ -69,11 +69,15 @@ export interface TableSlide extends SlideBase {
   imageAlt?: string
 }
 
+/** Where an inline image sits relative to a mixed slide's other content — see the `![alt](src) <position>` syntax in parseMixedBody. Defaults to `under`. */
+export type ImageBlockPosition = 'under' | 'left' | 'right'
+
 export type ContentBlock =
   | { type: 'heading'; level: 1 | 2; text: string }
   | { type: 'bullets'; items: Bullet[] }
   | { type: 'paragraph'; text: string }
   | { type: 'code'; language: string; code: string }
+  | { type: 'image'; src: string; alt: string; position: ImageBlockPosition }
 
 export interface MixedSlide extends SlideBase {
   layout: 'mixed'
@@ -111,6 +115,8 @@ export interface Talk {
   month: number
   slides: Slide[]
   tags?: string[]
+  /** Shows Karl Klammer, a Clippy-style mascot, occasionally during the presentation. */
+  clippy?: boolean
 }
 
 export interface DefaultSlides {

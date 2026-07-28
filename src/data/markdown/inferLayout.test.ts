@@ -35,6 +35,10 @@ describe('inferLayout', () => {
     expect(inferLayout('# Photo\n![alt text](assets/a.png)\nA caption')).toBe('image')
   })
 
+  it('infers "image" for an image tagged with a position keyword', () => {
+    expect(inferLayout('# Photo\n![alt text](assets/a.png) left\nA caption')).toBe('image')
+  })
+
   it('infers "mixed" when bullets and a code block are combined', () => {
     const body = '# Heading\n- One\n```go\nfunc main() {}\n```'
     expect(inferLayout(body)).toBe('mixed')

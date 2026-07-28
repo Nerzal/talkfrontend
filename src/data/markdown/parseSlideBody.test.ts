@@ -127,6 +127,50 @@ func main() {}
       { type: 'paragraph', text: 'line one line two' },
     ])
   })
+
+  it('reads a standalone image line with no position as "under"', () => {
+    expect(parseMixedBody('![a wolf](assets/wolf.png)')).toEqual([
+      { type: 'image', src: 'assets/wolf.png', alt: 'a wolf', position: 'under' },
+    ])
+  })
+
+  it('reads an explicit "under"/"left"/"right" position from an image line', () => {
+    expect(parseMixedBody('![alt](a.png) under')).toEqual([
+      { type: 'image', src: 'a.png', alt: 'alt', position: 'under' },
+    ])
+    expect(parseMixedBody('![alt](a.png) left')).toEqual([
+      { type: 'image', src: 'a.png', alt: 'alt', position: 'left' },
+    ])
+    expect(parseMixedBody('![alt](a.png) right')).toEqual([
+      { type: 'image', src: 'a.png', alt: 'alt', position: 'right' },
+    ])
+  })
+
+  it('is case-insensitive on the image position keyword', () => {
+    expect(parseMixedBody('![alt](a.png) LEFT')).toEqual([
+      { type: 'image', src: 'a.png', alt: 'alt', position: 'left' },
+    ])
+  })
+
+  it('keeps an image in document order alongside other block types', () => {
+    const body = '# Heading\n![alt](a.png) right\n- a bullet'
+
+    expect(parseMixedBody(body)).toEqual([
+      { type: 'heading', level: 1, text: 'Heading' },
+      { type: 'image', src: 'a.png', alt: 'alt', position: 'right' },
+      { type: 'bullets', items: [{ text: 'a bullet' }] },
+    ])
+  })
+
+  it('does not swallow a standalone image line into a preceding paragraph', () => {
+    const body = 'Some prose.\n![alt](a.png)\nMore prose.'
+
+    expect(parseMixedBody(body)).toEqual([
+      { type: 'paragraph', text: 'Some prose.' },
+      { type: 'image', src: 'a.png', alt: 'alt', position: 'under' },
+      { type: 'paragraph', text: 'More prose.' },
+    ])
+  })
 })
 
 describe('parseImageBody', () => {
@@ -135,6 +179,17 @@ describe('parseImageBody', () => {
 
     expect(parseImageBody(body)).toEqual({
       title: 'A photo',
+      src: 'assets/photo.png',
+      alt: 'alt text',
+      caption: 'A caption',
+    })
+  })
+
+  it('tolerates a trailing position keyword on the image line without leaking it into the caption', () => {
+    const body = '![alt text](assets/photo.png) left\nA caption'
+
+    expect(parseImageBody(body)).toEqual({
+      title: undefined,
       src: 'assets/photo.png',
       alt: 'alt text',
       caption: 'A caption',
@@ -221,6 +276,17 @@ o/
     expect(result.ascii).toBe('o/')
     expect(result.image).toBeUndefined()
   })
+
+  it('tolerates a trailing position keyword on the illustration image', () => {
+    const body = `| id |
+|---|
+| 1 |
+![A wolf](assets/wolf.png) left`
+
+    const result = parseTableBody(body)
+    expect(result.image).toBe('assets/wolf.png')
+    expect(result.imageAlt).toBe('A wolf')
+  })
 })
 
 describe('parseSpeakerBody', () => {
@@ -249,5 +315,11 @@ describe('parseSpeakerBody', () => {
 
   it('tolerates a body with no heading, photo, facts or links', () => {
     expect(parseSpeakerBody('')).toEqual({ heading: undefined, photo: undefined })
+  })
+
+  it('tolerates a trailing position keyword on the photo image', () => {
+    const body = '![](assets/profile2.jpg) right'
+
+    expect(parseSpeakerBody(body).photo).toBe('assets/profile2.jpg')
   })
 })

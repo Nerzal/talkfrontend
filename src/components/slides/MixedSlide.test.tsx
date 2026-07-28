@@ -65,4 +65,55 @@ describe('MixedSlide', () => {
     rerender(<MixedSlide slide={slide} stepIndex={2} />)
     expect(opacityOf('Group B')).toBe(false)
   })
+
+  it('renders a "under"-position image inline with the rest of the content', () => {
+    const slide: MixedSlideData = {
+      id: 's1',
+      layout: 'mixed',
+      blocks: [
+        { type: 'paragraph', text: 'Before' },
+        { type: 'image', src: 'a.png', alt: 'A photo', position: 'under' },
+        { type: 'paragraph', text: 'After' },
+      ],
+    }
+    render(<MixedSlide slide={slide} />)
+
+    expect(screen.getByAltText('A photo')).toBeDefined()
+    expect(screen.getByText('Before')).toBeDefined()
+    expect(screen.getByText('After')).toBeDefined()
+  })
+
+  it('renders a "left"-position image in its own column beside the other blocks', () => {
+    const slide: MixedSlideData = {
+      id: 's1',
+      layout: 'mixed',
+      blocks: [
+        { type: 'image', src: 'a.png', alt: 'A photo', position: 'left' },
+        { type: 'paragraph', text: 'Some text' },
+      ],
+    }
+    const { container } = render(<MixedSlide slide={slide} />)
+
+    const img = screen.getByAltText('A photo')
+    const paragraph = screen.getByText('Some text')
+    expect(img.closest('div')).not.toBe(paragraph.closest('div'))
+    expect(container.querySelector('img')).toBeDefined()
+  })
+
+  it('renders "left" and "right" images in separate columns flanking the main content', () => {
+    const slide: MixedSlideData = {
+      id: 's1',
+      layout: 'mixed',
+      blocks: [
+        { type: 'image', src: 'left.png', alt: 'Left photo', position: 'left' },
+        { type: 'paragraph', text: 'Middle text' },
+        { type: 'image', src: 'right.png', alt: 'Right photo', position: 'right' },
+      ],
+    }
+    render(<MixedSlide slide={slide} />)
+
+    expect(screen.getByAltText('Left photo')).toBeDefined()
+    expect(screen.getByAltText('Right photo')).toBeDefined()
+    expect(screen.getByText('Middle text')).toBeDefined()
+  })
 })
