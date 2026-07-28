@@ -84,7 +84,10 @@ function ActiveTalkView({ talk }: { talk: Talk }) {
         <SlideRenderer slide={slide} stepIndex={stepIndex} />
         <DrawingCanvas strokes={strokes} />
       </div>
-      <CarlOverlay presentationEnabled={talk.clippy === true} currentSlideAllowsCarl={slideIndex >= 3} />
+      <CarlOverlay
+        presentationEnabled={talk.clippy === true}
+        currentSlideAllowsCarl={slideIndex >= 3}
+      />
       <div className="h-0.5 bg-slate-800">
         <div
           className="h-full bg-indigo-500 transition-all duration-300"
