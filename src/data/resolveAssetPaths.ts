@@ -9,16 +9,22 @@ function resolvePath(path: string, baseUrl: string): string {
 }
 
 export function resolveSlideAssets(slide: Slide, baseUrl: string): Slide {
-  if (slide.layout === 'image') {
-    return { ...slide, src: resolvePath(slide.src, baseUrl) }
+  let result = slide
+
+  if (result.layout === 'image') {
+    result = { ...result, src: resolvePath(result.src, baseUrl) }
   }
-  if (slide.layout === 'speaker' && slide.photo) {
-    return { ...slide, photo: resolvePath(slide.photo, baseUrl) }
+  if (result.layout === 'speaker' && result.photo) {
+    result = { ...result, photo: resolvePath(result.photo, baseUrl) }
   }
-  if (slide.layout === 'table' && slide.image) {
-    return { ...slide, image: resolvePath(slide.image, baseUrl) }
+  if (result.layout === 'table' && result.image) {
+    result = { ...result, image: resolvePath(result.image, baseUrl) }
   }
-  return slide
+  if (result.background) {
+    result = { ...result, background: resolvePath(result.background, baseUrl) }
+  }
+
+  return result
 }
 
 export function resolveTalkAssets(talk: Talk, baseUrl: string): Talk {

@@ -7,31 +7,31 @@ month: 7
 tags: [go, architecture, design, patterns]
 ---
 
---- title
+---
 # Princess' Most-Loved Principles and Patterns
 ## And Why You Should Love Them Too!
 Nerzal · July 2021
 
---- image
+---
 ![Meme referencing Martin Luther King's "I Have a Dream" speech, captioned about clean code](assets/martin-luther-cleancode.jpg)
 I also have that dream
 
---- content
+---
 # Agenda
 - IOSP
 - Accept interfaces, return structs
 - YAGNI
 - Principle of Least Astonishment
 
---- blank
+---
 # IOSP
 Integration Operation Segregation Principle. Segregate operations from integrations.
 
---- blank
+---
 # Integration
 A function calls other functions. You could also say that a function integrates other functions. "A method does not contain any logic, but only calls methods from other parts of the same codebase — then it's called integration."
 
---- code
+---
 ```go
 func (s *Service) onPaymentReceived(ctx context.Context, sessionID, tenant string) error {
 	const errMessage = "could not handle received payment"
@@ -60,17 +60,17 @@ func (s *Service) onPaymentReceived(ctx context.Context, sessionID, tenant strin
 }
 ```
 
---- content
+---
 # Benefits
 - Easy to understand
 - Easy to extend
 - Easy to write integration tests
 
---- blank
+---
 # Operation
 A function that only contains if-else, switch-case, or an API call. "A method contains only logic — i.e. transformations, control structures, or I/O, or more generally: API calls. Then it's called operation."
 
---- code
+---
 ```go
 func mapMonitoring(response *monitoring.StatusResponse) (*Monitoring, error) {
 	const errMessage = "could not map monitoring status"
@@ -96,17 +96,17 @@ func mapMonitoring(response *monitoring.StatusResponse) (*Monitoring, error) {
 }
 ```
 
---- content
+---
 # Benefits
 - Easy to understand
 - Easy to extend
 - Easy to write unit tests
 
---- blank
+---
 # Accept Interfaces, Return Structures
 Accept interfaces and return structs in your objects. This is the idiomatic way of using interfaces in Go.
 
---- code
+---
 ```go
 type Repository interface {
 	StoreOrderDetails(ctx context.Context, stripeID, sessionID, userID, paymentURL string, order *domain.OrderRequest) error
@@ -133,29 +133,29 @@ func NewService(repo Repository, queuer Enqueueer, user User) *Service {
 }
 ```
 
---- content
+---
 # Benefits
 - Easy to understand
 - Looser coupling
 - Easy to write tests
 - Small interfaces
 
---- blank
+---
 # You Ain't Gonna Need It
 Do NOT implement things that are not exactly required.
 
---- content
+---
 - Unclear requirements
 - Being ready for the future
 
---- content
+---
 # Benefits
 - Code easy to understand
 - Code exactly reflects the requirements
 - Code easy to maintain
 - Cheaper and faster development
 
---- blank
+---
 # Principle of Least Astonishment
 A package, a module, or a function should behave as you would expect. We do not want surprises.
 
@@ -181,11 +181,11 @@ func (s *Service) GetOrder(orderID string) (Order, error) {
 
 Function name and... WTF is happening here?
 
---- image
+---
 ![A honking clown horn, a visual gag about chaotic code](assets/honk.jpg)
 Please don't do such things
 
---- content
+---
 # Benefits
 - Easy to understand
 - Looser coupling

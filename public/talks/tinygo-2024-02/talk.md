@@ -7,34 +7,34 @@ month: 2
 tags: [go, tinygo, wasm]
 ---
 
---- title
+---
 # Hello TinyGophers
 ## An introduction to TinyGo and WASM
 Nerzal · Februar 2024
 
---- content
+---
 # Agenda
 - What is TinyGo?
 - Tell me about the features!
 - How do you work with interfaces like GPIO, SPI etc?
 - WASM
 
---- content
+---
 # What is TinyGo?
 - Go for small places (Microcontroller)
 - Go for WASM (WebAssembly)
 - Go for WASI (WebSystemInterface)
 - A new compiler for Go written in Go that makes use of the LLVM compiler toolchain
 
---- content
+---
 # Some numbers
 - Currently 85 microcontroller boards are supported, including Arduino Uno, Adafruit Feather M0 and Nintendo Switch (see github.com/tinygo-org/tinygo)
 - Currently 101 devices are supported, including the BMP280 temperature/barometer sensor (I2C), the HC-SR04 ultrasonic distance sensor (GPIO) and the ST7735 TFT display (SPI) (see github.com/tinygo-org/drivers)
 
---- blank
+---
 # Demo
 
---- code
+---
 # Code Size
 ```go
 package main
@@ -44,16 +44,16 @@ func main() {
 }
 ```
 
---- content
+---
 # Code Size #2
 - 0,04 Megabyte when compiled with TinyGo
 - 1,21 Megabyte when compiled with Go
 
---- image
+---
 ![Binary size comparison of main compiled with Go vs main-tiny compiled with TinyGo](assets/comparison-size.png)
 main compiled with Go vs main-tiny compiled with TinyGo
 
---- mixed
+---
 # Code Size #3
 WASM
 ```text
@@ -63,10 +63,10 @@ rwxrwxr-x  1 tobias tobias 1408717 Feb  9 12:14 go-wasm.wasm
 - 0,08 Megabyte when compiled with TinyGo
 - 1,40 Megabyte when compiled with Go
 
---- blank
+---
 # Tell me about the features!
 
---- code
+---
 # Language support
 ```go
 package main
@@ -85,7 +85,7 @@ func main() {
 }
 ```
 
---- code
+---
 # Channels
 ```go
 package main
@@ -109,22 +109,22 @@ func asyncFunction(myChannel chan int) {
 }
 ```
 
---- content
+---
 # So?
 - TinyGo supports a big subset of Go, including slices, channels, interfaces, goroutines, defer and garbage collection
 - WASM/WASI
 
---- content
+---
 # What is not working?
 - Not every Go program can be compiled yet
 - Not every function of every Go std package is fully implemented
 
---- image
+---
 # Is my microcontroller (fully) supported?
 ![Screenshot of the TinyGo documentation listing supported interfaces](assets/supported-interfaces.png)
 Screenshot taken from the TinyGo documentation.
 
---- blank
+---
 # How do you work with interfaces like GPIO, SPI etc?
 
 --- mixed
@@ -160,53 +160,53 @@ tinygo flash --target=arduino-nano33 code/blinky/main.go
 ```
 Reminder: Don't forget to prove that this is working.
 
---- image
+---
 # The TinyGo Playground
 ![Screenshot of the TinyGo playground](assets/tinygo-playground.png)
 Screenshot of the TinyGo playground. Try it yourself at play.tinygo.org.
 
---- blank
+---
 # Libraries?
 
---- blank
+---
 # Do I have to implement everything on my own?!
 No.
 
---- image
+---
 # TinyGo got you covered
 ![Screenshot of TinyGo GitHub repositories](assets/tinygo-stuff.png)
 Screenshot of TinyGo GitHub repositories.
 
---- blank
+---
 # WASM
 
---- blank
+---
 # What's that?
 WebAssembly (abbreviated Wasm) is a binary instruction format for a stack-based virtual machine. Wasm is designed as a portable compilation target for programming languages, enabling deployment on the web for client and server applications. Source: webassembly.org
 
---- blank
+---
 # Why TinyGo?!
 The Go compiled binary is 30 times the size of the TinyGo compiled binary!
 
---- image
+---
 ![Binary size comparison of Go and TinyGo compiled to WASM](assets/go-vs-tinygo-wasm.png)
 Binary size comparison of Go and TinyGo
 
---- blank
+---
 # Demo
 
---- content
+---
 # Interesting files
 - index.html
 - wasm.js
 - wasm_exec.js
 - wasm.wasm
 
---- blank
+---
 # index.html
 Show in VSCode.
 
---- blank
+---
 # wasm.js
 Show in VSCode.
 
@@ -254,7 +254,7 @@ Compiled wasm binary.
       i32.const 3
 ```
 
---- code
+---
 # wasm.go
 ```go
 package main
@@ -283,13 +283,13 @@ func add(x, y int) int {
 }
 ```
 
---- content
+---
 # tinydom
 - TinyGo compatible DOM manipulation library
 - Wraps syscall/js
 - Custom types to provide a nice API
 
---- code
+---
 # tinydom example
 ```go
 userInput := input.New(input.TextInput).
@@ -314,17 +314,17 @@ SetInnerHTML("Sign In").
 AddEventListener("click", js.FuncOf(s.onLogin))
 ```
 
---- image
+---
 # tinydom custom types
 ![Screenshot of the implemented custom types in tinydom](assets/tinydom-types.png)
 Screenshot of the implemented custom types. See github.com/Nerzal/tinydom.
 
---- image
+---
 # Vugu
 ![Vugu logo](assets/vugu.png)
 See github.com/vugu/vugu.
 
---- content
+---
 # Get in touch with TinyGo
 - Follow @TinyGolang on Twitter
 - Join the #tinygo channel on the Gophers Slack (gophers.slack.com)

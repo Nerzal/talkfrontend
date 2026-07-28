@@ -77,6 +77,50 @@ describe('resolveSlideAssets', () => {
 
     expect(result).toEqual(slide)
   })
+
+  it('prefixes a relative background image with the base URL, on any layout', () => {
+    const slide: Talk['slides'][number] = {
+      id: 's1',
+      layout: 'blank',
+      heading: 'Hi',
+      background: 'assets/bg.jpg',
+    }
+
+    const result = resolveSlideAssets(slide, '/talks/my-talk')
+
+    expect(result).toEqual({ ...slide, background: '/talks/my-talk/assets/bg.jpg' })
+  })
+
+  it('leaves an absolute background image unchanged', () => {
+    const slide: Talk['slides'][number] = {
+      id: 's1',
+      layout: 'blank',
+      heading: 'Hi',
+      background: '/bg.jpg',
+    }
+
+    const result = resolveSlideAssets(slide, '/talks/my-talk')
+
+    expect(result.background).toBe('/bg.jpg')
+  })
+
+  it('resolves both a layout-specific asset and a background image on the same slide', () => {
+    const slide: ImageSlide = {
+      id: 's1',
+      layout: 'image',
+      src: 'assets/foo.png',
+      alt: 'Foo',
+      background: 'assets/bg.jpg',
+    }
+
+    const result = resolveSlideAssets(slide, '/talks/my-talk')
+
+    expect(result).toEqual({
+      ...slide,
+      src: '/talks/my-talk/assets/foo.png',
+      background: '/talks/my-talk/assets/bg.jpg',
+    })
+  })
 })
 
 describe('resolveTalkAssets', () => {

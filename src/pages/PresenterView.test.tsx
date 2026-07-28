@@ -1,9 +1,18 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { PresenterView } from './PresenterView'
 import { TalksProvider } from '../data/TalksContext'
 import { mockTalksFetch } from '../test/mockTalksFetch'
+import { usePresenterChannel } from '../hooks/usePresenterChannel'
+import type { PresenterMessage } from '../hooks/usePresenterChannel'
+
+vi.mock('../hooks/usePresenterChannel', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../hooks/usePresenterChannel')>()
+  return { ...actual, usePresenterChannel: vi.fn(actual.usePresenterChannel) }
+})
+
+type Handler = (msg: PresenterMessage, post: (msg: PresenterMessage) => void) => void
 
 const FRAGMENT_TALK_MARKDOWN = `---
 id: frag-test
@@ -63,8 +72,17 @@ function renderPresenterView(id: string) {
   )
 }
 
+let capturedHandler: Handler | undefined
+let postSpy: ReturnType<typeof vi.fn>
+
 beforeEach(() => {
   mockTalksFetch()
+  capturedHandler = undefined
+  postSpy = vi.fn()
+  vi.mocked(usePresenterChannel).mockImplementation((_talkId, onMessage) => {
+    capturedHandler = onMessage
+    return { post: postSpy, supported: true }
+  })
 })
 
 afterEach(() => {
@@ -146,6 +164,31 @@ describe('PresenterView', () => {
 
     expect(backSpy).toHaveBeenCalledOnce()
     expect(closeSpy).not.toHaveBeenCalled()
+  })
+
+  it('broadcasts a "nav" message when navigating locally, but not on mount', async () => {
+    renderPresenterView('wolf-deleted-oma-2026-07')
+    await waitFor(() => expect(screen.getByText('Next →')).toBeDefined())
+
+    expect(postSpy).not.toHaveBeenCalledWith(expect.objectContaining({ type: 'nav' }))
+
+    fireEvent.click(screen.getByText('Next →'))
+
+    await waitFor(() =>
+      expect(postSpy).toHaveBeenCalledWith({ type: 'nav', slideIndex: 1, stepIndex: 0 }),
+    )
+  })
+
+  it('follows a "nav" message from the audience-sync channel without re-broadcasting it', async () => {
+    renderPresenterView('wolf-deleted-oma-2026-07')
+    await waitFor(() => expect(screen.getByText(/Slide 1 \//)).toBeDefined())
+
+    act(() => {
+      capturedHandler?.({ type: 'nav', slideIndex: 1, stepIndex: 0 }, vi.fn())
+    })
+
+    await waitFor(() => expect(screen.getByText(/Slide 2 \//)).toBeDefined())
+    expect(postSpy).not.toHaveBeenCalledWith(expect.objectContaining({ type: 'nav' }))
   })
 
   it('keeps the next-slide preview on the current slide while fragments remain, revealing them ahead of the audience view', async () => {

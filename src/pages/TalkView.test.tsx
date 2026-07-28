@@ -28,13 +28,15 @@ function renderTalkView(id: string) {
 }
 
 let capturedHandler: Handler | undefined
+let postSpy: ReturnType<typeof vi.fn>
 
 beforeEach(() => {
   mockTalksFetch()
   capturedHandler = undefined
+  postSpy = vi.fn()
   vi.mocked(usePresenterChannel).mockImplementation((_talkId, onMessage) => {
     capturedHandler = onMessage
-    return { post: vi.fn(), supported: true }
+    return { post: postSpy, supported: true }
   })
 })
 
@@ -99,6 +101,31 @@ describe('TalkView', () => {
     })
 
     await waitFor(() => expect(screen.getByText(/Rotkäppchen, CRUD und die Sprache/)).toBeDefined())
+  })
+
+  it('broadcasts a "nav" message when navigating locally, but not on mount', async () => {
+    renderTalkView('wolf-deleted-oma-2026-07')
+    await waitFor(() => expect(screen.getByLabelText('Next slide')).toBeDefined())
+
+    expect(postSpy).not.toHaveBeenCalledWith(expect.objectContaining({ type: 'nav' }))
+
+    fireEvent.click(screen.getByLabelText('Next slide'))
+
+    await waitFor(() =>
+      expect(postSpy).toHaveBeenCalledWith({ type: 'nav', slideIndex: 1, stepIndex: 0 }),
+    )
+  })
+
+  it('does not re-broadcast a "nav" message it just received from the other window', async () => {
+    renderTalkView('wolf-deleted-oma-2026-07')
+    await waitFor(() => expect(screen.getByText(/1 \//)).toBeDefined())
+
+    act(() => {
+      capturedHandler?.({ type: 'nav', slideIndex: 1, stepIndex: 0 }, vi.fn())
+    })
+
+    await waitFor(() => expect(screen.getByText(/Rotkäppchen, CRUD und die Sprache/)).toBeDefined())
+    expect(postSpy).not.toHaveBeenCalledWith(expect.objectContaining({ type: 'nav' }))
   })
 
   it('renders received drawing strokes as an overlay', async () => {

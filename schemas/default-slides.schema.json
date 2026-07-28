@@ -59,6 +59,10 @@
           "type": "string",
           "description": "Speaker notes, shown only in the presenter view, never to the audience."
         },
+        "background": {
+          "type": "string",
+          "description": "Image shown behind the slide's own content, dimmed for readability. Available on every layout."
+        },
         "layout": {
           "type": "string",
           "const": "title"
@@ -89,6 +93,10 @@
         "notes": {
           "type": "string",
           "description": "Speaker notes, shown only in the presenter view, never to the audience."
+        },
+        "background": {
+          "type": "string",
+          "description": "Image shown behind the slide's own content, dimmed for readability. Available on every layout."
         },
         "layout": {
           "type": "string",
@@ -138,6 +146,10 @@
           "type": "string",
           "description": "Speaker notes, shown only in the presenter view, never to the audience."
         },
+        "background": {
+          "type": "string",
+          "description": "Image shown behind the slide's own content, dimmed for readability. Available on every layout."
+        },
         "layout": {
           "type": "string",
           "const": "code"
@@ -177,6 +189,10 @@
           "type": "string",
           "description": "Speaker notes, shown only in the presenter view, never to the audience."
         },
+        "background": {
+          "type": "string",
+          "description": "Image shown behind the slide's own content, dimmed for readability. Available on every layout."
+        },
         "layout": {
           "type": "string",
           "const": "image"
@@ -212,6 +228,10 @@
           "type": "string",
           "description": "Speaker notes, shown only in the presenter view, never to the audience."
         },
+        "background": {
+          "type": "string",
+          "description": "Image shown behind the slide's own content, dimmed for readability. Available on every layout."
+        },
         "layout": {
           "type": "string",
           "const": "blank"
@@ -238,6 +258,10 @@
         "notes": {
           "type": "string",
           "description": "Speaker notes, shown only in the presenter view, never to the audience."
+        },
+        "background": {
+          "type": "string",
+          "description": "Image shown behind the slide's own content, dimmed for readability. Available on every layout."
         },
         "layout": {
           "type": "string",
@@ -324,6 +348,10 @@
           "type": "string",
           "description": "Speaker notes, shown only in the presenter view, never to the audience."
         },
+        "background": {
+          "type": "string",
+          "description": "Image shown behind the slide's own content, dimmed for readability. Available on every layout."
+        },
         "layout": {
           "type": "string",
           "const": "speaker"
@@ -374,6 +402,10 @@
         "notes": {
           "type": "string",
           "description": "Speaker notes, shown only in the presenter view, never to the audience."
+        },
+        "background": {
+          "type": "string",
+          "description": "Image shown behind the slide's own content, dimmed for readability. Available on every layout."
         },
         "layout": {
           "type": "string",

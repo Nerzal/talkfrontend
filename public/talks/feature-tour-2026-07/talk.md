@@ -7,7 +7,7 @@ month: 7
 tags: [dokumentation, demo]
 ---
 
---- title
+---
 # talkfrontend\nFeature-Tour
 ## Wie du eine Präsentation als Markdown schreibst
 Diese Folien sind selbst das Beispiel
@@ -17,7 +17,7 @@ Das ist ein Sprechernotiz-Beispiel: alles nach einer alleinstehenden "+++ notes"
 landet in `notes` und ist nur im Presenter-View (/talk/:id/presenter) sichtbar,
 nie im normalen Zuschauer-View.
 
---- content
+---
 # Was du hier siehst
 
 - Diese Präsentation ist eine ganz normale `talk.md`
@@ -27,7 +27,7 @@ nie im normalen Zuschauer-View.
 - Bullet-Listen können außerdem Schritt für Schritt per Klick erscheinen (Fragments)
 - Presenter-Werkzeuge (Notizen, Zeichnen, Recording, Kamera, Sync) – dazu später mehr Folien
 
---- content
+---
 # Grundgerüst einer talk.md
 
 - Oben ein YAML-Block zwischen zwei `---`-Zeilen mit id, title, year, month, ...
@@ -35,7 +35,28 @@ nie im normalen Zuschauer-View.
 - Alles bis zur nächsten `--- <layout>`-Zeile gehört zu dieser Folie
 - Fertig – keine Kommentare, keine Sonderzeichen, nur Markdown und YAML
 
---- code
+---
+# Layout automatisch erkennen
+
+- Der Trenner zwischen Folien ist einfach eine alleinstehende `---`-Zeile
+- Ein Layout-Wort danach (`--- content`) ist nur noch nötig, um die Erkennung zu überschreiben
+- Sonst wird das Layout allein aus dem Inhalt abgeleitet: Bullet-Liste -> content, Codezaun -> code, Bild -> image, Überschrift + Unterüberschrift -> title, reiner Text -> blank
+- Mischt eine Folie mehrere dieser Arten (z. B. Bullet-Liste und Codezaun), wird daraus automatisch `mixed`
+- table/speaker bleiben YAML und werden an ihrem ersten bekannten Feld erkannt (`columns:`, `heading:`, ...)
+
+---
+# Live-Beispiel: Titel ganz ohne Layout-Wort
+## Nur eine Überschrift, Unterüberschrift und Autor
+Erkannt als Layout "title"
+
+---
+# Live-Beispiel: Bullet-Liste ganz ohne Layout-Wort
+
+- Diese Folie beginnt einfach mit `---` statt `--- content`
+- Trotzdem wird daraus die richtige `content`-Folie
+- Weil eine Bullet-Liste im Inhalt steckt
+
+---
 # So sieht das Frontmatter aus
 ```yaml
 id: my-talk-2026-01
@@ -46,7 +67,7 @@ month: 1
 tags: [beispiel]
 ```
 
---- content
+---
 # Layout: title
 
 - `--- title` startet die Folie
@@ -55,12 +76,12 @@ tags: [beispiel]
 - `## Unterüberschrift` wird zum Subtitle
 - Die nächste normale Textzeile wird zum Autor
 
---- title
+---
 # Live-Beispiel
 ## Das ist der Subtitle
 Das ist der Autor
 
---- content
+---
 # Layout: content
 
 - `--- content` startet die Folie
@@ -68,7 +89,7 @@ Das ist der Autor
 - Jede Zeile, die mit `- ` beginnt, wird ein Bulletpoint
 - Genau das siehst du gerade
 
---- content
+---
 # Layout: code
 
 - `--- code` startet die Folie
@@ -77,7 +98,7 @@ Das ist der Autor
 - Syntax-Highlighting passiert automatisch über Prism.js – keine Konfiguration nötig
 - Unbekannte Sprachen werden einfach als reiner Text angezeigt
 
---- code
+---
 # Live-Beispiel: Go
 ```go
 func main() {
@@ -85,13 +106,13 @@ func main() {
 }
 ```
 
---- code
+---
 # Noch ein Beispiel: Bash
 ```bash
 curl -s https://example.com/talks/index.json | jq .
 ```
 
---- content
+---
 # Code Schritt für Schritt: Magic Move
 
 - Schreibst du mehrere Codezäune direkt hintereinander in einer `--- code`-Folie, werden sie zu Schritten
@@ -99,7 +120,7 @@ curl -s https://example.com/talks/index.json | jq .
 - Der Übergang wird animiert (Shiki Magic Move) – Zeilen morphen statt hart zu schneiden
 - Shiki wird nur für Folien mit mehreren Schritten nachgeladen, andere Code-Folien bleiben leichtgewichtig (Prism)
 
---- code
+---
 # Live-Beispiel: Magic Move (→ drücken)
 ```go
 type User struct {
@@ -132,12 +153,12 @@ func (u User) Greet() string {
 - Der Text direkt nach dem Bild wird zur Bildunterschrift
 - Pfade sind relativ zum `assets/`-Ordner dieses Talks
 
---- image
+---
 # Live-Beispiel
 ![Ein Beispielfoto](assets/example.jpg)
 So einfach wird ein Bild eingebunden
 
---- content
+---
 # Layout: blank
 
 - `--- blank` startet die Folie
@@ -145,46 +166,59 @@ So einfach wird ein Bild eingebunden
 - Der restliche Text wird zum Fließtext
 - Gedacht für Q&A- oder Übergangsfolien
 
---- blank
+---
 # Fragen?
 Nutze diese Folie für Q&A oder als Übergang zum nächsten Thema.
 
---- content
+---
 # Layout: table
 
-- `--- table` startet die Folie
-- Der komplette Inhalt bis zur nächsten Folie ist YAML – kein Markdown
-- Felder: title, statement, columns, rows (cells + optional variant), caption, ascii
-- variant kann sein: normal, highlight, warning, danger, deleted
-- ascii ist optional und zeigt eine kleine Text-Animation neben der Tabelle
+- `--- table` startet die Folie (oder automatisch erkannt an einer Markdown-Tabelle)
+- Optionale `# Überschrift`, optionaler SQL-Codezaun davor wird zum `statement`
+- Danach eine normale Markdown-Tabelle: `| Spalte | ... |` + `|---|---|`
+- Eine Zeile mit einer zusätzlichen letzten Zelle (`| 1 | Oma | highlight |`) setzt deren variant
+- variant kann sein: normal, highlight, warning, danger, deleted; keine Datenzeilen = leere Tabelle
+- Danach optional ein Bild oder ein weiterer Codezaun (ASCII-Art), dann die Bildunterschrift
+- Alternativ geht auch reines YAML als kompletter Folieninhalt, wenn das besser passt (z. B. bei Sonderzeichen in Zellen)
 
---- table
-title: Live-Beispiel
-statement: "INSERT INTO personen VALUES (1, 'Oma', 'gesund')"
-columns: [id, name, status]
-rows:
-  - cells: ['1', 'Oma', 'gesund']
-    variant: highlight
-caption: Eine neue Zeile wird eingefügt.
-ascii: |
-  ✨ INSERT ✨
-  neue Zeile!
+---
+# Live-Beispiel
 
---- content
+```sql
+INSERT INTO personen VALUES (1, 'Oma', 'gesund')
+```
+
+| id | name | status |
+|---|---|---|
+| 1 | Oma | gesund | highlight |
+
+```
+✨ INSERT ✨
+neue Zeile!
+
+```
+
+Eine neue Zeile wird eingefügt.
+
+---
 # Layout: speaker
 
-- `--- speaker` startet die Folie
-- Genau wie table: der ganze Inhalt ist YAML
-- Felder: heading, photo, facts, website, linkedin, github, twitter, bluesky, mastodon
+- `--- speaker` startet die Folie (oder automatisch erkannt an einem `[github](...)`-artigen Link)
+- Optionale `# Überschrift`, optionales Bild fürs Foto, Bullet-Liste für facts
+- Danach je Zeile ein Link: `[website]`, `[linkedin]`, `[github]`, `[twitter]`/`[x]`, `[bluesky]`, `[mastodon]`
 - Jeder gesetzte Link bekommt automatisch einen QR-Code und, wo möglich, ein Icon
 - Wird meist für `default-slides.md` (Intro/Outro) verwendet, geht aber auch in einem Talk
+- Alternativ geht auch reines YAML als kompletter Folieninhalt, wenn das besser passt
 
---- speaker
-heading: Live-Beispiel
-facts: [Erstellt mit talkfrontend, Open Source]
-github: https://github.com/nerzal/talkfrontend
+---
+# Live-Beispiel
 
---- content
+- Erstellt mit talkfrontend
+- Open Source
+
+[github](https://github.com/nerzal/talkfrontend)
+
+---
 # Layout: mixed
 
 - `--- mixed` startet die Folie
@@ -192,7 +226,7 @@ github: https://github.com/nerzal/talkfrontend
 - Ganz normales Markdown, von oben nach unten gelesen – keine feste Reihenfolge
 - `#` wird zur großen, `##` zur kleinen Überschrift, `- ` bleibt ein Bulletpoint
 
---- mixed
+---
 # Live-Beispiel
 Ein `mixed`-Slide kann mehrere Inhaltsarten kombinieren.
 
@@ -207,7 +241,7 @@ func add(a, b int) int {
 }
 ```
 
---- content
+---
 # Click-Animationen: Fragments
 
 - `- ` zeigt einen Punkt sofort mit dem Rest der Folie
@@ -216,7 +250,7 @@ func add(a, b int) int {
 - Fragmente zählen wie die Code-Schritte als eigene Steps einer Folie
 - Funktioniert in content- und mixed-Folien, für jede Bullet-Liste
 
---- content
+---
 # Live-Beispiel (→ drücken)
 
 - Diese Zeile ist sofort sichtbar
@@ -224,7 +258,7 @@ func add(a, b int) int {
 -> Und diese beim zweiten
 -> Erst danach geht's weiter zur nächsten Folie
 
---- content
+---
 # Presenter View
 
 - Eigene Route `/talk/:id/presenter`, öffnet sich als neues Fenster
@@ -232,7 +266,7 @@ func add(a, b int) int {
 - Dazu Sprechernotizen und ein Timer (Start/Pause/Reset)
 - "Open audience view" öffnet `/talk/:id` in einem zweiten Tab, beide bleiben live synchron
 
---- content
+---
 # Speaker Notes im Markdown
 
 - Jede Folie kann mit einer alleinstehenden `+++ notes`-Zeile enden
@@ -242,7 +276,21 @@ func add(a, b int) int {
 +++ notes
 Genau das ist eine Sprechernotiz: Sie taucht nur hier auf, nie im normalen Talk-View.
 
---- content
+---
+# Hintergrundbild für jede Folie
+
+- Jede Folie kann mit einer alleinstehenden `+++ background <pfad>`-Zeile ein Hintergrundbild bekommen
+- Funktioniert bei allen acht Layouts, nicht nur bei `image`
+- Pfad ist relativ zum `assets/`-Ordner dieses Talks, genau wie bei anderen Bildern
+- Der eigentliche Inhalt der Folie wird über einem abgedunkelten Hintergrund angezeigt, damit er lesbar bleibt
+
+---
+# Live-Beispiel
+Dieser Text steht vor einem Hintergrundbild – erzeugt allein durch `+++ background assets/example.jpg`.
+
++++ background assets/example.jpg
+
+---
 # Zeichnen & Annotationen
 
 - Der "Pen"-Button im Presenter-View aktiviert ein SVG-Overlay auf der Folie
@@ -250,7 +298,7 @@ Genau das ist eine Sprechernotiz: Sie taucht nur hier auf, nie im normalen Talk-
 - Fertige Striche landen live im Audience-Fenster, "Clear drawing" leert sie dort ebenfalls
 - Striche werden automatisch zurückgesetzt, sobald die Folie wechselt
 
---- content
+---
 # Aufnahme & Kamera-Overlay
 
 - Der Record-Button nutzt `getDisplayMedia` + `MediaRecorder` – komplett im Browser
@@ -258,7 +306,7 @@ Genau das ist eine Sprechernotiz: Sie taucht nur hier auf, nie im normalen Talk-
 - Der Kamera-Button blendet eine kleine Picture-in-Picture-Webcam-Blase ein
 - Beide Buttons verschwinden automatisch, wenn der Browser die jeweilige API nicht unterstützt
 
---- content
+---
 # Presenter- & Audience-Sync
 
 - `usePresenterChannel` verbindet Presenter- und Audience-Fenster per `BroadcastChannel`
@@ -266,7 +314,7 @@ Genau das ist eine Sprechernotiz: Sie taucht nur hier auf, nie im normalen Talk-
 - Bewusst begrenzt auf denselben Browser, dasselbe Gerät
 - Keine echte Fernsteuerung von einem zweiten Gerät – dafür bräuchte es einen Signaling-Server
 
---- content
+---
 # default-slides.md: Intro & Outro
 
 - Genau zwei Folien, ganz ohne Frontmatter am Anfang
@@ -274,6 +322,6 @@ Genau das ist eine Sprechernotiz: Sie taucht nur hier auf, nie im normalen Talk-
 - Werden automatisch vor und nach jedem Talk eingefügt
 - Einmal pflegen, gilt für alle Talks
 
---- blank
+---
 # Das war's!
 Wirf einen Blick in public/talks/feature-tour-2026-07/talk.md – diese Präsentation ist selbst das Beispiel für alle acht Layouts, Fragments und die Presenter-Werkzeuge.

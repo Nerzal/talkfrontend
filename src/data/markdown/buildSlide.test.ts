@@ -196,6 +196,117 @@ github: https://github.com/nerzal`,
     expect(slide.notes).toBe('Slow down, big finish.')
   })
 
+  it('splits off a background image from a prose-layout body', () => {
+    const chunk: SlideChunk = {
+      layout: 'title',
+      body: '# Title\n+++ background assets/bg.jpg',
+    }
+
+    expect(buildSlide(chunk, 0)).toEqual({
+      layout: 'title',
+      id: 's01',
+      title: 'Title',
+      background: 'assets/bg.jpg',
+    })
+  })
+
+  it('splits off a background image from a YAML-body layout', () => {
+    const chunk: SlideChunk = {
+      layout: 'speaker',
+      body: 'heading: Tobi\n+++ background assets/bg.jpg',
+    }
+
+    const slide = buildSlide(chunk, 0)
+    expect(slide.background).toBe('assets/bg.jpg')
+  })
+
+  it('infers the layout from the body when the chunk has no explicit layout', () => {
+    const chunk: SlideChunk = { body: '# Agenda\n- One\n- Two' }
+
+    expect(buildSlide(chunk, 1)).toEqual({
+      layout: 'content',
+      id: 's02',
+      title: 'Agenda',
+      bullets: [{ text: 'One' }, { text: 'Two' }],
+    })
+  })
+
+  it('infers a title slide from the body when the chunk has no explicit layout', () => {
+    const chunk: SlideChunk = { body: '# Title\n## Subtitle\nAuthor Name' }
+
+    expect(buildSlide(chunk, 0)).toEqual({
+      layout: 'title',
+      id: 's01',
+      title: 'Title',
+      subtitle: 'Subtitle',
+      author: 'Author Name',
+    })
+  })
+
+  it('infers a speaker slide from a YAML body when the chunk has no explicit layout', () => {
+    const chunk: SlideChunk = {
+      id: 'intro',
+      body: 'heading: Tobi\ngithub: https://github.com/nerzal',
+    }
+
+    expect(buildSlide(chunk, 0)).toMatchObject({
+      layout: 'speaker',
+      id: 'intro',
+      heading: 'Tobi',
+      github: 'https://github.com/nerzal',
+    })
+  })
+
+  it('builds a table slide from a Markdown body (GFM table)', () => {
+    const chunk: SlideChunk = {
+      body: `# CREATE
+| id | name |
+|---|---|
+| 1 | Oma | highlight |
+Eine neue Zeile.`,
+    }
+
+    expect(buildSlide(chunk, 0)).toEqual({
+      layout: 'table',
+      id: 's01',
+      title: 'CREATE',
+      statement: undefined,
+      columns: ['id', 'name'],
+      rows: [{ cells: ['1', 'Oma'], variant: 'highlight' }],
+      empty: false,
+      caption: 'Eine neue Zeile.',
+      ascii: undefined,
+      image: undefined,
+      imageAlt: undefined,
+    })
+  })
+
+  it('builds a speaker slide from a Markdown body (labeled links)', () => {
+    const chunk: SlideChunk = {
+      body: '# Tobi\n- Software Engineer\n[github](https://github.com/nerzal)',
+    }
+
+    expect(buildSlide(chunk, 0)).toEqual({
+      layout: 'speaker',
+      id: 's01',
+      heading: 'Tobi',
+      photo: undefined,
+      facts: ['Software Engineer'],
+      website: undefined,
+      linkedin: undefined,
+      github: 'https://github.com/nerzal',
+      twitter: undefined,
+      bluesky: undefined,
+      mastodon: undefined,
+    })
+  })
+
+  it('lets an explicit layout override what would otherwise be inferred', () => {
+    const chunk: SlideChunk = { layout: 'mixed', body: '# Agenda\n- One\n- Two' }
+
+    expect(buildSlide(chunk, 0).layout).toBe('mixed')
+  })
+
   it('throws a descriptive error for an unknown layout', () => {
     const chunk: SlideChunk = { layout: 'nonsense', body: 'body' }
 

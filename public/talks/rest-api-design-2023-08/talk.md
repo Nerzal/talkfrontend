@@ -7,80 +7,80 @@ month: 8
 tags: [go]
 ---
 
---- title
+---
 # REST API Design
 ## Tobi hat nen Buch gelesen
 Nerzal · August 2023
 
---- image
+---
 ![REST API meme](assets/restapi.png)
 
---- image
+---
 ![U are all doing it wrong meme](assets/uarealldoingitwrong.png)
 
---- content
+---
 # Motivation
 
 - Standardize REST APIs to a certain degree
 - Make REST APIs easy to understand
 - Gain a common understanding of how to design REST APIs
 
---- image
+---
 # Richardson Maturity Model
 ![Richardson Maturity Model overview diagram](assets/rest_level_overview.png)
 source: https://martinfowler.com/articles/richardsonMaturityModel.html
 
---- content
+---
 # Level 0 - Swamp of POX
 
 - Simply post plain old xml to the server
 - Using HTTP as tunneling for Remote Procedure Calls
 
---- image
+---
 ![Level 0 diagram, swamp of POX](assets/level0.png)
 source: https://martinfowler.com/articles/richardsonMaturityModel.html
 
---- content
+---
 # Level 1 - Resources
 
 - Add resources instead of simply posting everything to the same endpoint
 
---- image
+---
 ![Level 1 diagram, resources](assets/level1.png)
 source: https://martinfowler.com/articles/richardsonMaturityModel.html
 
---- content
+---
 # Level 2 - HTTP Verbs
 
 - Make use of HTTP Verbs instead of posting everything
 
---- image
+---
 ![Level 2 diagram, HTTP verbs](assets/level2.png)
 source: https://martinfowler.com/articles/richardsonMaturityModel.html
 
---- content
+---
 # Level 3 - Hypermedia Controls
 
 - Include links to other resources of concern
 - Resolve coupling of Client and Server
 - See also: https://roy.gbiv.com/untangled/2008/rest-apis-must-be-hypertext-driven
 
---- image
+---
 ![Level 3 diagram, hypermedia controls](assets/level3.png)
 source: https://martinfowler.com/articles/richardsonMaturityModel.html
 
---- blank
+---
 # URIs
 REST API designers should create URIs that convey a REST API's resource model to its potential client developers. Source: Mark Masse - REST API Design Rulebook.
 
---- blank
+---
 # Format
 Defined in RFC 3986. URI = schema"://"authority"/"path[ "?" query ][ "#" fragment ]
 
---- blank
+---
 # URI Rules
 
---- blank
+---
 # Forward slash operator must be used to indicate a hierarchical relationship
 https://api.canvas.restapi.org/shapes/polygones/quadrilaterals/squares
 
@@ -165,28 +165,28 @@ A controller resource behaves like an executable function. It has input and outp
 - Do: POST /alerts/1234/resend
 - Don't: POST /alerts/1234/new-alert
 
---- blank
+---
 # URI Path Design Rules
 
---- blank
+---
 # A singular noun should be used for document names
 Example: http://api.example.com/leagues/seattle/teams/denic/players/tobi. The URI for the single player document "tobi" is /tobi.
 
---- blank
+---
 # A plural noun should be used for collection names
 Example: http://api.example.com/leagues/seattle/teams/denic/players. The URI for a collection of player documents is /players.
 
---- blank
+---
 # A plural noun should be used for store names
 Example: http://api.example.com/artists/tobi/playlists. The URI of the store of playlists is /playlists.
 
---- content
+---
 # A verb or verb phrase should be used for controller names
 
 - http://api.example.com/students/tobi/register
 - http://api.example.com/databases/nic/reindex
 
---- content
+---
 # Variable path segments may be substituted with id values
 
 - http://api.example.com/leagues/{league-id}/teams/{team-id}/players/{player-id}
@@ -201,7 +201,7 @@ Example: http://api.example.com/artists/tobi/playlists. The URI of the store of 
 - Don't: GET /api/deleteUser?id=1234
 - Don't: POST /api/users/1234/delete
 
---- blank
+---
 # URL Query Design
 URI = schema"://"authority"/"path[ "?" query ][ "#" fragment ]
 
@@ -220,11 +220,11 @@ Note: other names for those query params are totally fine.
 
 When the complexity of a client's pagination or filtering requirements exceeds the simple formatting capabilities of the query part, consider designing a special controller.
 
---- blank
+---
 # Interaction Design with HTTP
 When to use GET, POST, PUT, HEAD, etc.
 
---- blank
+---
 # GET and POST must not be used to tunnel other request methods
 Example: GET /users/1234/delete-user
 
@@ -249,11 +249,11 @@ Response:
 
 Note: Headers are allowed. Using a body in GET is technically possible but discouraged.
 
---- blank
+---
 # HEAD should be used to retrieve response headers
 HEAD should return the same response as GET, but without the body. Can be used to check if a resource exists or to read its metadata.
 
---- content
+---
 # PUT must be used to both insert and update a stored resource
 
 - PUT must be used to add a new resource to a store, with a URI specified by the client, e.g. PUT http://api.example.com/users/notes/{client-specified}
@@ -290,7 +290,7 @@ POST can be used to trigger processes that cannot be mapped to the HTTP methods.
 
 Example: POST http://api.example.com/databases/nic/reindex
 
---- blank
+---
 # DELETE must be used to remove a resource from its parent
 Example: DELETE /accounts/1234/buckets/objects/4321. The object with id 4321 will be deleted.
 
@@ -302,7 +302,7 @@ Response should contain the Allow header, that contains usable methods.
 
 Example: Allow: GET, PUT, DELETE
 
---- content
+---
 # Response Status Codes
 
 - 1xx: Informational
@@ -311,70 +311,70 @@ Example: Allow: GET, PUT, DELETE
 - 4xx: Client Error
 - 5xx: Server Error
 
---- blank
+---
 # 200 should be used to indicate nonspecific success
 A 200 "ok" response should include a body. A 200 is used when no other 2xx variant matches.
 
---- blank
+---
 # 200 must not be used to communicate errors in the response body
 If you want to communicate errors, use a 4xx or 5xx response. A 200 indicates success, not an error.
 
---- blank
+---
 # 201 must be used to indicate successful resource creation
 A 201 "Created" indicates that a new resource has been created at a store or collection. In some cases a controller might also create a new resource - in that case a 201 is also the correct response.
 
---- blank
+---
 # 202 must be used to indicate successful start of an asynchronous operation
 A 202 "Accepted" indicates that an operation has successfully started. Controller resources may send 202 responses, but no other resource types should do that.
 
---- blank
+---
 # 204 should be used when the response body is intentionally empty
 A 204 "No Content" is usually used in response to a PUT, POST or DELETE request. A 204 may also be used as response to a GET request to indicate that the requested resource exists, but has no state representation to include in the body.
 
---- blank
+---
 # 301 should be used to relocate resources
 A 301 "Moved Permanently" indicates that the API's resource model has been redesigned and a new permanent URI has been assigned. The REST API should specify the new URI in the response's Location header.
 
---- blank
+---
 # 302 should not be used
 A 302 "Found" was intended to be used as automatic redirect behavior that only applies if the client's original request used either the GET or HEAD method. This has been commonly misinterpreted by programmers in the past. HTTP 1.1 introduced status codes 303 "See Other" and 307 "Temporary Redirect", which should be used instead.
 
---- blank
+---
 # 406 must be used when the requested media type cannot be served
 A 406 "Not Acceptable" indicates that the API is not able to generate any of the client's preferred media types. A client might request application/xml but the API can only serve application/json.
 
---- blank
+---
 # 409 should be used to indicate a violation of resource state
 A 409 "Conflict" indicates that the client tried to put a REST API's resource into an impossible or inconsistent state. Example: a client tries to delete a non-empty store resource.
 
---- blank
+---
 # 412 should be used to support conditional operations
 A 412 "Precondition Failed" indicates that the client's specified preconditions were not met. A client can specify preconditions in the request headers.
 
---- blank
+---
 # 415 must be used when the media type of a request's payload cannot be processed
 A 415 "Unsupported Media Type" indicates that the API is not able to process the provided media type. Example: a client tries to supply XML-encoded data, while the API only supports JSON-encoded data.
 
---- blank
+---
 # 500 should be used to indicate API malfunction
 A 500 "Internal Server Error" is a generic error response. A 500 is never a client's fault. A 500 is normally caused by any kind of bug or unexpected behavior in the API.
 
---- blank
+---
 # Metadata Design
 
---- blank
+---
 # Content-Type must be used
 The Content-Type header names the type of data found within a request or response message body. See the IANA media types registry for more info, and RFC 2046 (https://www.rfc-editor.org/rfc/rfc2046.html) for details.
 
---- blank
+---
 # Content-Length should be used
 The Content-Length header provides the size of the entity body in bytes. Content-Length can be used to check whether the correct number of bytes has been read. A client can use a HEAD request to find out how many bytes will be provided in the GET response.
 
---- blank
+---
 # Last-Modified should be used in responses
 The Last-Modified header applies to response messages only. This header should always be supplied in response to GET requests.
 
---- blank
+---
 # Location must be used to specify the URI of a newly created resource
 A REST API must include the Location header to designate the URI of the newly created resource. In a 202 "Accepted" response, this header may be used to direct clients to the operational status of an asynchronous controller resource.
 
@@ -386,19 +386,19 @@ Example: Cache-Control: max-age=60, must-revalidate
 
 To support legacy HTTP 1.0 caches, a REST API should include an Expires header with the expiration date-time. REST APIs should include the Date header with the date-time stamp of the response.
 
---- blank
+---
 # Caching should be encouraged
 The no-cache directive will prevent any cache from serving cached responses. Using a small value of max-age as opposed to adding a no-cache directive helps clients fetch cached copies for at least a short while without significantly impacting freshness.
 
---- blank
+---
 # Expiration caching headers should be used with 200 responses
 Set expiration caching headers in responses to successful GET and HEAD requests.
 
---- blank
+---
 # Expiration caching headers may optionally be used with 3xx and 4xx responses
 In addition to successful responses with the 200 response code, adding caching headers to 3xx and 4xx responses is a good practice. This is known as negative caching - it helps reduce the amount of redirecting and error-triggering load on a REST API.
 
---- blank
+---
 # Error Representation
 
 --- mixed

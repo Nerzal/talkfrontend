@@ -7,16 +7,16 @@ month: 10
 tags: [info, sec]
 ---
 
---- title
+---
 # MITRE 2021 Top 25 CWE
 ## You Should Be Aware of These
 Nerzal · October 2021
 
---- image
+---
 ![Screenshot of a tweet about security vulnerabilities](assets/20211028_005402.jpg)
 Source: twitter (https://twitter.com/z3r0trust/status/1453180840091926532)
 
---- content
+---
 # What?
 - Top 25 CWE (Common Weakness Enumeration)
 - They have a list at cwe.mitre.org/top25/archive/2021/2021_cwe_top25.html
@@ -111,16 +111,16 @@ What could possibly go wrong with OS commands? How about an input like: ; rm -rf
 
 Validate your inputs and neutralize dangerous input!
 
---- image
+---
 # 6. CWE-89: Improper Neutralization of Special Elements Used in an SQL Command (SQL Injection)
 ![xkcd comic "Exploits of a Mom" (Little Bobby Tables)](assets/exploits_of_a_mom.png)
 XKCD Comic — Exploits of a Mom (https://xkcd.com/327/)
 
---- blank
+---
 # 7. CWE-416: Use After Free
 Referencing memory after it has been freed can cause a program to crash, use unexpected values, or execute code. Source: cwe.mitre.org/data/definitions/416.html. No problem in Java, C#, Go, etc. Could be a big problem in C, C+, C++ (all puns intended).
 
---- code
+---
 # 8. CWE-22: Improper Limitation of a Pathname to a Restricted Directory (Path Traversal)
 ```go
 package main
@@ -176,7 +176,7 @@ Restrict the file types you accept. You have a PDF upload? Good — then only ac
 
 There is no reason to not have authentication for your critical data and functions!
 
---- mixed
+---
 # 12. CWE-190: Integer Overflow or Wraparound
 ```go
 package main
@@ -219,11 +219,11 @@ Wait?! What?! Why?
 - ...
 - The attacker administrates your application
 
---- blank
+---
 # 14. What Can We Do?!
 Do not implement auth mechanisms yourself. (Also, please do not implement crypto logic yourself.) Just use Keycloak or a similar service, and use standard auth flows like OAuth2.
 
---- mixed
+---
 # 15. CWE-476: NULL Pointer Dereference
 ```go
 package main
@@ -246,7 +246,7 @@ What can we do?
 - System tests
 - E2E tests
 
---- blank
+---
 # 16. CWE-798: Use of Hard-Coded Credentials
 What shall I explain here? Do NOT hardcode credentials! How to prevent it? Use linters, static code analysis tools, proper code review, etc.
 
@@ -261,7 +261,7 @@ Where is that dangerous?
 - Assembly
 - Other languages
 
---- blank
+---
 # 17. How?
 You have a buffer, you get user input, the buffer overflows, and then you could overwrite critical data in RAM.
 
@@ -274,7 +274,7 @@ You have a buffer, you get user input, the buffer overflows, and then you could 
 
 Why? You didn't validate the user's permissions when they accessed resources they shouldn't have had access to.
 
---- blank
+---
 # 19. CWE-276: Incorrect Default Permissions
 During installation, installed file permissions are set to allow anyone to modify those files. Source: cwe.mitre.org/data/definitions/276.html. This is also a problem when setting up Docker containers where the user has too many privileges.
 
@@ -300,7 +300,7 @@ The product transmits or stores authentication credentials using an insecure met
 
 Why? You didn't check that the user changing the password was actually that user.
 
---- content
+---
 # 21. More Problems?
 - You transmit user credentials via HTTP?!
 - You store user credentials in clear text
@@ -314,7 +314,7 @@ Why? You didn't check that the user changing the password was actually that user
 
 Why? You forgot to check the user's permission to do so.
 
---- blank
+---
 # 22. What Else?
 You created a file with incorrect permissions, for example 777.
 
@@ -326,7 +326,7 @@ What? In simple words: XML documents can specify that external resources should 
 
 You could put common paths to credentials into the document.
 
---- blank
+---
 # 23. How to Prevent It?
 Deactivate XML external entity references in your XML parser.
 
@@ -338,7 +338,7 @@ Deactivate XML external entity references in your XML parser.
 
 What? The attacker used your API as a proxy to resources that could be behind firewalls, etc. It could also be used to port-scan, etc.
 
---- content
+---
 # 24. How to Prevent It?
 - Don't do such things? :)
 - Don't let the consumer specify the port

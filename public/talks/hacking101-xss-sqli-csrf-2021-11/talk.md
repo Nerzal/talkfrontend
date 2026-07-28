@@ -11,7 +11,7 @@ tags: [security, hacking, xss, sqli, csrf, mitre]
 # Hacking101 #1\nXSS, SQL Injection & CSRF
 Yannick · November 2021
 
---- content
+---
 # Contents
 - Sources
 - Requirements
@@ -19,59 +19,59 @@ Yannick · November 2021
 - Live Hacking: XSS (Cross-Site Scripting), SQL Injection, CSRF (Cross-Site Request Forgery)
 - MITRE Prospect
 
---- blank
+---
 # Sources
 
---- content
+---
 # Sources
 - Hack The Box (hackthebox.eu): great for cert prep (OSCP etc.), tons of VMs with good tutorials via ippsec.rocks, hard for beginners but improving
 - TryHackMe (tryhackme.com): good guidance for beginners, better structured
 - Google Fu
 - hackertyper.net
 
---- content
+---
 # Sources
 - Today's box: Bankrobber (HTB)
 
---- image
+---
 ![HackTheBox "Bankrobber" machine info card](assets/br_info.png)
 
---- blank
+---
 # Requirements
 
---- content
+---
 # Requirements
 - Black hoodie
 
---- image
+---
 ![A black hoodie](assets/hoodie.jpeg)
 
---- content
+---
 # Requirements
 - Linux machine running one of: Kali Linux, ParrotOS, BlackArch, or equivalent
 
---- content
+---
 # Requirements
 - Hacker stickers (at least one Mr. Robot reference)
 
---- image
+---
 ![Laptop lid covered in hacker-themed stickers](assets/stickers.jpeg)
 
---- content
+---
 # Requirements
 - Green-on-black terminal color scheme
 
---- image
+---
 ![Terminal with a green-on-black color scheme](assets/terminal.png)
 
---- content
+---
 # Requirements
 - Just kidding — use whatever you like (except Windows)
 
---- blank
+---
 # MITRE Recap
 
---- content
+---
 # MITRE Recap
 - Out-of-bounds Write
 - Cross-Site Scripting (covered today)
@@ -86,7 +86,7 @@ Yannick · November 2021
 - Missing Authentication for Critical Function
 - Integer Overflow or Wraparound
 
---- content
+---
 # MITRE Recap
 - Deserialization of Untrusted Data
 - Improper Authentication (touched on today)
@@ -102,17 +102,17 @@ Yannick · November 2021
 - Server-Side Request Forgery
 - Command Injection
 
---- blank
+---
 # Live Hacking
 
---- content
+---
 # Different Kinds of XSS
 - Reflected XSS: the application receives data in an HTTP request
 - The data sent is included ("reflected") back in the response
 - Example: https://10.10.10.154/index.php?msg=User%20created.
 - Possible reflected XSS payload: https://10.10.10.154/index.php?msg=<script>some.evil.javaScript()</script>
 
---- code
+---
 # How to Prevent Reflected XSS
 ```go
 func main() {
@@ -126,7 +126,7 @@ func main() {
 }
 ```
 
---- content
+---
 # Different Kinds of XSS
 - Stored XSS (also called Persistent XSS)
 - Scripts are stored on the server (databases, forums, "About Me" fields)
@@ -172,7 +172,7 @@ if ($_SERVER['REMOTE_ADDR'] == "::1") {
 }
 ```
 
---- content
+---
 # How to Prevent XSS in General
 - All user data is untrusted
 - Never put untrusted data directly into an HTML document
@@ -181,7 +181,7 @@ if ($_SERVER['REMOTE_ADDR'] == "::1") {
 - Quote untrusted data in HTML attributes — quoted attributes can only be broken out of with " or '; unquoted attributes can also be broken with space % * + , - / ; < = > ^ and |
 - Don't try to do this yourself — use libraries
 
---- blank
+---
 # SQL Injection
 
 --- mixed
@@ -199,25 +199,32 @@ SQL injection:
 SELECT username FROM users WHERE password == '' OR 1=1-- -'
 ```
 
---- table
-title: SQL Union Injection
-statement: SELECT * from users WHERE id = '1'
-columns: [ID, User, Password]
-rows:
-  - cells: ['1', Admin, Hopelessromantic]
-    variant: normal
-caption: The vulnerable query, with its normal result.
+---
+# SQL Union Injection
 
---- table
-title: SQL Union Injection
-statement: "SELECT * from users WHERE id = '1' union select 0,evil stuff,0;-- -'"
-columns: [ID, User, Password]
-rows:
-  - cells: ['1', Admin, Hopelessromantic]
-    variant: normal
-  - cells: ['0', evil stuff, '0']
-    variant: danger
-caption: A UNION injection appends an attacker-controlled row to the result set.
+```sql
+SELECT * from users WHERE id = '1'
+```
+
+| ID | User | Password |
+|---|---|---|
+| 1 | Admin | Hopelessromantic |
+
+The vulnerable query, with its normal result.
+
+---
+# SQL Union Injection
+
+```sql
+SELECT * from users WHERE id = '1' union select 0,evil stuff,0;-- -'
+```
+
+| ID | User | Password |
+|---|---|---|
+| 1 | Admin | Hopelessromantic |
+| 0 | evil stuff | 0 | danger |
+
+A UNION injection appends an attacker-controlled row to the result set.
 
 --- mixed
 # How to Prevent SQL Injection (PHP)
@@ -249,10 +256,10 @@ Safe:
 db.Query("SELECT * FROM user WHERE id = ?", id)
 ```
 
---- blank
+---
 # What's That Weird Backdoorchecker???
 
---- image
+---
 # backdoorchecker.php Attack
 ![Diagram of the backdoorchecker.php CSRF attack flow](assets/csrf.svg)
 
@@ -268,14 +275,14 @@ db.Query("SELECT * FROM user WHERE id = ?", id)
 
 Classic real-life CSRF differs a bit, but the prevention is the same.
 
---- content
+---
 # Prevent CSRF (XSRF)
 - Use well-known, well-tested frameworks
 - Generate CSRF tokens
 - Don't transmit tokens/credentials via cookies
 - Use session variables or hidden form fields instead
 
---- content
+---
 # MITRE Prospect
 - Out-of-bounds Write — hard to explain, not very relevant for Go/Java
 - Cross-Site Scripting (already covered)
@@ -290,7 +297,7 @@ Classic real-life CSRF differs a bit, but the prevention is the same.
 - Missing Authentication for Critical Function (kind of covered)
 - Integer Overflow or Wraparound — didn't find good exploits, more of a bug class
 
---- content
+---
 # MITRE Prospect
 - Deserialization of Untrusted Data — good examples in Java
 - Improper Authentication (kind of covered)
@@ -306,7 +313,7 @@ Classic real-life CSRF differs a bit, but the prevention is the same.
 - Server-Side Request Forgery — similar to CSRF but could go deeper
 - Command Injection (kind of covered)
 
---- content
+---
 # Sources
 - Slides (git): https://github.com/y-peter/HackingTalks
 - Prevent XSS: OWASP Cross-Site Scripting Prevention Cheat Sheet (https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)

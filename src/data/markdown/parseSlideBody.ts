@@ -1,4 +1,5 @@
-import type { Bullet, ContentBlock } from '../types'
+import type { Bullet, ContentBlock, TableRow, TableRowVariant } from '../types'
+import { isFenceBoundary } from './fence'
 
 const H1_PATTERN = /^#\s+(.+)$/m
 const IMAGE_PATTERN = /!\[([^\]]*)\]\(([^)]+)\)/
@@ -196,4 +197,181 @@ export function parseBlankBody(body: string): BlankBody {
     bodyLines.push(line)
   }
   return { heading, body: bodyLines.length > 0 ? bodyLines.join(' ') : undefined }
+}
+
+const TABLE_SEPARATOR_CELL = /^:?-+:?$/
+const TABLE_ROW_VARIANTS = new Set<TableRowVariant>([
+  'normal',
+  'highlight',
+  'warning',
+  'danger',
+  'deleted',
+])
+
+function splitTableRow(line: string): string[] {
+  let trimmed = line.trim()
+  if (trimmed.startsWith('|')) trimmed = trimmed.slice(1)
+  if (trimmed.endsWith('|')) trimmed = trimmed.slice(0, -1)
+  return trimmed.split('|').map((cell) => cell.trim())
+}
+
+function isTableSeparatorRow(cells: string[]): boolean {
+  return cells.length > 0 && cells.every((cell) => TABLE_SEPARATOR_CELL.test(cell))
+}
+
+export interface TableBody {
+  title?: string
+  statement?: string
+  columns: string[]
+  rows: TableRow[]
+  empty: boolean
+  caption?: string
+  ascii?: string
+  image?: string
+  imageAlt?: string
+}
+
+/**
+ * A `table` slide written as Markdown instead of YAML: optional "# Title",
+ * an optional fenced code block *before* the table becomes the SQL
+ * `statement`, a GFM pipe table becomes `columns`/`rows` (a row with one
+ * extra trailing cell matching a known variant name, e.g.
+ * "| 1 | Oma | highlight |", sets that row's `variant`; zero data rows
+ * means `empty`), then either a Markdown image or a fenced code block
+ * *after* the table becomes the illustration slot (`image`/`imageAlt` or
+ * `ascii`), and any remaining prose becomes the `caption`.
+ */
+export function parseTableBody(body: string): TableBody {
+  const title = H1_PATTERN.exec(body)?.[1]?.trim()
+
+  let inFence = false
+  let fenceLines: string[] = []
+  let seenTable = false
+  let statement: string | undefined
+  let ascii: string | undefined
+  const tableLines: string[] = []
+  const otherLines: string[] = []
+
+  for (const raw of body.split('\n')) {
+    if (isFenceBoundary(raw)) {
+      if (inFence) {
+        const content = fenceLines.join('\n')
+        if (seenTable) ascii = content
+        else statement = content
+        fenceLines = []
+      }
+      inFence = !inFence
+      continue
+    }
+    if (inFence) {
+      fenceLines.push(raw)
+      continue
+    }
+    const line = raw.trim()
+    if (!line || line.startsWith('# ')) continue
+    if (line.includes('|')) {
+      tableLines.push(line)
+      seenTable = true
+      continue
+    }
+    otherLines.push(raw)
+  }
+
+  let columns: string[] = []
+  const rows: TableRow[] = []
+  if (tableLines.length > 0) {
+    columns = splitTableRow(tableLines[0])
+    for (const rowLine of tableLines.slice(1)) {
+      const cells = splitTableRow(rowLine)
+      if (isTableSeparatorRow(cells)) continue
+      let variant: TableRowVariant | undefined
+      let rowCells = cells
+      if (cells.length === columns.length + 1) {
+        const last = cells[cells.length - 1].toLowerCase() as TableRowVariant
+        if (TABLE_ROW_VARIANTS.has(last)) {
+          variant = last
+          rowCells = cells.slice(0, -1)
+        }
+      }
+      rows.push({ cells: rowCells, variant })
+    }
+  }
+
+  const otherText = otherLines.join('\n')
+  const imageMatch = IMAGE_PATTERN.exec(otherText)
+  const image = imageMatch?.[2]
+  const imageAlt = imageMatch?.[1]
+  const captionLines = otherLines
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0 && !IMAGE_PATTERN.test(line))
+  const caption = captionLines.length > 0 ? captionLines.join(' ') : undefined
+
+  return {
+    title,
+    statement,
+    columns,
+    rows,
+    empty: rows.length === 0,
+    caption,
+    ascii,
+    image,
+    imageAlt,
+  }
+}
+
+export interface SpeakerBody {
+  heading?: string
+  photo?: string
+  facts?: string[]
+  website?: string
+  linkedin?: string
+  github?: string
+  twitter?: string
+  bluesky?: string
+  mastodon?: string
+}
+
+const STANDALONE_LINK_PATTERN = /^\[([^\]]+)]\(([^)]+)\)$/
+
+const LINK_LABEL_ALIASES: Record<string, keyof Omit<SpeakerBody, 'heading' | 'photo' | 'facts'>> = {
+  website: 'website',
+  linkedin: 'linkedin',
+  github: 'github',
+  twitter: 'twitter',
+  x: 'twitter',
+  bluesky: 'bluesky',
+  mastodon: 'mastodon',
+}
+
+/**
+ * A `speaker` slide written as Markdown instead of YAML: optional
+ * "# Heading", an optional Markdown image for the `photo`, a bullet list
+ * for `facts`, and standalone `[label](url)` links whose label
+ * (case-insensitive; "x" is an alias for "twitter") matches one of the
+ * known social fields.
+ */
+export function parseSpeakerBody(body: string): SpeakerBody {
+  const heading = H1_PATTERN.exec(body)?.[1]?.trim()
+  const imageMatch = IMAGE_PATTERN.exec(body)
+  const photo = imageMatch?.[2]
+
+  const facts: string[] = []
+  const result: SpeakerBody = { heading, photo }
+
+  for (const raw of body.split('\n')) {
+    const line = raw.trim()
+    if (!line) continue
+    const bullet = parseBulletLine(line)
+    if (bullet) {
+      facts.push(bullet.text)
+      continue
+    }
+    const linkMatch = STANDALONE_LINK_PATTERN.exec(line)
+    if (linkMatch) {
+      const key = LINK_LABEL_ALIASES[linkMatch[1].trim().toLowerCase()]
+      if (key) result[key] = linkMatch[2].trim()
+    }
+  }
+
+  return { ...result, facts: facts.length > 0 ? facts : undefined }
 }

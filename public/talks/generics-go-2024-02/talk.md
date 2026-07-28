@@ -7,20 +7,20 @@ month: 2
 tags: [go, generics]
 ---
 
---- title
+---
 # Go Generics
 ## Introduction to generics in Go
 Nerzal · Februar 2024
 
---- content
+---
 # Agenda
 - A brief history of generics in Go
 
---- blank
+---
 # History
 Starting with version 1.18, Go has added support for generics, also known as type parameters. What have Go devs done before 1.18?
 
---- mixed
+---
 # Prior 1.18
 - Use workarounds with interfaces, reflection, code generation
 - Implement the same function over and over again for other types
@@ -45,7 +45,7 @@ func maxInt(numbers []int) int {
 }
 ```
 
---- code
+---
 # Now → NOW! → NOW!!!111elf
 ```go
 package main

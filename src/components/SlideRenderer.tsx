@@ -13,7 +13,7 @@ interface Props {
   stepIndex?: number
 }
 
-export function SlideRenderer({ slide, stepIndex = 0 }: Props) {
+function renderSlide(slide: Slide, stepIndex: number) {
   switch (slide.layout) {
     case 'title':
       return <TitleSlide slide={slide} />
@@ -32,4 +32,21 @@ export function SlideRenderer({ slide, stepIndex = 0 }: Props) {
     case 'mixed':
       return <MixedSlide slide={slide} stepIndex={stepIndex} />
   }
+}
+
+export function SlideRenderer({ slide, stepIndex = 0 }: Props) {
+  const content = renderSlide(slide, stepIndex)
+
+  if (!slide.background) return content
+
+  return (
+    <div className="relative flex-1 min-h-0 flex flex-col">
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: `url(${slide.background})` }}
+      />
+      <div className="absolute inset-0 bg-black/60" />
+      <div className="relative flex-1 min-h-0 flex flex-col">{content}</div>
+    </div>
+  )
 }

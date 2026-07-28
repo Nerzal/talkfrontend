@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import type { Talk } from '../data/types'
 import { getTalkById } from '../data/queries'
@@ -32,9 +32,11 @@ function ActiveTalkView({ talk }: { talk: Talk }) {
     useTalkPresenter(talk)
   const slide = talk.slides[slideIndex]
   const [strokes, setStrokes] = useSlideStrokes(slide.id)
+  const remoteNavRef = useRef(false)
 
   const { post } = usePresenterChannel(talk.id, (msg) => {
     if (msg.type === 'nav') {
+      remoteNavRef.current = true
       setNav(msg.slideIndex, msg.stepIndex)
     } else if (msg.type === 'draw-stroke' && msg.slideId === slide.id) {
       setStrokes((s) => [...s, { points: msg.points, color: msg.color }])
@@ -46,6 +48,23 @@ function ActiveTalkView({ talk }: { talk: Talk }) {
   useEffect(() => {
     post({ type: 'request-state' })
   }, [post])
+
+  // Mirror this view's own navigation (keyboard/click, either here or in the
+  // presenter window) to the other window — but not when this slideIndex/
+  // stepIndex change was itself just applied from an incoming 'nav' message,
+  // or every remote move would echo straight back to its sender.
+  const didMountRef = useRef(false)
+  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true
+      return
+    }
+    if (remoteNavRef.current) {
+      remoteNavRef.current = false
+      return
+    }
+    post({ type: 'nav', slideIndex, stepIndex })
+  }, [slideIndex, stepIndex, post])
 
   const openPresenterView = useCallback(() => {
     window.open(`/talk/${talk.id}/presenter`, '_blank', 'noopener')

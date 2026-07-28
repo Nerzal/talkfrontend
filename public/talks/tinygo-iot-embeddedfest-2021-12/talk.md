@@ -7,12 +7,12 @@ month: 12
 tags: [go, tinygo]
 ---
 
---- title
+---
 # IoT in TinyGo
 ## An introduction to TinyGo with examples that are based on IoT projects
 Tobias · December 2021
 
---- content
+---
 # Agenda
 - What is TinyGo?
 - The Arduino Nano 33 IoT
@@ -20,15 +20,15 @@ Tobias · December 2021
 - Send Data over the network
 - Livedemo
 
---- content
+---
 # What is TinyGo?
 - A new compiler
 - A new implementation of the Go std libraries
 
---- blank
+---
 # New compiler benefits
 
---- code
+---
 # Hello World
 ```go
 package main
@@ -38,7 +38,7 @@ func main() {
 }
 ```
 
---- code
+---
 # Comparison
 ```bash
 $ go build -o go-hello code/hello/main.go
@@ -48,55 +48,55 @@ $ tinygo build --target=arduino -gc=none -o tinygo-hello.hex code/hello/main.go
 -rw-rw-r--  1 tobias tobias     1332 Okt 21 20:07 tinygo-hello.hex
 ```
 
---- content
+---
 # New std library benefits
 - Packages are optimized for microcontrollers
 - The machine package
 
---- content
+---
 # The machine package
 - Implemented per microcontroller board
 - Offers constants for pins
 - Offers access to all interfaces on a microcontroller board
 
---- blank
+---
 # Downsides
 Not everything is implemented yet.
 
---- image
+---
 # Example
 ![Screenshot of the TinyGo standard library support table](assets/tinygo-std-lib2.png)
 Screenshot from the TinyGo documentation (https://tinygo.org/docs/reference/lang-support/stdlib/)
 
---- content
+---
 # Summary
 - TinyGo executables are really small
 - The microcontroller support is integrated into the std libraries
 - Some std libraries are not or not completely implemented
 
---- blank
+---
 # The Arduino Nano 33 IoT
 Microcontroller: SAMD21 Cortex M0+ 32-bit low power ARM MCU. WiFi Coprocessor: u-blox NINA-W102 (ESP32).
 
---- image
+---
 ![The Arduino Nano 33 IoT board](assets/arduino-nano-33-iot.png)
 Image of the Arduino Nano 33 IoT board
 
---- image
+---
 # TinyGo support
 ![TinyGo support status for the Arduino Nano 33 IoT](assets/arduino-nano-tinygo.png)
 Image of the Arduino Nano 33 IoT TinyGo support page
 
---- content
+---
 # Summary
 - 3.3V microcontroller board
 - Powerful WiFi Coprocessor
 - Very good TinyGo support
 
---- blank
+---
 # Setup a WiFi connection
 
---- code
+---
 # Setup variables
 ```go
 package wifi
@@ -117,7 +117,7 @@ var (
 )
 ```
 
---- code
+---
 # Initialize interfaces
 ```go
 func setup() {
@@ -139,7 +139,7 @@ func setup() {
 }
 ```
 
---- code
+---
 # Connect to accesspoint
 ```go
 func connectToAP() {
@@ -159,13 +159,13 @@ func connectToAP() {
 }
 ```
 
---- content
+---
 # Summary
 - Set SSID and password
 - Initialize SPI and WiFi driver
 - Trigger the connection attempt using the SetPassphrase function
 
---- code
+---
 # Setup the MQTT connection
 ```go
 package mqttclient
@@ -193,7 +193,7 @@ func Connect(client mqtt.Client) error {
 }
 ```
 
---- code
+---
 # Publish messages
 ```go
 package mqttclient
@@ -217,7 +217,7 @@ func PublishMessage(client mqtt.Client, temp int32) {
 }
 ```
 
---- code
+---
 # Putting all together
 ```go
 package main
@@ -245,7 +245,7 @@ func InitializeMQTTClient() mqtt.Client {
 }
 ```
 
---- code
+---
 # The main logic
 ```go
 package main
@@ -273,7 +273,7 @@ func main() {
 }
 ```
 
---- image
+---
 # Livedemo
 ![Screenshot of MQTT Explorer showing published temperature messages](assets/mqtt-explorer.png)
 
@@ -286,11 +286,11 @@ func main() {
 
 We are there to help you out.
 
---- image
+---
 # Learning Resources
 ![Cover of Tobias' TinyGo book](assets/B16555_MockupCover.jpg)
 
---- content
+---
 # What do you learn?
 - How to setup TinyGo + IDE
 - Basics of microcontroller development
@@ -299,6 +299,6 @@ We are there to help you out.
 - How to use WiFi and send data over the network
 - How to build web apps using WASM
 
---- blank
+---
 # Where can u get it?
 Basically at every bookstore. Here is a link to help u out: https://packt.link/a/1800560206

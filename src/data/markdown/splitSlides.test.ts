@@ -17,10 +17,19 @@ describe('splitSlides', () => {
     expect(chunks).toEqual([{ layout: 'speaker', id: 'intro', body: 'heading: Hi' }])
   })
 
-  it('ignores a bare "---" with no layout word', () => {
-    const chunks = splitSlides('--- blank\nline one\n---\nline two')
+  it('splits on a bare "---" line, with no explicit layout or id', () => {
+    const chunks = splitSlides('---\nslide one\n---\nslide two')
 
-    expect(chunks).toEqual([{ layout: 'blank', id: undefined, body: 'line one\n---\nline two' }])
+    expect(chunks).toEqual([
+      { layout: undefined, id: undefined, body: 'slide one' },
+      { layout: undefined, id: undefined, body: 'slide two' },
+    ])
+  })
+
+  it('treats a word after "---" that is not a known layout as a bare id', () => {
+    const chunks = splitSlides('--- intro\nheading: Hi')
+
+    expect(chunks).toEqual([{ layout: undefined, id: 'intro', body: 'heading: Hi' }])
   })
 
   it('ignores "--- <layout>"-looking lines inside fenced code blocks', () => {

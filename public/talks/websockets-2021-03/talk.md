@@ -7,12 +7,12 @@ month: 3
 tags: [go, websocket]
 ---
 
---- title
+---
 # Y u don't know WebSockets?
 ## Now u know!
 Tobias · March 2021
 
---- content
+---
 # Agenda
 - ServerPush
 - ServerSentEvents
@@ -20,19 +20,19 @@ Tobias · March 2021
 - WebSockets in Go
 - Real World Examples?
 
---- image
+---
 ![Frontend waiting for a server push update](assets/frontend.png)
 
---- content
+---
 # ServerPush
 - Sometimes we want to push data to clients, without having the client ask for it
 - Like: Bro, I have a lit meme, look at it!
 
---- image
+---
 # Example flow of ServerPush
 ![Diagram of the ServerPush flow](assets/SSE.png)
 
---- content
+---
 # ServerSentEvents
 - Provides ServerPush
 - Is based on a long lived HTTP connection
@@ -40,7 +40,7 @@ Tobias · March 2021
 - Browser support is good
 - Very efficient, good choice!
 
---- mixed
+---
 # WebSockets
 - Bidirectional communication
 - Event driven communication anyone?
@@ -49,21 +49,21 @@ Tobias · March 2021
 
 ![Diagram of a WebSocket connection](assets/websockets.png)
 
---- blank
+---
 # WebSockets in Go
 
---- image
+---
 # Libs
 ![Comparison of WebSocket libraries in Go](assets/ws_comparison.png)
 
---- content
+---
 # Gobwas
 - So we use Gobwas: go get github.com/gobwas/ws
 - Gobwas seems to be a good choice, as it is very versatile
 - We can use very low level connections and directly write on the socket
 - Or we use higher level abstractions and make use of JSON n stuff
 
---- code
+---
 # Listen on TCP and wait for connection
 ```go
 func main() {
@@ -85,7 +85,7 @@ func main() {
 }
 ```
 
---- code
+---
 # Handle incoming frames
 ```go
 func receive(conn net.Conn) {
@@ -107,7 +107,7 @@ func receive(conn net.Conn) {
 }
 ```
 
---- mixed
+---
 # Send message
 - Write a message to the client
 - We can also directly write on the connection
@@ -122,7 +122,7 @@ func send(conn net.Conn, message string) {
 }
 ```
 
---- code
+---
 # A little less low level
 ```go
 import (
@@ -137,7 +137,7 @@ func main() {
 }
 ```
 
---- mixed
+---
 # Upgrade the connection
 - Upgrade to WebSocket connection and handle requests
 
@@ -151,7 +151,7 @@ func HandlerFunc(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
---- code
+---
 # Handling the connection
 ```go
 func handleConnection(conn net.Conn) {
@@ -180,7 +180,7 @@ func handleConnection(conn net.Conn) {
 }
 ```
 
---- content
+---
 # Real World Examples?
 - MQTT is capable of handling WebSocket connections
 - WebSockets can be used inside WASM

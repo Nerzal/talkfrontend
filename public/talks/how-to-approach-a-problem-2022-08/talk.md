@@ -7,20 +7,20 @@ month: 8
 tags: [go, development]
 ---
 
---- title
+---
 # How to Approach a Problem
 ## As a Dev
 Tobias · August 2022
 
---- image
+---
 ![Confused person meme, unsure where to even start](assets/no-idea.jpg)
 Image from Know Your Meme (https://i.kym-cdn.com/entries/icons/facebook/000/008/342/ihave.jpg)
 
---- blank
+---
 # Introduction
 In the life of a developer, especially at the beginning, we sometimes face tasks to solve and have no idea where to start. We have a huge wall in front of us and can't see what's behind it. I want to provide some methods that helped, and are still helping me, get over this wall.
 
---- content
+---
 # Agenda
 - The Task
 - Gain Knowledge
@@ -29,7 +29,7 @@ In the life of a developer, especially at the beginning, we sometimes face tasks
 - Pair- and Mob-Programming
 - Open Discussion
 
---- image
+---
 # The Task
 ![Screenshot of a product backlog item](assets/the-task.png)
 Screenshot of a product backlog item
@@ -72,7 +72,7 @@ The writer writes down the steps needed to solve an issue. This can be done in m
 - Write a general todo list
 - Paraphrase the complete problem in your own language
 
---- code
+---
 # Example
 ```go
 func UpdateConfig(option ConfigOption) error {
@@ -90,25 +90,25 @@ The artist visualizes the problem. This can be done with simple graphics made of
 - Create a very basic image that contains all affected components
 - Create a UML sequence diagram
 
---- image
+---
 # Example
 ![Simple diagram of the affected components](assets/artist_01.png)
 Simple diagram of the affected components
 
---- image
+---
 # Example
 ![Simple sequence diagram](assets/artist_02.png)
 Simple sequence diagram
 
---- content
+---
 # Helpful Tools
 - draw.io
 - plantUML
 
---- blank
+---
 # Pair- and Mob-Programming
 Multiple developer brains tend to be very effective in finding good solutions.
 
---- blank
+---
 # Open Discussion
 What ways of approaching problems do you have?

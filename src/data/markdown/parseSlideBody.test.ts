@@ -6,6 +6,8 @@ import {
   parseImageBody,
   parseBlankBody,
   parseMixedBody,
+  parseTableBody,
+  parseSpeakerBody,
 } from './parseSlideBody'
 
 describe('parseTitleBody', () => {
@@ -152,5 +154,100 @@ describe('parseBlankBody', () => {
 
   it('tolerates a missing heading and body', () => {
     expect(parseBlankBody('')).toEqual({ heading: undefined, body: undefined })
+  })
+})
+
+describe('parseTableBody', () => {
+  it('reads title, statement, columns/rows and caption from a GFM table', () => {
+    const body = `# CREATE
+\`\`\`sql
+INSERT INTO personen VALUES (1, 'Oma', 'gesund')
+\`\`\`
+| id | name | status |
+|---|---|---|
+| 1 | Oma | gesund |
+Eine neue Zeile wird eingefügt.`
+
+    expect(parseTableBody(body)).toEqual({
+      title: 'CREATE',
+      statement: "INSERT INTO personen VALUES (1, 'Oma', 'gesund')",
+      columns: ['id', 'name', 'status'],
+      rows: [{ cells: ['1', 'Oma', 'gesund'], variant: undefined }],
+      empty: false,
+      caption: 'Eine neue Zeile wird eingefügt.',
+      ascii: undefined,
+      image: undefined,
+      imageAlt: undefined,
+    })
+  })
+
+  it('reads a row variant from a trailing extra cell', () => {
+    const body = `| id | name |
+|---|---|
+| 1 | Oma | highlight |`
+
+    const result = parseTableBody(body)
+    expect(result.rows).toEqual([{ cells: ['1', 'Oma'], variant: 'highlight' }])
+  })
+
+  it('treats zero data rows as empty', () => {
+    const body = `| id | name |
+|---|---|`
+
+    expect(parseTableBody(body).empty).toBe(true)
+  })
+
+  it('reads an image after the table as the illustration', () => {
+    const body = `| id |
+|---|
+| 1 |
+![A wolf](assets/wolf.png)`
+
+    const result = parseTableBody(body)
+    expect(result.image).toBe('assets/wolf.png')
+    expect(result.imageAlt).toBe('A wolf')
+    expect(result.ascii).toBeUndefined()
+  })
+
+  it('reads a fenced block after the table as ascii art', () => {
+    const body = `| id |
+|---|
+| 1 |
+\`\`\`
+o/
+\`\`\``
+
+    const result = parseTableBody(body)
+    expect(result.ascii).toBe('o/')
+    expect(result.image).toBeUndefined()
+  })
+})
+
+describe('parseSpeakerBody', () => {
+  it('reads heading, photo, facts and labeled social links', () => {
+    const body = `# Tobi | Nerzal
+![](assets/profile2.jpg)
+- Software Engineer
+- Speaker
+[website](https://blog.noobygames.de)
+[github](https://github.com/nerzal)`
+
+    expect(parseSpeakerBody(body)).toEqual({
+      heading: 'Tobi | Nerzal',
+      photo: 'assets/profile2.jpg',
+      facts: ['Software Engineer', 'Speaker'],
+      website: 'https://blog.noobygames.de',
+      github: 'https://github.com/nerzal',
+    })
+  })
+
+  it('treats "x" as an alias for the twitter field', () => {
+    const body = '[x](https://x.com/nerzal)'
+
+    expect(parseSpeakerBody(body).twitter).toBe('https://x.com/nerzal')
+  })
+
+  it('tolerates a body with no heading, photo, facts or links', () => {
+    expect(parseSpeakerBody('')).toEqual({ heading: undefined, photo: undefined })
   })
 })

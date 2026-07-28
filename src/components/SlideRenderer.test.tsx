@@ -96,6 +96,26 @@ describe('SlideRenderer', () => {
     expect(screen.getByText('GitHub')).toBeDefined()
   })
 
+  it('renders a background image behind the slide content when set', () => {
+    const slide: Slide = {
+      id: 'b1',
+      layout: 'blank',
+      heading: 'Questions?',
+      background: '/talks/t/assets/bg.jpg',
+    }
+    const { container } = render(<SlideRenderer slide={slide} />)
+    expect(screen.getByText('Questions?')).toBeDefined()
+    const bgLayer = container.querySelector('[style*="background-image"]')
+    expect(bgLayer).not.toBeNull()
+    expect(bgLayer?.getAttribute('style')).toContain('/talks/t/assets/bg.jpg')
+  })
+
+  it('renders no background layer when the slide has none', () => {
+    const slide: Slide = { id: 'b2', layout: 'blank', heading: 'No background' }
+    const { container } = render(<SlideRenderer slide={slide} />)
+    expect(container.querySelector('[style*="background-image"]')).toBeNull()
+  })
+
   it('renders mixed layout with combined blocks', () => {
     const slide: Slide = {
       id: 'm1',

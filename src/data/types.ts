@@ -2,6 +2,8 @@ interface SlideBase {
   id: string
   /** Speaker notes, shown only in the presenter view, never to the audience. */
   notes?: string
+  /** Image shown behind the slide's own content, dimmed for readability. Available on every layout. */
+  background?: string
 }
 
 export interface TitleSlide extends SlideBase {
