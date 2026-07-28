@@ -8,6 +8,11 @@ import { fileURLToPath } from 'node:url'
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), 'dist')
 const PORT = process.env.PORT ? Number(process.env.PORT) : 8080
 const INDEX_HTML = join(ROOT, 'index.html')
+// Vite fingerprints every file it emits here (content hash in the filename),
+// so it's the only directory safe to cache forever — everything else,
+// notably dist/talks (fetched at runtime, no cache-busting), must always be
+// revalidated or a redeployed talk stays invisible until the cache expires.
+const ASSETS_DIR = join(ROOT, 'assets') + sep
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -39,9 +44,14 @@ function resolveSafePath(urlPath) {
   return normalized
 }
 
+function cacheControlFor(filePath) {
+  if (filePath.startsWith(ASSETS_DIR)) return 'public, max-age=31536000, immutable'
+  return 'no-cache'
+}
+
 function sendFile(res, filePath) {
   const type = MIME_TYPES[extname(filePath)] ?? 'application/octet-stream'
-  const cacheControl = filePath === INDEX_HTML ? 'no-cache' : 'public, max-age=31536000, immutable'
+  const cacheControl = cacheControlFor(filePath)
   res.writeHead(200, {
     'Content-Type': type,
     'Cache-Control': cacheControl,
