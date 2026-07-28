@@ -6,8 +6,8 @@ export interface DrawPoint {
 }
 
 export type PresenterMessage =
-  | { type: 'nav'; slideIndex: number; stepIndex: number }
-  | { type: 'request-state' }
+  | { type: 'nav'; slideIndex: number; stepIndex: number; replyTo?: string }
+  | { type: 'request-state'; requestId: string }
   | { type: 'draw-stroke'; slideId: string; points: DrawPoint[]; color: string }
   | { type: 'draw-clear'; slideId: string }
 

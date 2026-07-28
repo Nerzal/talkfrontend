@@ -151,10 +151,41 @@ describe('TalkView', () => {
 
     const reply = vi.fn()
     act(() => {
-      capturedHandler?.({ type: 'request-state' }, reply)
+      capturedHandler?.({ type: 'request-state', requestId: 'r1' }, reply)
     })
 
-    expect(reply).toHaveBeenCalledWith({ type: 'nav', slideIndex: 1, stepIndex: 0 })
+    expect(reply).toHaveBeenCalledWith({
+      type: 'nav',
+      slideIndex: 1,
+      stepIndex: 0,
+      replyTo: 'r1',
+    })
+  })
+
+  it('ignores a stale reply to its own mount-time "request-state" once it has already navigated locally', async () => {
+    renderTalkView('wolf-deleted-oma-2026-07')
+    await waitFor(() => expect(screen.getByLabelText('Next slide')).toBeDefined())
+
+    const requestStateMsg = postSpy.mock.calls
+      .map(([msg]) => msg as PresenterMessage)
+      .find((msg): msg is Extract<PresenterMessage, { type: 'request-state' }> => {
+        return msg.type === 'request-state'
+      })
+    if (!requestStateMsg) throw new Error('expected a "request-state" message to have been sent')
+
+    fireEvent.click(screen.getByLabelText('Next slide'))
+    await waitFor(() => expect(screen.getByText(/Nerzal/)).toBeDefined())
+
+    // A late reply to our own mount-time request, reporting the other
+    // window's (now stale) pre-navigation position, must not revert us.
+    act(() => {
+      capturedHandler?.(
+        { type: 'nav', slideIndex: 0, stepIndex: 0, replyTo: requestStateMsg.requestId },
+        vi.fn(),
+      )
+    })
+
+    expect(screen.getByText(/Nerzal/)).toBeDefined()
   })
 
   it('broadcasts a "nav" message when navigating locally, but not on mount', async () => {

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useId, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import type { Talk } from '../data/types'
 import { getTalkById } from '../data/queries'
@@ -34,13 +34,20 @@ function ActiveTalkView({ talk }: { talk: Talk }) {
   const slide = talk.slides[slideIndex]
   const [strokes, setStrokes] = useSlideStrokes(slide.id)
   const remoteNavRef = useRef(false)
+  const requestId = useId()
+  const navigatedSinceRequestRef = useRef(false)
 
   const { post } = usePresenterChannel(talk.id, (msg, reply) => {
     if (msg.type === 'nav') {
+      // A reply to our own mount-time "where are you" request can arrive
+      // after we've already navigated locally (e.g. the presenter clicked
+      // Next immediately) — applying it then would clobber that fresh
+      // position with the other window's now-stale one, so drop it.
+      if (msg.replyTo === requestId && navigatedSinceRequestRef.current) return
       remoteNavRef.current = true
       setNav(msg.slideIndex, msg.stepIndex)
     } else if (msg.type === 'request-state') {
-      reply({ type: 'nav', slideIndex, stepIndex })
+      reply({ type: 'nav', slideIndex, stepIndex, replyTo: msg.requestId })
     } else if (msg.type === 'draw-stroke' && msg.slideId === slide.id) {
       setStrokes((s) => [...s, { points: msg.points, color: msg.color }])
     } else if (msg.type === 'draw-clear' && msg.slideId === slide.id) {
@@ -49,8 +56,8 @@ function ActiveTalkView({ talk }: { talk: Talk }) {
   })
 
   useEffect(() => {
-    post({ type: 'request-state' })
-  }, [post])
+    post({ type: 'request-state', requestId })
+  }, [post, requestId])
 
   // Mirror this view's own navigation (keyboard/click, either here or in the
   // presenter window) to the other window — but not when this slideIndex/
@@ -66,6 +73,7 @@ function ActiveTalkView({ talk }: { talk: Talk }) {
       remoteNavRef.current = false
       return
     }
+    navigatedSinceRequestRef.current = true
     post({ type: 'nav', slideIndex, stepIndex })
   }, [slideIndex, stepIndex, post])
 

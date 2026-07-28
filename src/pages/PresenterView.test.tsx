@@ -171,7 +171,10 @@ describe('PresenterView', () => {
     renderPresenterView('wolf-deleted-oma-2026-07')
     await waitFor(() => expect(screen.getByText('Next →')).toBeDefined())
 
-    expect(postSpy).toHaveBeenCalledWith({ type: 'request-state' })
+    expect(postSpy).toHaveBeenCalledWith({
+      type: 'request-state',
+      requestId: expect.any(String) as string,
+    })
   })
 
   it('replies to a "request-state" message with its current slide position', async () => {
@@ -183,10 +186,41 @@ describe('PresenterView', () => {
 
     const reply = vi.fn()
     act(() => {
-      capturedHandler?.({ type: 'request-state' }, reply)
+      capturedHandler?.({ type: 'request-state', requestId: 'r1' }, reply)
     })
 
-    expect(reply).toHaveBeenCalledWith({ type: 'nav', slideIndex: 1, stepIndex: 0 })
+    expect(reply).toHaveBeenCalledWith({
+      type: 'nav',
+      slideIndex: 1,
+      stepIndex: 0,
+      replyTo: 'r1',
+    })
+  })
+
+  it('ignores a stale reply to its own mount-time "request-state" once it has already navigated locally', async () => {
+    renderPresenterView('wolf-deleted-oma-2026-07')
+    await waitFor(() => expect(screen.getByText('Next →')).toBeDefined())
+
+    const requestStateMsg = postSpy.mock.calls
+      .map(([msg]) => msg as PresenterMessage)
+      .find((msg): msg is Extract<PresenterMessage, { type: 'request-state' }> => {
+        return msg.type === 'request-state'
+      })
+    if (!requestStateMsg) throw new Error('expected a "request-state" message to have been sent')
+
+    fireEvent.click(screen.getByText('Next →'))
+    await waitFor(() => expect(screen.getByText(/Slide 2 \//)).toBeDefined())
+
+    // A late reply to our own mount-time request, reporting the audience
+    // window's (now stale) pre-navigation position, must not revert us.
+    act(() => {
+      capturedHandler?.(
+        { type: 'nav', slideIndex: 0, stepIndex: 0, replyTo: requestStateMsg.requestId },
+        vi.fn(),
+      )
+    })
+
+    expect(screen.getByText(/Slide 2 \//)).toBeDefined()
   })
 
   it('broadcasts a "nav" message when navigating locally, but not on mount', async () => {

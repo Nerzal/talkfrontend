@@ -24,7 +24,7 @@ describe('usePresenterChannel', () => {
     const { result: sender } = renderHook(() => usePresenterChannel('talk-x'))
     renderHook(() => usePresenterChannel('talk-y', onMessage))
 
-    sender.current.post({ type: 'request-state' })
+    sender.current.post({ type: 'request-state', requestId: 'r1' })
     await new Promise((resolve) => setTimeout(resolve, 20))
 
     expect(onMessage).not.toHaveBeenCalled()
@@ -36,7 +36,7 @@ describe('usePresenterChannel', () => {
     const { unmount } = renderHook(() => usePresenterChannel('talk-unmount', onMessage))
 
     unmount()
-    sender.current.post({ type: 'request-state' })
+    sender.current.post({ type: 'request-state', requestId: 'r1' })
     await new Promise((resolve) => setTimeout(resolve, 20))
 
     expect(onMessage).not.toHaveBeenCalled()

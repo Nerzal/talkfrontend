@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { Talk } from '../data/types'
 import { getTalkById } from '../data/queries'
@@ -60,11 +60,18 @@ function ActivePresenterView({ talk }: { talk: Talk }) {
     fontSize: notesFontSize,
   } = useAutoFitFontSize([slide.notes])
   const remoteNavRef = useRef(false)
+  const requestId = useId()
+  const navigatedSinceRequestRef = useRef(false)
 
   const onChannelMessage = (msg: PresenterMessage, reply: (msg: PresenterMessage) => void) => {
     if (msg.type === 'request-state') {
-      reply({ type: 'nav', slideIndex, stepIndex })
+      reply({ type: 'nav', slideIndex, stepIndex, replyTo: msg.requestId })
     } else if (msg.type === 'nav') {
+      // A reply to our own mount-time "where are you" request can arrive
+      // after we've already navigated locally (e.g. clicking Next right
+      // away) — applying it then would clobber that fresh position with
+      // the other window's now-stale one, so drop it.
+      if (msg.replyTo === requestId && navigatedSinceRequestRef.current) return
       remoteNavRef.current = true
       setNav(msg.slideIndex, msg.stepIndex)
     }
@@ -72,8 +79,8 @@ function ActivePresenterView({ talk }: { talk: Talk }) {
   const { post } = usePresenterChannel(talk.id, onChannelMessage)
 
   useEffect(() => {
-    post({ type: 'request-state' })
-  }, [post])
+    post({ type: 'request-state', requestId })
+  }, [post, requestId])
 
   // Mirror this view's own navigation (keyboard/click, either here or in the
   // audience window) to the other window — but not when this slideIndex/
@@ -89,6 +96,7 @@ function ActivePresenterView({ talk }: { talk: Talk }) {
       remoteNavRef.current = false
       return
     }
+    navigatedSinceRequestRef.current = true
     post({ type: 'nav', slideIndex, stepIndex })
   }, [post, slideIndex, stepIndex])
 

@@ -2,9 +2,9 @@ import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
 import { render, screen, act } from '@testing-library/react'
 import { CarlOverlay } from './CarlOverlay'
 
-const MIN_INTERVAL_MS = 20_000
+const MIN_INTERVAL_MS = 40_000
 const VISIBLE_DURATION_MS = 7_000
-const MAX_APPEARANCES = 4
+const MAX_APPEARANCES = 5
 
 describe('CarlOverlay', () => {
   beforeEach(() => {

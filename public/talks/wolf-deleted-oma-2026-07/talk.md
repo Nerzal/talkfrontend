@@ -18,7 +18,7 @@ clippy: true
 
 +++ notes
 - Kurz warten, Titel wirken lassen. Präsenz zeigen.
-- Ton zweigleisig etablieren: Wir sind hier auf einem Code Meetup, aber wir fangen an mit einem Märchen.
+- Wir sind hier auf einem Code Meetup, aber wir fangen an mit einem Märchen.
 - "Herzlich willkommen. Wir reden heute über Architektur, Datenbanken und... Rotkäppchen."
 
 ---
@@ -33,60 +33,123 @@ clippy: true
 - Prämisse klarmachen: Ab jetzt zwingen wir das Märchen in die gnadenlose Logik von SQL.
 
 ---
-# Create Rotkäppchen
+# Create Großmutter
 
 ```sql
-INSERT INTO personen VALUES (1, 'Rotkäppchen', 'unterwegs', 'Wald')
+INSERT INTO personen VALUES (0, 'Großmutter', 'braucht Medizin', 'Omas Zuhause')
 ```
 
 | id | name | status | ort |
 |---|---|---|---|
-| 1 | Rotkäppchen | unterwegs | Wald | highlight |
+| 0 | Großmutter | braucht Medizin | Omas Zuhause | highlight |
+
+![Oma wurde created](assets/oma_created.png)
+
++++ notes
+- Es createte einmal eine Großmutter
+- Ihr status reads: hungrig
+- Ihr ort reads: Zuhause
+- Sie braucht wohl Medizin
+
+
+---
+# Create Rotkäppchen
+
+```sql
+INSERT INTO personen VALUES (1, 'Rotkäppchen', 'fröhlich', 'Zuhause')
+```
+
+| id | name | status | ort |
+|---|---|---|---|
+| 0 | Großmutter | braucht Medizin | Omas Zuhause |
+| 1 | Rotkäppchen | fröhlich | Zuhause | highlight |
 
 ![Rotkäppchen wurde created](assets/rotkäppchen_create.png)
 
 +++ notes
-- "Unsere Geschichte beginnt. Die Heldin betritt direkt den Wald der Datenbank."
-- Kurz und knackig, wir springen direkt in die Action.
+- Es createte einmal ein Rotkäppchen
+- Ihr status reads: fröhlich
+- Ihr ort reads: Zuhause
 
 ---
-# READ
+# Update Auftrag
 
 ```sql
-SELECT ziel FROM personen WHERE id = 1
-```
-
-| id | name | ziel |
-|---|---|---|
-| 1 | Rotkäppchen | Omas Haus im Wald |
-
-![Rotkäppchen läuft durch den Wald auf einen wartenden Wolf zu](assets/rottkäpchen_updated_position.png)
-
-Der Wolf liest ein einziges Feld. Mehr braucht er nicht, um loszulaufen.
-
-+++ notes
-- Bild kurz wirken lassen vor Caption.
-- Wolf im Hintergrund selbst entdecken lassen. "Ein klassischer unautorisierter Lesezugriff."
-
----
-# UPDATE
-
-```sql
-UPDATE personen SET ort = 'Omas Haus' WHERE id = 3
+UPDATE personen SET status = 'Auftrag erhalten' WHERE id = 1
 ```
 
 | id | name | status | ort |
 |---|---|---|---|
-| 3 | Wolf | unterwegs | Omas Haus | danger |
+| 0 | Großmutter | braucht Medizin | Omas Zuhause |
+| 1 | Rotkäppchen | Auftrag erhalten | Zuhause | highlight |
+
+![Rotkäppchen erhält auftrag](assets/rottkäppchen_update_auftrag.png)
+
++++ notes
+ - Rottkäppchens mutter updated: status
+
+---
+# Create Wolf
+
+```sql
+INSERT INTO personen VALUES (2, 'Wolf', 'hungrig', 'Im Wald')
+```
+
+| id | name | status | ort |
+|---|---|---|---|
+| 0 | Großmutter | braucht Medizin | Omas Zuhause |
+| 1 | Rotkäppchen | Auftrag erhalten | Zuhause | 
+| 2 | Wolf | hungrig | Im Wald | highlight |
+
+![Wolf wurde created](assets/wolf_created.png)
+
++++ notes
+- Es createte alsbald ein Wolf
+- Sein status reads: hungrig
+- Sein ort reads: Im Wald
+
+---
+
+# Update Unterwegs
+
+```sql
+UPDATE personen SET status = 'unterwegs' and ort = 'Wald' WHERE id = 1
+```
+
+| id | name | status | ort |
+|---|---|---|---|
+| 0 | Großmutter | braucht Medizin | Omas Zuhause |
+| 1 | Rotkäppchen | unterwegs | Wald | 
+| 2 | Wolf | hungrig | Im Wald | 
+
+![Rotkäppchen läuft durch den Wald auf einen wartenden Wolf zu](assets/rottkäpchen_updated_position.png)
+
++++ notes
+- Bild kurz wirken lassen vor Caption.
+- Wolf im Hintergrund selbst entdecken lassen. "Ein klassischer unautorisierter Lesezugriff."
+- Privilege escalation: Unauthorized Read
+
+---
+# UPDATE Ort
+
+```sql
+UPDATE personen SET ort = 'Omas Haus' WHERE id = 2
+```
+
+| id | name | status | ort |
+|---|---|---|---|
+| 0 | Großmutter | braucht Medizin | Omas Zuhause |
+| 1 | Rotkäppchen | unterwegs | Wald | 
+| 2 | Wolf | unterwegs | Omas Haus | danger |
 
 ```
-  🐺💨💨💨
+    🐺💨💨💨
 
   Abkürzung
   durchs Dickicht!
 
   ort: 'Wald'
-        ↓
+       ↓
   ort: 'Omas Haus'
 
    (¬‿¬)
@@ -99,18 +162,19 @@ Der Wolf updated seinen Standort. Schneller als jedes Kind – ein UPDATE kennt 
 - Lacher mitnehmen: "Ein UPDATE kennt kein Tempolimit."
 
 ---
-# DELETE
+# DELETE Großmutter
 
 ```sql
-DELETE FROM personen WHERE id = 2
+DELETE FROM personen WHERE id = 0
 ```
 
 | id | name | status | ort |
 |---|---|---|---|
-| 2 | Großmutter | gesund | Omas Haus | deleted |
+| 0 | Großmutter | gesund | Omas Haus | deleted |
+| 1 | Rotkäppchen | unterwegs | Wald | 
+| 2 | Wolf | unterwegs | Omas Haus | 
 
-CRUD OPERATIONS: [D]ELETE. TARGET: OMA. STATUS: DELETED. 
-Mehr Kommentar gibt das Feld nicht her.
+![Wolf deleted Großmutter](assets/wolf_deleted_oma.png)
 
 +++ notes
 - Erster harter Cut – Ton kurz ernster.
@@ -121,12 +185,13 @@ Mehr Kommentar gibt das Feld nicht her.
 # UPDATE
 
 ```sql
-UPDATE personen SET name = 'Großmutter', status = 'trägt Nachthemd', ort = 'Bett' WHERE id = 3
+UPDATE personen SET name = 'Großmutter', status = 'trägt Nachthemd', ort = 'Bett' WHERE id = 2
 ```
 
 | id | name | status | ort |
 |---|---|---|---|
-| 3 | Großmutter | trägt Nachthemd | Bett | danger |
+| 1 | Rotkäppchen | unterwegs | Wald | 
+| 2 | Großmutter | trägt Nachthemd | Bett | danger |
 
 ```
   🐺 + 👗 + 🛏️
@@ -160,24 +225,12 @@ SELECT augen, ohren, zaehne FROM personen WHERE id = 3
 | ohren | ungewöhnlich groß | warning |
 | zaehne | lebensgefährlich | danger |
 
-```
-     👧:
-  "Was hast du für
-   große ZÄHNE?!"
-
-     🐺:
-  "Damit ich dich
-   besser—"
-
-   * S P R U N G *
-```
-
-Rotkäppchen macht einen fatalen Lesezugriff auf gefälschte Daten.
+![Rotkäppchen reads Oma](assets/rottkäppchen_reads_attributes.png)
 
 +++ notes
 - Cliffhanger – dramatische Pause vor "SPRUNG".
 - Timing wichtiger als Tempo, Stille aushalten.
-- (Die zwei alten READ-Folien sind hier zu einer perfekten Pointe verschmolzen).
+- Rotkäppchen macht einen fatalen Lesezugriff auf gefälschte Daten.
 
 ---
 # DELETE
@@ -188,29 +241,50 @@ DELETE FROM personen WHERE id = 1
 
 | id | name | status | ort |
 |---|---|---|---|
-| 3 | Großmutter | satt | Bett | danger |
-| 1 | Rotkäppchen | unterwegs | Bett | deleted |
+| 1 | Rotkäppchen | erschrocken | Omas Zuhause | deleted | 
+| 2 | Großmutter | trägt Nachthemd | Bett | 
 
 ![Rotkäppchen löst sich am Fußende des Betts in Pixel auf, der Wolf liegt als Oma verkleidet im Bett](assets/rotkäppchen_deleted.png)
-
-Der Wolf deleted Rotkäppchen. Die echte Oma und das echte Rotkäppchen existieren in keiner Tabelle mehr.
 
 +++ notes
 - Zweiter harter Cut.
 - Bild zeigt beide Opfer. "Die Datenbank ist jetzt sehr ordentlich aufgeräumt. Zu ordentlich."
+- Der Wolf deleted Rotkäppchen. Die echte Oma und das echte Rotkäppchen existieren in keiner Tabelle mehr.
+
+
 
 ---
-# CREATE & DELETE (Der Jäger)
+# Create Jäger
 
 ```sql
-INSERT INTO personen VALUES (4, 'Jäger', 'alarmiert', 'Omas Haus');
-DELETE FROM personen WHERE id = 3;
+INSERT INTO personen VALUES (4, 'Jäger', 'alarmiert', 'Vor Omas Zuhause');
+```
+
+| id | name | status | ort |
+|---|---|---|---|
+| 2 | Großmutter | trägt Nachthemd | Bett | 
+| 4 | Jäger | alarmiert | Vor Omas Zuhause | highlight |
+
+![Jäger wurde created](assets/jäger_created.png)
+
++++ notes
+- Es createte einmal eine Großmutter
+- Ihr status reads: hungrig
+- Ihr ort reads: Zuhause
+- Sie braucht wohl Medizin
+
+
+---
+# DELETE Wolf
+
+```sql
+DELETE FROM personen WHERE id = 2;
 ```
 
 | id | name | status | ort |
 |---|---|---|---|
 | 4 | Jäger | alarmiert | Omas Haus | highlight |
-| 3 | Großmutter (Wolf) | satt | Bett | deleted |
+| 2 | Großmutter | satt | Bett | deleted |
 
 ```
   🪓 Jäger: "HEUTE NICHT!"
@@ -218,11 +292,8 @@ DELETE FROM personen WHERE id = 3;
   *WUUUSH!* 💨  *C-H-O-P!* 🪓
 ```
 
-Ein neuer Datensatz betritt die Geschichte. Wolf deleted. Problem "gelöst"? 
-Die Tabelle "personen" ist jetzt komplett leer.
-
 +++ notes
-- Jäger-Auftritt und Wolf-Tod auf einer Folie zusammengefasst fürs Pacing.
+- Wolf deleted. Problem "gelöst"? 
 - Scheinbarer "Sieg". Anführungszeichen um "gelöst?" betont in die Luft malen.
 - Nach dem Jubel kurz innehalten. Der Wendepunkt des Vortrags.
 
@@ -253,13 +324,13 @@ Es gibt kein Backup. Es gibt kein Rollback. Es gibt nur CREATE.
 # CREATE
 
 ```sql
-INSERT INTO personen VALUES (2, 'Großmutter', ?, ?, ?), (1, 'Rotkäppchen', ?, ?, ?)
+INSERT INTO personen VALUES (?, 'Großmutter', ?, ?, ?), (?, 'Rotkäppchen', ?, ?, ?)
 ```
 
 | id | name | status | ort | aussehen |
 |---|---|---|---|---|
-| 2 | Großmutter | ??? | ??? | ??? | warning |
-| 1 | Rotkäppchen | ??? | ??? | ??? | warning |
+| ??? | Großmutter | ??? | ??? | ??? | warning |
+| ??? | Rotkäppchen | ??? | ??? | ??? | warning |
 
 ```
       🤔 "Wie waren die beiden nochmal...?"
@@ -371,13 +442,32 @@ Kein Zauber – nur ein **Replay** des Ereignis-Logs von Anfang an.
 ---
 # Aber: Kein Märchen ohne Haken
 - Event Sourcing ist **keine Silver Bullet**.
-- **Komplexität steigt:** CQRS (Command Query Responsibility Segregation) wird oft zur Pflicht, um Daten performant lesen zu können (Read Models / Projections).
-- **Eventual Consistency:** Das System ist vielleicht nicht immer auf die Millisekunde synchron.
-- **Event Versionierung:** Was, wenn sich das Schema von `AuftragErteilt` nach 2 Jahren ändert?
+-> **Komplexität steigt:** CQRS (Command Query Responsibility Segregation) wird oft zur Pflicht, um Daten performant lesen zu können (Read Models / Projections).
+-> **Eventual Consistency:** Das System ist vielleicht nicht immer auf die Millisekunde synchron.
+-> **Event Versionierung:** Was, wenn sich das Schema von `AuftragErteilt` nach 2 Jahren ändert?
 
 +++ notes
 - Wer nur die Vorteile nennt, macht Sales. Wer die Nachteile kennt, ist Engineer.
 - "Nutzt ES nur, wenn die Historie der Daten echten fachlichen Wert hat."
+
+--- 
+# Create Clippy: Eventual Consistency
+
+```sql
+INSERT INTO personen VALUES (5, 'Clippy', 'hungrig', 'Im Wald')
+```
+
+| id | name | status | ort |
+|---|---|---|---|
+| 5 | Clippy | hungrig | Im Wald | highlight |
+
+![Rotkäppchen wurde created](assets/clippy_created.png)
+
++++ notes
+- Überrascht tun
+- Daher kommt der also
+- Irgendwann, passt der State
+- War halt asynchron
 
 ---
 # Großmutter lebt. Rotkäppchen auch.
