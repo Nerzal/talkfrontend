@@ -62,6 +62,9 @@ export interface TableSlide extends SlideBase {
   empty?: boolean
   caption?: string
   ascii?: string
+  /** Replaces the ascii-art slot with a real image instead — mutually exclusive with `ascii` in practice, but both are independently optional. */
+  image?: string
+  imageAlt?: string
 }
 
 export type ContentBlock =

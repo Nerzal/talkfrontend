@@ -5,6 +5,51 @@ import { PresenterView } from './PresenterView'
 import { TalksProvider } from '../data/TalksContext'
 import { mockTalksFetch } from '../test/mockTalksFetch'
 
+const FRAGMENT_TALK_MARKDOWN = `---
+id: frag-test
+title: Fragment Test
+year: 2026
+month: 1
+---
+
+--- content
+# First
+- shown immediately
+-> fragment one
+-> fragment two
+
+--- blank
+# Second Slide
+All done
+`
+
+const FRAGMENT_DEFAULT_SLIDES_MARKDOWN = `--- blank intro
+# Intro Slide
+
+--- blank end
+# End Slide
+`
+
+function mockFragmentTalkFetch() {
+  const jsonFiles: Record<string, unknown> = { 'index.json': ['frag-test'] }
+  const textFiles: Record<string, string> = {
+    'default-slides.md': FRAGMENT_DEFAULT_SLIDES_MARKDOWN,
+    'frag-test/talk.md': FRAGMENT_TALK_MARKDOWN,
+  }
+  vi.stubGlobal(
+    'fetch',
+    vi.fn((url: string) => {
+      const path = url.replace(/^.*\/talks\//, '')
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve(jsonFiles[path]),
+        text: () => Promise.resolve(textFiles[path]),
+      } as Response)
+    }),
+  )
+}
+
 function renderPresenterView(id: string) {
   return render(
     <MemoryRouter initialEntries={[`/talk/${id}/presenter`]}>
@@ -101,5 +146,39 @@ describe('PresenterView', () => {
 
     expect(backSpy).toHaveBeenCalledOnce()
     expect(closeSpy).not.toHaveBeenCalled()
+  })
+
+  it('keeps the next-slide preview on the current slide while fragments remain, revealing them ahead of the audience view', async () => {
+    mockFragmentTalkFetch()
+    renderPresenterView('frag-test')
+    await waitFor(() => expect(screen.getByText('Next →')).toBeDefined())
+
+    // Intro has no fragments, so the first click lands on the fragment slide.
+    fireEvent.click(screen.getByText('Next →'))
+    await waitFor(() => expect(screen.getAllByText('First').length).toBeGreaterThan(0))
+
+    // Still 2 fragments left to reveal -> preview stays on this slide, one step ahead.
+    expect(screen.getByText('Next (this slide)')).toBeDefined()
+    let fragmentOne = screen.getAllByText('fragment one').map((el) => el.closest('li'))
+    let fragmentTwo = screen.getAllByText('fragment two').map((el) => el.closest('li'))
+    expect(fragmentOne[0]?.className).toContain('opacity-0')
+    expect(fragmentOne[1]?.className).toContain('opacity-100')
+    expect(fragmentTwo[0]?.className).toContain('opacity-0')
+    expect(fragmentTwo[1]?.className).toContain('opacity-0')
+
+    // 1 fragment left -> preview still on this slide, now showing both revealed.
+    fireEvent.click(screen.getByText('Next →'))
+    expect(screen.getByText('Next (this slide)')).toBeDefined()
+    fragmentOne = screen.getAllByText('fragment one').map((el) => el.closest('li'))
+    fragmentTwo = screen.getAllByText('fragment two').map((el) => el.closest('li'))
+    expect(fragmentOne[0]?.className).toContain('opacity-100')
+    expect(fragmentOne[1]?.className).toContain('opacity-100')
+    expect(fragmentTwo[0]?.className).toContain('opacity-0')
+    expect(fragmentTwo[1]?.className).toContain('opacity-100')
+
+    // Nothing left to animate -> preview finally switches to the actual next slide.
+    fireEvent.click(screen.getByText('Next →'))
+    await waitFor(() => expect(screen.getByText('Next slide')).toBeDefined())
+    expect(screen.getByText('Second Slide')).toBeDefined()
   })
 })

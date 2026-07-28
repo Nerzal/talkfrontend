@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { resolveSlideAssets, resolveTalkAssets } from './resolveAssetPaths'
-import type { ImageSlide, SpeakerSlide, Talk } from './types'
+import type { ImageSlide, SpeakerSlide, TableSlide, Talk } from './types'
 
 describe('resolveSlideAssets', () => {
   it('prefixes a relative image src with the base URL', () => {
@@ -42,6 +42,28 @@ describe('resolveSlideAssets', () => {
 
   it('leaves a speaker slide without a photo unchanged', () => {
     const slide: SpeakerSlide = { id: 's1', layout: 'speaker', heading: 'Hi' }
+
+    const result = resolveSlideAssets(slide, '/talks')
+
+    expect(result).toEqual(slide)
+  })
+
+  it('prefixes a relative table image with the base URL', () => {
+    const slide: TableSlide = {
+      id: 's1',
+      layout: 'table',
+      columns: [],
+      rows: [],
+      image: 'assets/wolf.png',
+    }
+
+    const result = resolveSlideAssets(slide, '/talks/my-talk')
+
+    expect(result).toEqual({ ...slide, image: '/talks/my-talk/assets/wolf.png' })
+  })
+
+  it('leaves a table slide without an image unchanged', () => {
+    const slide: TableSlide = { id: 's1', layout: 'table', columns: [], rows: [], ascii: 'o/' }
 
     const result = resolveSlideAssets(slide, '/talks')
 

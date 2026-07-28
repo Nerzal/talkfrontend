@@ -104,6 +104,8 @@ export function buildSlide(chunk: SlideChunk, index: number): Slide {
         empty: bool(config.empty),
         caption: str(config.caption),
         ascii: str(config.ascii),
+        image: str(config.image),
+        imageAlt: str(config.imageAlt),
         notes,
       }
     }

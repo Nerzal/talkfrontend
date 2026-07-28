@@ -293,6 +293,13 @@
         },
         "ascii": {
           "type": "string"
+        },
+        "image": {
+          "type": "string",
+          "description": "Replaces the ascii-art slot with a real image instead — mutually exclusive with `ascii` in practice, but both are independently optional."
+        },
+        "imageAlt": {
+          "type": "string"
         }
       },
       "required": [

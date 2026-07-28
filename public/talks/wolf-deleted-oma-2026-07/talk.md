@@ -16,6 +16,10 @@ tags:
 ## Rotkäppchen, CRUD und die Sprache, die wir verlieren
 Nerzal · Juli 2026
 
++++ notes
+- Kurz warten, Titel wirken lassen
+- Ton zweigleisig: Märchen + CRUD-Kritik – zieht sich durch ganzen Talk
+
 
 --- content
 # Eine Geschichte, vier Verben
@@ -23,6 +27,10 @@ Nerzal · Juli 2026
 - Aber: nur mit CREATE, READ, UPDATE, DELETE
 - Mehr Verben gibt es nicht. Mehr Sprache auch nicht.
 - Mal sehen, wie weit wir damit kommen
+
++++ notes
+- Regel klar benennen: ab jetzt nur die 4 CRUD-Verben, auch sprachlich
+- Prämisse für den ganzen ersten Teil
 
 
 --- table
@@ -56,6 +64,10 @@ ascii: |2
    ╚═════════╝
       id = 1
 
++++ notes
+- Kontrast: normale Sprache vs. SQL
+- Kurz aufs INSERT zeigen, nicht verweilen – Witz trägt sich selbst
+
 
 --- table
 title: UPDATE
@@ -73,20 +85,10 @@ rows:
       - Wald
     variant: warning
 caption: Rotkäppchen updated ihre Position. Der Wald weiß nichts von Gefahr – CRUD kennt sowieso nur Felder, keine Bedeutung.
-ascii: |2
 
-     🌲 🌲 🌲
-
-        👧
-     "La la la~"
-
-     🌲 🧺 🌲
-
-   ort: 'Zuhause'
-        ↓
-   ort: 'Wald'
-
-     🌲 🌲 🌲
++++ notes
+- Betonen: UPDATE speichert nur Feld, keine Bedeutung
+- Pointe kurz stehen lassen vor Bildwechsel
 
 
 --- table
@@ -103,19 +105,12 @@ rows:
       - Omas Haus im Wald
     variant: normal
 caption: Der Wolf liest ein einziges Feld. Mehr braucht er nicht, um loszulaufen.
-ascii: |2
+image: assets/rottkäpchen_updated_position.png
+imageAlt: Rotkäppchen läuft durch den Wald auf einen wartenden Wolf zu
 
-     🐺: "Na, Kleine,
-      wohin so eilig?"
-
-     👧: "Zu Oma,
-      hinterm Wald!"
-
-     SELECT ziel
-      ──────────
-     → notiert. ✍️
-
-     (￣ω￣) 🐺
++++ notes
+- Bild kurz wirken lassen vor Caption
+- Wolf im Hintergrund selbst entdecken lassen
 
 
 --- table
@@ -148,6 +143,9 @@ ascii: |2
      ZUERST DA.
       (¬‿¬)
 
++++ notes
+- Tempo anziehen, Slide kurz halten – Wolf ist schnell
+
 
 --- table
 title: DELETE
@@ -164,20 +162,13 @@ rows:
       - gesund
       - Omas Haus
     variant: deleted
-caption: Eine Zeile. Weg. Kein Wimmern im Log – nur ein DELETE.
-ascii: |2
+caption: 'CRUD OPERATIONS: [D]ELETE. TARGET: OMA. STATUS: DELETED. Mehr Kommentar gibt das Feld nicht her.'
+image: assets/oma_deleted.png
+imageAlt: Wolf sitzt grinsend an einem Computer vor der Statusmeldung "Oma deleted"
 
-    👵: "Wer klopft—"
-
-    🐺: *SCHLUCK*
-
-     gulp gulp
-      gulp
-
-    (⌐■_■)ᕗ
-    "Mahlzeit!"
-
-    💨 Oma: gone
++++ notes
+- Erster harter Cut – Ton kurz ernster
+- Bild als Payoff wirken lassen, Lachpause, nicht zu schnell weiter
 
 
 --- table
@@ -211,6 +202,10 @@ ascii: |2
      id bleibt 3
      name lügt jetzt
 
++++ notes
+- Kernstelle des Talks – "id bleibt 3, name lügt jetzt" laut betonen (die These in einem Satz)
+- Etwas langsamer als bei anderen UPDATE-Slides
+
 
 --- table
 title: UPDATE
@@ -228,99 +223,19 @@ rows:
       - Omas Haus
     variant: highlight
 caption: Rotkäppchen updated ihre Position. Sie ist da. Ahnungslos.
-ascii: |2
 
-        👧
-    *klopf klopf*
-
-    "Oma? Ich bin's!"
-
-     🚪 → offen
-
-    ort: 'Omas Haus'
-       ✓ angekommen
++++ notes
+- Verbindungs-Slide, nur Vollständigkeit – zügig weiter
 
 
---- table
-title: READ
-statement: SELECT * FROM personen WHERE name = 'Großmutter'
-columns:
-  - id
-  - name
-  - status
-  - ort
-rows:
-  - cells:
-      - '3'
-      - Großmutter
-      - trägt Nachthemd
-      - Bett
-    variant: warning
-caption: 'Ein Treffer. Für CRUD ist das die Wahrheit: der Name passt, die Zeile existiert. Wer schaut schon auf die id?'
-ascii: |2
+--- image
+# READ
+![Diagramm "Attribut-Analyse: Verkleideter Wolf" mit großen Ohren, Augen und Händen als erkannte Merkmale](assets/rottkäppchen_reads_attributes.png)
+SELECT * findet einen Treffer auf name = 'Großmutter' – id = 3 liest niemand. Danach: SELECT augen, SELECT ohren. Jeder READ liefert einen Wert. Keine Erklärung, keine Warnung.
 
-       👧
-    "Guten Tag, Oma!"
-
-     SELECT *
-      ──────
-     → gefunden ✓
-     → name: 'Großmutter'
-     → id: 3 (niemand liest das)
-
-     (˶ᵔᵕᵔ˶)
-
-
---- table
-title: READ
-statement: SELECT augen FROM personen WHERE id = 3
-columns:
-  - merkmal
-  - wert
-rows:
-  - cells:
-      - augen
-      - erschreckend groß
-    variant: warning
-caption: '"Was hast du für große Augen?" – "Damit ich dich besser sehen kann!" Ein READ liefert einen Wert. Keine Erklärung.'
-ascii: |2
-
-       👧:
-    "Was hast du für
-     große AUGEN?!"
-
-       👵❓:
-    "Damit ich
-     dich besser
-     sehen kann!"
-
-     ⚠ hihi ⚠
-
-
---- table
-title: READ
-statement: SELECT ohren FROM personen WHERE id = 3
-columns:
-  - merkmal
-  - wert
-rows:
-  - cells:
-      - ohren
-      - erschreckend groß
-    variant: warning
-caption: '"Was hast du für große Ohren?" – noch ein READ, noch ein Wert ohne Warum.'
-ascii: |2
-
-       👧:
-    "Was hast du für
-     große OHREN?!"
-
-       👵❓:
-    "Damit ich
-     dich besser
-     hören kann!"
-
-     ⚠ hmm... ⚠
++++ notes
+- Bild fasst 3 Märchen-Momente zusammen (*, augen, ohren)
+- Frei auf Original-Zeilen anspielen, nicht extra vorlesen
 
 
 --- table
@@ -349,6 +264,10 @@ ascii: |2
 
       (╬ಠ益ಠ)
 
++++ notes
+- Cliffhanger – dramatische Pause vor "SPRUNG"
+- Timing wichtiger als Tempo, Stille aushalten
+
 
 --- table
 title: DELETE
@@ -372,18 +291,12 @@ rows:
       - Bett
     variant: deleted
 caption: Der Wolf deleted Rotkäppchen. Zwei Zeilen sind jetzt leer – die echte Oma und das echte Rotkäppchen existieren in keiner Tabelle mehr.
-ascii: |2
+image: assets/rotkäppchen_deleted.png
+imageAlt: Rotkäppchen löst sich am Fußende des Betts in Pixel auf, der Wolf liegt als Oma verkleidet im Bett
 
-     gulp gulp
-      GULP
-
-    🐺: (⌐■_■)ᕗ
-    "Zweite Portion!"
-
-    💨 Rotkäppchen: gone
-
-     ort: 'Bett'
-     bewohner: 1
++++ notes
+- Zweiter harter Cut, kurz halten – Muster-Wiederholung soll auffallen
+- Bild zeigt beide Opfer, kurze Pause vor Jäger
 
 
 --- table
@@ -413,6 +326,10 @@ ascii: |2
      Richtung: Omas Haus
 
      (ง'̀-'́)ง
+
++++ notes
+- Tonwechsel: düster → hoffnungsvoll
+- Jäger als Retter, Publikum kurz aufatmen lassen
 
 
 --- table
@@ -445,27 +362,47 @@ ascii: |2
 
      🎉 🎉 🎉
 
++++ notes
+- Scheinbarer "Sieg" – Anführungszeichen um "gelöst?" betont vorlesen
+- Umschwung zur These beginnt hier, nach Jubel kurz innehalten
+
 
 --- content
 # Moment... und jetzt?
 - Das Märchen sagt: Der Jäger schneidet den Wolf auf und befreit Großmutter und Rotkäppchen – lebendig
-- CRUD sagt: dafür gibt es kein Verb
-- „In CRUD-basierten Systemen gibt es kein Undelete" – Golo Roden
-- Die einzige Möglichkeit, die CRUD kennt: ein neues CREATE
+-> CRUD sagt: dafür gibt es kein Verb
+-> „In CRUD-basierten Systemen gibt es kein Undelete" – Golo Roden
+-> Die einzige Möglichkeit, die CRUD kennt: ein neues CREATE
+
++++ notes
+- Zentrale Wendestelle – 3 Fragmente einzeln klicken, Pause dazwischen
+- Roden-Zitat betont vorlesen, Kern der Kritik
+
+
+--- image
+# RESTORE?
+![Jäger sitzt panisch vor einer Data-Recovery-Konsole, die "BACKUP.OMA NOT FOUND" und "ALL RECOVERY PATHS LOST" meldet, der Wolf schaut ratlos zu](assets/oma_restore.png)
+"Die Backups sind weg! Wie restore ich sie jetzt?" Es gibt kein Backup. Es gibt kein Rollback. Es gibt nur CREATE.
+
++++ notes
+- Verzweiflung wirken lassen
+- Caption wie Comic-Sprechblase vorlesen
 
 
 --- table
 title: CREATE
-statement: "INSERT INTO personen VALUES (2, 'Großmutter', ?, ?), (1, 'Rotkäppchen', ?, ?)"
+statement: "INSERT INTO personen VALUES (2, 'Großmutter', ?, ?, ?), (1, 'Rotkäppchen', ?, ?, ?)"
 columns:
   - id
   - name
   - status
   - ort
+  - aussehen
 rows:
   - cells:
       - '2'
       - Großmutter
+      - '???'
       - '???'
       - '???'
     variant: warning
@@ -474,8 +411,9 @@ rows:
       - Rotkäppchen
       - '???'
       - '???'
+      - '???'
     variant: warning
-caption: Zwei neue Zeilen mit den alten IDs. Sind das dieselben Personen wie vorher? CRUD weiß es nicht – und wir auch nicht.
+caption: Zwei neue Zeilen mit den alten IDs. Sind das dieselben Personen wie vorher? Und – wie sahen die beiden eigentlich aus? CRUD weiß es nicht. Wir auch nicht.
 ascii: |2
 
         🤔
@@ -483,22 +421,31 @@ ascii: |2
     "Wie waren die
      beiden nochmal...?"
 
-    status: ??? ✗
-    ort:    ??? ✗
+    status:   ??? ✗
+    ort:      ??? ✗
+    aussehen: ??? ✗
 
     "Ich weiß
      es nicht."
 
       (¬_¬ ")
 
++++ notes
+- Twist-Höhepunkt: Spalte "aussehen" + "???" laut vorlesen
+- Erstmals aussprechen: wir wissen nicht mehr, wie sie aussahen
+
 
 --- content
 # Fragen, die CRUD nicht beantworten kann
-- Wann genau hat der Wolf zugeschlagen – und wen zuerst?
-- War die "Großmutter", mit der Rotkäppchen sprach, überhaupt echt?
-- Welches UPDATE war eine harmlose Ortsänderung, welches ein Betrug?
-- Sind die wiederhergestellten Personen dieselben wie vorher?
-- Wie sollen wir das jemals beweisen?
+-> Wie genau sahen Großmutter und Rotkäppchen aus? Ein INSERT kennt ein name-Feld, kein Gesicht
+-> Wann genau hat der Wolf zugeschlagen – und wen zuerst?
+-> War die "Großmutter", mit der Rotkäppchen sprach, überhaupt echt?
+-> Welches UPDATE war eine harmlose Ortsänderung, welches ein Betrug?
+-> Sind die wiederhergestellten Personen dieselben wie vorher – und wie sollen wir das je beweisen?
+
++++ notes
+- Fragmente einzeln klicken, Pause nach jeder Frage
+- Erste Frage (Aussehen) am längsten stehen lassen
 
 
 --- content
@@ -506,22 +453,37 @@ ascii: |2
 - CREATE, READ, UPDATE, DELETE sind Datenbank-Begriffe – keine Fachbegriffe
 - "Kunde storniert Bestellung", "Rolle wird delegiert", "Risiko wird neu bewertet" – alles wird zum selben UPDATE
 - „Ein Update sagt nichts darüber aus, welche fachliche Änderung eingetreten ist" – Golo Roden
-- Die Semantik verschwindet im Code
+-> Golo Rodens Pointe: eigentlich hätte der Wolf nur ein Feld `isDeleted = true` setzen sollen – dann hätte der Jäger Oma später einfach... undeleted
+-> Die Semantik verschwindet im Code
+
++++ notes
+- isDeleted-Pointe stammt aus Rodens eigenem Podcast
+- Als Callback zur eigenen Geschichte bringen, nicht als trockenes Zitat
 
 
 --- content
 # Wenn die Sprache bricht, bricht das Verständnis
 - Entwickler reden von "Update" – das Business redet von "storniert" oder "eskaliert"
-- Fachsprache und technische Sprache laufen auseinander
-- Die meisten Projekte scheitern nicht an der Technik, sondern an fehlender gemeinsamer Sprache
-- Auch ein Märchen erzählt man nicht in vier Verben
+-> „Das Überschreiben von Zuständen verwischt Spuren. Wie ist ein Zustand entstanden? Welche Abfolge führte zu einem Fehler oder zu einem Erfolg?" – Golo Roden
+-> Genau diese Spur fehlt uns bei Oma und Rotkäppchen: keiner weiß mehr, wie es wirklich war
+-> Auch ein Märchen erzählt man nicht in vier Verben
+
++++ notes
+- Zitat auf eigene Geschichte zurückbeziehen: wir wissen bis jetzt nicht, wie's wirklich war
+- Moment, wo CRUD-Kritik und Märchen zusammenfallen
 
 
 --- content
 # Ein Gedankenexperiment: dieselbe Geschichte, anders erzählt
 - Was, wenn wir nicht Zustände überschreiben, sondern erzählen, was geschah?
 - Kein UPDATE, kein DELETE – nur Ereignisse, die dazukommen
-- RotkäppchenBetratWald, WolfVerschlangGroßmutter, JägerBefreiteBeide …
+-> RotkäppchenBetratWald
+-> WolfVerschlangGroßmutter
+-> JägerBefreiteBeide …
+
++++ notes
+- Ruhiger Moment vor der Lösung, Tempo darf sinken
+- 3 Ereignisnamen einzeln klicken, wie Kapitelüberschrift
 
 
 --- table
@@ -567,17 +529,41 @@ rows:
       - GroßmutterUndRotkäppchenBefreit
       - '{ retter: ''Jäger'' }'
     variant: highlight
-caption: Kein Undelete nötig. "Befreit" ist einfach ein neues Ereignis – eins, das an die Geschichte anknüpft, statt sie zu überschreiben.
+caption: 'Kein Undelete nötig. "Befreit" ist einfach ein neues Ereignis – eins, das an die Geschichte anknüpft, statt sie zu überschreiben. Und jedes Ereignis trägt sein eigenes Wissen: wie Rotkäppchen aussah, stand schon in AuftragErteilt – und geht nie mehr verloren.'
+
++++ notes
+- Zeilenweise vorgehen, "GroßmutterUndRotkäppchenBefreit" hervorheben
+- Caption schließt Bogen zur Aussehen-Frage
+
+
+--- image
+# Event Sourcing
+![Jäger lächelt an einem Laptop, auf dem "REPLAYING EVENT STREAM... COMPLETED" steht, während eine leuchtende, wiederhergestellte Großmutter neben dem verdutzten Wolf erscheint](assets/oma_restored.png)
+"Easy! Dank Event Sourcing ist sie wieder da." Kein Zauber – nur ein Replay des Ereignis-Logs von Anfang an.
+
++++ notes
+- Emotionaler Höhepunkt: Oma erscheint wieder
+- Bild-Payoff wirken lassen vor abstrakteren Schlussfolgerungen
 
 
 --- content
 # Was sich ändert
 - Korrektur statt Fälschung: ein Fehler wird nicht gelöscht, sondern durch ein neues Ereignis richtiggestellt
 - Audit-Log gratis – es ist das System, kein Feature
-- Ereignisnamen sind Fachbegriffe, keine Datenbank-Verben
-- Die Vergangenheit bleibt lesbar, ganz ohne Raten
+-> Domain-Driven Design nennt das Ubiquitous Language: Ereignisnamen sind Fachbegriffe, keine Datenbank-Verben
+-> Ereignisse gehören zu einem Aggregate – einer fachlichen Einheit mit eigenen Regeln, nicht nur einer Tabellenzeile
+-> Die Vergangenheit bleibt lesbar, ganz ohne Raten
+
++++ notes
+- Fragmente einzeln als Zusammenfassung klicken
+- DDD-Begriffe kurz einordnen, nicht vertiefen
+- Letzter Punkt = eigentliche Pointe (kein Rätselraten mehr)
 
 
 --- blank
 # Großmutter lebt. Rotkäppchen auch.
 Und vielleicht auch unsere Sprache – wenn wir aufhören, sie in vier Verben zu pressen.
+
++++ notes
+- Warm & ruhig abschließen, Kontrast zum hektischen Mittelteil
+- Kurze Pause vor Applaus/Fragen

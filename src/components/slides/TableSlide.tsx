@@ -24,7 +24,15 @@ export function TableSlide({ slide }: Props) {
         <div className="flex-1 min-w-0">
           <DataTable columns={slide.columns} rows={slide.rows} empty={slide.empty} />
         </div>
-        {slide.ascii && <AsciiArt content={slide.ascii} />}
+        {slide.image ? (
+          <img
+            src={slide.image}
+            alt={slide.imageAlt ?? ''}
+            className="flex-1 self-stretch max-h-[40vh] md:max-h-full w-full object-contain rounded-2xl"
+          />
+        ) : (
+          slide.ascii && <AsciiArt content={slide.ascii} />
+        )}
       </div>
       {slide.caption && (
         <p className="text-center text-slate-400 text-sm sm:text-lg italic">{slide.caption}</p>

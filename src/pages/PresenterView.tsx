@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import type { Talk } from '../data/types'
 import { getTalkById } from '../data/queries'
 import { useTalks } from '../data/TalksContext'
-import { useTalkPresenter } from '../hooks/useTalkPresenter'
+import { useTalkPresenter, stepCount } from '../hooks/useTalkPresenter'
 import { usePresenterChannel } from '../hooks/usePresenterChannel'
 import type { DrawPoint, PresenterMessage } from '../hooks/usePresenterChannel'
 import { useElapsedTimer } from '../hooks/useElapsedTimer'
@@ -49,7 +49,9 @@ function ActivePresenterView({ talk }: { talk: Talk }) {
     },
   )
   const slide = talk.slides[slideIndex]
-  const nextSlide = talk.slides[slideIndex + 1]
+  const hasMoreSteps = stepIndex < stepCount(talk, slideIndex) - 1
+  const previewSlide = hasMoreSteps ? slide : talk.slides[slideIndex + 1]
+  const previewStepIndex = hasMoreSteps ? stepIndex + 1 : 0
   const timer = useElapsedTimer()
   const [strokes, setStrokes] = useSlideStrokes(slide.id)
   const [drawing, setDrawing] = useState(false)
@@ -162,9 +164,15 @@ function ActivePresenterView({ talk }: { talk: Talk }) {
 
         <div className="flex flex-col gap-4 min-h-0">
           <div>
-            <span className="text-slate-500 text-sm">Next slide</span>
-            {nextSlide ? (
-              <ScaledSlidePreview slide={nextSlide} className="w-full mt-2" />
+            <span className="text-slate-500 text-sm">
+              {hasMoreSteps ? 'Next (this slide)' : 'Next slide'}
+            </span>
+            {previewSlide ? (
+              <ScaledSlidePreview
+                slide={previewSlide}
+                stepIndex={previewStepIndex}
+                className="w-full mt-2"
+              />
             ) : (
               <div className="mt-2 aspect-video rounded bg-slate-900 flex items-center justify-center text-slate-600 text-sm">
                 End of talk

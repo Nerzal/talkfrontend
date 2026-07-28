@@ -32,7 +32,7 @@ function fragmentCount(slide: Slide): number {
   return bullets.filter((bullet) => bullet.fragment).length
 }
 
-function stepCount(talk: Talk, slideIndex: number): number {
+export function stepCount(talk: Talk, slideIndex: number): number {
   const slide = talk.slides[slideIndex]
   if (slide.layout === 'code' && slide.steps) return slide.steps.length + 1
   const fragments = fragmentCount(slide)

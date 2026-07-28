@@ -15,6 +15,9 @@ export function resolveSlideAssets(slide: Slide, baseUrl: string): Slide {
   if (slide.layout === 'speaker' && slide.photo) {
     return { ...slide, photo: resolvePath(slide.photo, baseUrl) }
   }
+  if (slide.layout === 'table' && slide.image) {
+    return { ...slide, image: resolvePath(slide.image, baseUrl) }
+  }
   return slide
 }
 

@@ -128,6 +128,26 @@ ascii: |
     })
   })
 
+  it('builds a table slide with an image replacing the ascii-art slot', () => {
+    const chunk: SlideChunk = {
+      layout: 'table',
+      body: `title: READ
+columns: [id]
+rows:
+  - cells: ["1"]
+image: assets/wolf.png
+imageAlt: A wolf`,
+    }
+
+    const slide = buildSlide(chunk, 0)
+    expect(slide).toMatchObject({
+      layout: 'table',
+      image: 'assets/wolf.png',
+      imageAlt: 'A wolf',
+      ascii: undefined,
+    })
+  })
+
   it('builds a speaker slide from a plain YAML body', () => {
     const chunk: SlideChunk = {
       layout: 'speaker',
