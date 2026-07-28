@@ -18,4 +18,4 @@
 - Speaker
 - Spielkind
 
-[talk](https://talks.noobygames.de)
+[website](https://talks.noobygames.de)
