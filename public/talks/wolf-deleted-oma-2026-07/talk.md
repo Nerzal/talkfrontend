@@ -290,9 +290,9 @@ Zwei neue Zeilen mit den alten IDs. Sind das dieselben Personen wie vorher? Und 
 
 ---
 # CRUD spricht nicht unsere Sprache
-- CREATE, READ, UPDATE, DELETE sind Datenbank-Begriffe – keine Fachbegriffe.
-- "Kunde storniert Bestellung", "Adresse korrigiert", "Mahnlauf gestartet" – alles wird zum selben dummen `UPDATE`.
-- „Ein Update sagt nichts darüber aus, welche fachliche Änderung eingetreten ist." – Golo Roden
+-> CREATE, READ, UPDATE, DELETE sind Datenbank-Begriffe – keine Fachbegriffe.
+-> "Kunde storniert Bestellung", "Adresse korrigiert", "Mahnlauf gestartet" – alles wird zum selben dummen `UPDATE`.
+-> „Ein Update sagt nichts darüber aus, welche **fachliche Änderung** eingetreten ist." – Golo Roden
 -> Die Semantik, der **Grund** für die Änderung, verschwindet im Code.
 
 +++ notes
@@ -314,7 +314,7 @@ Zwei neue Zeilen mit den alten IDs. Sind das dieselben Personen wie vorher? Und 
 ---
 # Ein Gedankenexperiment: Die Geschichte neu erzählen
 - Was, wenn wir Zustände nicht mehr überschreiben?
-- Kein UPDATE, kein DELETE. Wir speichern nur noch die **Ereignisse** (Domain Events), die passieren.
+-> Kein UPDATE, kein DELETE. Wir speichern nur noch die **Ereignisse** (Domain Events), die passieren.
 -> `RotkäppchenBetratWald`
 -> `WolfVerschlangGroßmutter`
 -> `JägerBefreiteBeide`
@@ -360,7 +360,7 @@ Kein Zauber – nur ein **Replay** des Ereignis-Logs von Anfang an.
 ---
 # Was sich ändert
 - **Korrektur statt Fälschung:** Ein Fehler wird nicht gelöscht, sondern durch ein Kompensations-Ereignis richtiggestellt (wie in der Buchhaltung).
-- **Audit-Log gratis:** Es ist die Kernarchitektur des Systems, kein angeflanschtes Feature.
+-> **Audit-Log gratis:** Es ist die Kernarchitektur des Systems, kein angeflanschtes Feature.
 -> **Ubiquitous Language:** Unsere Code-Events heißen genau so, wie die Fachabteilung spricht.
 -> Die Vergangenheit bleibt lesbar. Ganz ohne Rätselraten um 3 Uhr nachts.
 
@@ -376,7 +376,6 @@ Kein Zauber – nur ein **Replay** des Ereignis-Logs von Anfang an.
 - **Event Versionierung:** Was, wenn sich das Schema von `AuftragErteilt` nach 2 Jahren ändert?
 
 +++ notes
-- GANZ WICHTIG FÜR DAS MEETUP: Hier zeigst du Seniorität.
 - Wer nur die Vorteile nennt, macht Sales. Wer die Nachteile kennt, ist Engineer.
 - "Nutzt ES nur, wenn die Historie der Daten echten fachlichen Wert hat."
 

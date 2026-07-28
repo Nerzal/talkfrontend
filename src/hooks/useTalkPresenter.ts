@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useCallback, useEffect } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import type { Slide, Talk } from '../data/types'
 import { usePresenter } from './usePresenter'
 import { flattenBulletBlocks } from '../lib/assignFragmentOrder'
@@ -39,11 +39,40 @@ export function stepCount(talk: Talk, slideIndex: number): number {
   return fragments > 0 ? fragments + 1 : 1
 }
 
+const SLIDE_PARAM = 'slide'
+
+function clampSlideIndex(index: number, totalSlides: number): number {
+  return Math.min(Math.max(index, 0), totalSlides - 1)
+}
+
+function readSlideIndexFromUrl(searchParams: URLSearchParams, totalSlides: number): number {
+  const raw = searchParams.get(SLIDE_PARAM)
+  const parsed = raw !== null ? Number(raw) : NaN
+  return Number.isInteger(parsed) ? clampSlideIndex(parsed, totalSlides) : 0
+}
+
 export function useTalkPresenter(talk: Talk, options?: UseTalkPresenterOptions): TalkPresenter {
   const navigate = useNavigate()
-  const [slideIndex, setSlideIndex] = useState(0)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [slideIndex, setSlideIndex] = useState(() =>
+    readSlideIndexFromUrl(searchParams, talk.slides.length),
+  )
   const [stepIndex, setStepIndex] = useState(0)
   const totalSteps = stepCount(talk, slideIndex)
+
+  // Keeps the URL in sync so reloading or sharing the link resumes on this
+  // slide instead of jumping back to the start — replace (not push) so
+  // stepping through slides doesn't spam browser history.
+  useEffect(() => {
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev)
+        next.set(SLIDE_PARAM, String(slideIndex))
+        return next
+      },
+      { replace: true },
+    )
+  }, [slideIndex, setSearchParams])
 
   const goNext = useCallback(() => {
     if (stepIndex < totalSteps - 1) {

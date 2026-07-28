@@ -1,12 +1,28 @@
 import type { ReactNode } from 'react'
 import { describe, it, expect } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
+import { MemoryRouter, useSearchParams } from 'react-router-dom'
 import { useTalkPresenter } from './useTalkPresenter'
 import type { Talk } from '../data/types'
 
 function wrapper({ children }: { children: ReactNode }) {
   return <MemoryRouter>{children}</MemoryRouter>
+}
+
+function makeWrapper(initialEntries: string[], onSearchChange: (params: URLSearchParams) => void) {
+  function SearchCapture() {
+    const [params] = useSearchParams()
+    onSearchChange(params)
+    return null
+  }
+  return function Wrapper({ children }: { children: ReactNode }) {
+    return (
+      <MemoryRouter initialEntries={initialEntries}>
+        <SearchCapture />
+        {children}
+      </MemoryRouter>
+    )
+  }
 }
 
 const talk: Talk = {
@@ -92,6 +108,47 @@ describe('useTalkPresenter', () => {
     expect(result.current.slideIndex).toBe(0)
     expect(result.current.stepIndex).toBe(0)
     expect(result.current.isFirst).toBe(true)
+  })
+
+  it('reads the initial slide index from the "slide" URL param', () => {
+    const { result } = renderHook(() => useTalkPresenter(talk), {
+      wrapper: makeWrapper(['/talk/t?slide=2'], () => {}),
+    })
+
+    expect(result.current.slideIndex).toBe(2)
+  })
+
+  it('clamps an out-of-range "slide" URL param to the last slide', () => {
+    const { result } = renderHook(() => useTalkPresenter(talk), {
+      wrapper: makeWrapper(['/talk/t?slide=99'], () => {}),
+    })
+
+    expect(result.current.slideIndex).toBe(2)
+  })
+
+  it('falls back to the first slide for a missing or invalid "slide" URL param', () => {
+    const { result } = renderHook(() => useTalkPresenter(talk), {
+      wrapper: makeWrapper(['/talk/t?slide=not-a-number'], () => {}),
+    })
+
+    expect(result.current.slideIndex).toBe(0)
+  })
+
+  it('keeps the "slide" URL param in sync when navigating, without pushing new history entries', () => {
+    let latest: URLSearchParams | undefined
+    const { result } = renderHook(() => useTalkPresenter(talk), {
+      wrapper: makeWrapper(['/talk/t'], (params) => {
+        latest = params
+      }),
+    })
+
+    expect(latest?.get('slide')).toBe('0')
+
+    act(() => result.current.goNext())
+    expect(latest?.get('slide')).toBe('1')
+
+    act(() => result.current.goPrev())
+    expect(latest?.get('slide')).toBe('0')
   })
 })
 
