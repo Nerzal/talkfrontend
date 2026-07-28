@@ -16,19 +16,19 @@ the commit that lands there — not just that `git push` returned exit code 0.
    are changes unrelated to the work just done in this conversation, ask
    before bundling them into the deploy commit — don't silently sweep up
    unrelated edits.
-2. **Commit.** Use a message describing *why*, following this repo's existing
+2. **Commit.** Use a message describing _why_, following this repo's existing
    commit style (see `git log`). Never use `--no-verify`.
 3. **Push.** `git push`. If it's rejected (remote moved), `git pull --ff-only`
    then push again — never force-push without the user explicitly asking.
-4. **Find the resulting commit's runs.** `gh run list --limit 5 --json
-   databaseId,status,conclusion,headSha,workflowName` and match `headSha`
-   against `git rev-parse HEAD`.
+4. **Find the resulting commit's runs.**
+   `gh run list --limit 5 --json databaseId,status,conclusion,headSha,workflowName`
+   and match `headSha` against `git rev-parse HEAD`.
    - If another push lands on `main` while yours is queued, this repo's
      concurrency groups (`ci-CI-refs/heads/main`, `docker-publish-refs/heads/main`)
      cancel the older run in favor of the newer one — that's expected, not a
      failure. Re-fetch (`git fetch && git log --oneline origin/main -3`),
      confirm the newer commit still contains yours as an ancestor, and watch
-     *that* run instead.
+     _that_ run instead.
 5. **Watch, don't poll blindly.** `gh run watch <databaseId> --exit-status`
    for both the `CI` and `Publish Docker image` runs. Report the real
    per-job outcome (`lint`, `test`, `schema`, `build` for CI) — don't
