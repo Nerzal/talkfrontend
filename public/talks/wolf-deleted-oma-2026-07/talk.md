@@ -411,9 +411,8 @@ SELECT * FROM ereignisse ORDER BY zeit
 | 6 | WolfGetötet | { täter: 'Jäger' } |
 | 7 | GroßmutterUndRotkäppchenBefreit | { retter: 'Jäger' } | highlight |
 
-Kein Undelete nötig. "Befreit" ist ein neues Ereignis. Und das Wissen, wie Rotkäppchen aussah, steht sicher in Event #1. Es geht nie verloren.
-
 +++ notes
+- Kein Undelete nötig. "Befreit" ist ein neues Ereignis. Und das Wissen, wie Rotkäppchen aussah, steht sicher in Event #1. Es geht nie verloren.
 - Zeilenweise vorgehen. Betonen, dass wir hier nur noch "anhängen" (Append-Only). Niemals löschen.
 - Die Historie ist der State.
 
