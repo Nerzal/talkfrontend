@@ -83,7 +83,7 @@ For really small projects just use go mod graph. In bigger projects you'll need 
 There are lots of ways to visualize dependency graphs. One of the cooler tools is goda: https://github.com/loov/goda
 
 ---
-![Visualization of goda dependencies](assets/goda.png)
+![Visualization of goda dependencies](assets/goda.webp)
 Visualization of goda dependencies
 
 ---

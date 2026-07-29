@@ -13,10 +13,10 @@ tags: [go]
 Nerzal · August 2023
 
 ---
-![REST API meme](assets/restapi.png)
+![REST API meme](assets/restapi.webp)
 
 ---
-![U are all doing it wrong meme](assets/uarealldoingitwrong.png)
+![U are all doing it wrong meme](assets/uarealldoingitwrong.webp)
 
 ---
 # Motivation
@@ -37,7 +37,7 @@ source: https://martinfowler.com/articles/richardsonMaturityModel.html
 - Using HTTP as tunneling for Remote Procedure Calls
 
 ---
-![Level 0 diagram, swamp of POX](assets/level0.png)
+![Level 0 diagram, swamp of POX](assets/level0.webp)
 source: https://martinfowler.com/articles/richardsonMaturityModel.html
 
 ---
@@ -46,7 +46,7 @@ source: https://martinfowler.com/articles/richardsonMaturityModel.html
 - Add resources instead of simply posting everything to the same endpoint
 
 ---
-![Level 1 diagram, resources](assets/level1.png)
+![Level 1 diagram, resources](assets/level1.webp)
 source: https://martinfowler.com/articles/richardsonMaturityModel.html
 
 ---
@@ -55,7 +55,7 @@ source: https://martinfowler.com/articles/richardsonMaturityModel.html
 - Make use of HTTP Verbs instead of posting everything
 
 ---
-![Level 2 diagram, HTTP verbs](assets/level2.png)
+![Level 2 diagram, HTTP verbs](assets/level2.webp)
 source: https://martinfowler.com/articles/richardsonMaturityModel.html
 
 ---

@@ -21,7 +21,7 @@ Tobias · March 2021
 - Real World Examples?
 
 ---
-![Frontend waiting for a server push update](assets/frontend.png)
+![Frontend waiting for a server push update](assets/frontend.webp)
 
 ---
 # ServerPush
@@ -54,7 +54,7 @@ Tobias · March 2021
 
 ---
 # Libs
-![Comparison of WebSocket libraries in Go](assets/ws_comparison.png)
+![Comparison of WebSocket libraries in Go](assets/ws_comparison.webp)
 
 ---
 # Gobwas

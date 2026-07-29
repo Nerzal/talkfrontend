@@ -79,7 +79,7 @@ Screenshot from the TinyGo documentation (https://tinygo.org/docs/reference/lang
 Microcontroller: SAMD21 Cortex M0+ 32-bit low power ARM MCU. WiFi Coprocessor: u-blox NINA-W102 (ESP32).
 
 ---
-![The Arduino Nano 33 IoT board](assets/arduino-nano-33-iot.png)
+![The Arduino Nano 33 IoT board](assets/arduino-nano-33-iot.webp)
 Image of the Arduino Nano 33 IoT board
 
 ---

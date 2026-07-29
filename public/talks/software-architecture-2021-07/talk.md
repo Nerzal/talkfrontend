@@ -49,7 +49,7 @@ Dependencies only point downwards
 
 ---
 # Layered but Modular but Broken
-![Diagram of a broken layered/modular architecture with cross-cutting dependencies](assets/architecture_example.png)
+![Diagram of a broken layered/modular architecture with cross-cutting dependencies](assets/architecture_example.webp)
 Dependencies only point downwards... and sideways... wait, what?!
 
 ---
@@ -129,7 +129,7 @@ For really small projects, just use go mod graph. In bigger projects you'll need
 There are lots of ways to visualize dependency graphs. One of the cooler tools is goda (https://github.com/loov/goda).
 
 ---
-![Visualization of dependency graphs produced by goda](assets/goda.png)
+![Visualization of dependency graphs produced by goda](assets/goda.webp)
 Visualization of goda dependencies
 
 ---
@@ -161,7 +161,7 @@ Accept interfaces, return structs
 
 ---
 # Don't Do Architecture Alone
-![People discussing architecture together](assets/architekturdiskussion.png)
+![People discussing architecture together](assets/architekturdiskussion.webp)
 Other people have other points of view — leading to better solutions
 
 ---

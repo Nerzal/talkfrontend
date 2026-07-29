@@ -34,7 +34,7 @@ Yannick · November 2021
 - Today's box: Bankrobber (HTB)
 
 ---
-![HackTheBox "Bankrobber" machine info card](assets/br_info.png)
+![HackTheBox "Bankrobber" machine info card](assets/br_info.webp)
 
 ---
 # Requirements

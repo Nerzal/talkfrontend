@@ -40,7 +40,7 @@ Reverse Engineer WebApp by Theelinger
 
 ---
 # DevTools
-![Screenshot of a search request in the German Traderegister](assets/traderegister-search.png)
+![Screenshot of a search request in the German Traderegister](assets/traderegister-search.webp)
 Screenshot of a search request in the German Traderegister
 
 ---
