@@ -1,4 +1,4 @@
-.PHONY: dev build preview install test test-watch test-ui lint lint-fix format format-check schema talks-index clean help
+.PHONY: dev build preview install test test-watch test-ui lint lint-fix format format-check schema talks-index minify-images clean help
 
 .DEFAULT_GOAL := help
 
@@ -40,6 +40,9 @@ schema: ## Regenerate JSON schemas for talk data from src/data/types.ts
 
 talks-index: ## Regenerate public/talks/index.json from the talk folders on disk
 	npm run talks:index
+
+minify-images: ## Resize and recompress oversized talk image assets in place
+	npm run images:minify
 
 clean: ## Remove build output
 	rm -rf dist
