@@ -27,6 +27,7 @@ const QUOTES = [
   'AGI ist für nächsten Dienstag angekündigt. Soll ich den Termin eintragen?',
   'Warnung: Diese Slide wurde zu 99 % von mir halluziniert.',
   'Ich habe deinen Code vorsichtshalber in Rust neu geschrieben. Gern geschehen!',
+  'Ich habe dein Dokument auf unseren Servern gesichert. Verluste vorbeugen undso.',
 ]
 
 const EDGE_CLASSES: Record<CarlSide, string> = {

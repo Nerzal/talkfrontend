@@ -113,7 +113,7 @@ INSERT INTO personen VALUES (2, 'Wolf', 'hungrig', 'Im Wald')
 # Update Unterwegs
 
 ```sql
-UPDATE personen SET status = 'unterwegs' and ort = 'Wald' WHERE id = 1
+UPDATE personen SET status = 'unterwegs', ort = 'Wald' WHERE id = 1
 ```
 
 | id | name | status | ort |
@@ -368,6 +368,7 @@ Zwei neue Zeilen mit den alten IDs. Sind das dieselben Personen wie vorher? Und 
 
 +++ notes
 - Golo Rodens Kritikpunkt auf den Punkt bringen.
+- Bruch in der Sprache (PO <-> Dev)
 - "Unsere Software soll Geschäftsprozesse abbilden, aber wir zwingen sie, wie eine glorifizierte Excel-Tabelle zu sprechen."
 
 ---
@@ -446,25 +447,26 @@ Kein Zauber – nur ein **Replay** des Ereignis-Logs von Anfang an.
 -> **Event Versionierung:** Was, wenn sich das Schema von `AuftragErteilt` nach 2 Jahren ändert?
 
 +++ notes
-- Wer nur die Vorteile nennt, macht Sales. Wer die Nachteile kennt, ist Engineer.
-- "Nutzt ES nur, wenn die Historie der Daten echten fachlichen Wert hat."
+- Braucht ihr ein Auditlog?
+- Hat die Historie fachlichen Wert?
 
 --- 
-# Create Clippy: Eventual Consistency
+# Create Clippy
 
 ```sql
-INSERT INTO personen VALUES (5, 'Clippy', 'hungrig', 'Im Wald')
+INSERT INTO personen VALUES (5, 'Clippy', 'plant böses', 'Im Wald')
 ```
 
 | id | name | status | ort |
 |---|---|---|---|
-| 5 | Clippy | hungrig | Im Wald | highlight |
+| 5 | Clippy | plant böses | Im Wald | highlight |
 
 ![Clippy wurde created](assets/clippy_created.webp) 90% 90%
 
 +++ notes
 - Überrascht tun
 - Daher kommt der also
+- Eventual Consistency
 - Irgendwann, passt der State
 - War halt asynchron
 
@@ -475,6 +477,5 @@ Und vielleicht auch unsere Architektur – wenn wir aufhören, die Realität in 
 Vielen Dank!
 
 +++ notes
-- Warm & ruhig abschließen, Kontrast zum hektischen Mittelteil.
 - Kurze Pause.
 - "Ich freue mich auf eure Fragen!"
