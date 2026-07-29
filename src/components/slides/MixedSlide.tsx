@@ -83,7 +83,8 @@ function Block({ block, stepIndex }: { block: OrderedBlock; stepIndex: number })
         <img
           src={block.src}
           alt={block.alt}
-          className="w-full max-h-[50vh] object-contain rounded-xl"
+          className="w-full max-h-[50vh] object-contain rounded-xl mx-auto"
+          style={{ maxHeight: block.maxHeight, maxWidth: block.maxWidth }}
         />
       )
     default: {

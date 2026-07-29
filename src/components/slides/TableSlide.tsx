@@ -32,6 +32,7 @@ export function TableSlide({ slide }: Props) {
             src={slide.image}
             alt={slide.imageAlt ?? ''}
             className="flex-1 self-stretch max-h-[40vh] md:max-h-full w-full object-contain rounded-2xl"
+            style={{ maxHeight: slide.maxHeight, maxWidth: slide.maxWidth }}
           />
         ) : (
           slide.ascii && <AsciiArt content={slide.ascii} />

@@ -47,4 +47,20 @@ describe('TableSlide', () => {
     expect(img.getAttribute('src')).toBe('assets/pic.png')
     expect(screen.queryByText('ascii line')).toBeNull()
   })
+
+  it('applies maxHeight/maxWidth as inline style on the illustration image', () => {
+    render(
+      <TableSlide
+        slide={baseSlide({
+          image: 'assets/pic.png',
+          imageAlt: 'A picture',
+          maxHeight: '10%',
+          maxWidth: '10%',
+        })}
+      />,
+    )
+    const img = screen.getByAltText('A picture')
+    expect(img.style.maxHeight).toBe('10%')
+    expect(img.style.maxWidth).toBe('10%')
+  })
 })

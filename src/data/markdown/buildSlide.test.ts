@@ -90,6 +90,21 @@ describe('buildSlide', () => {
     })
   })
 
+  it('builds an image slide with a max height/width', () => {
+    const chunk: SlideChunk = { layout: 'image', body: '![alt](assets/a.png) 50% 30%\n*caption*' }
+
+    expect(buildSlide(chunk, 0)).toEqual({
+      layout: 'image',
+      id: 's01',
+      title: undefined,
+      src: 'assets/a.png',
+      alt: 'alt',
+      caption: 'caption',
+      maxHeight: '50%',
+      maxWidth: '30%',
+    })
+  })
+
   it('builds a blank slide', () => {
     const chunk: SlideChunk = { layout: 'blank', body: '# Thanks\nSee you next time.' }
 
@@ -125,6 +140,26 @@ ascii: |
       empty: undefined,
       caption: 'A caption',
       ascii: 'o/\n',
+    })
+  })
+
+  it('builds a table slide from Markdown with a sized illustration image', () => {
+    const chunk: SlideChunk = {
+      layout: 'table',
+      body: `# CREATE
+| id | name |
+|---|---|
+| 1 | Oma |
+![Oma wurde created](assets/oma_created.webp) 10% 10%`,
+    }
+
+    const slide = buildSlide(chunk, 0)
+    expect(slide).toMatchObject({
+      layout: 'table',
+      image: 'assets/oma_created.webp',
+      imageAlt: 'Oma wurde created',
+      maxHeight: '10%',
+      maxWidth: '10%',
     })
   })
 

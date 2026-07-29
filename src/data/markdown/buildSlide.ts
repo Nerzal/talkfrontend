@@ -103,6 +103,8 @@ export function buildSlide(chunk: SlideChunk, index: number): Slide {
         src: parsed.src ?? '',
         alt: parsed.alt ?? '',
         caption: parsed.caption,
+        maxHeight: parsed.maxHeight,
+        maxWidth: parsed.maxWidth,
         notes,
         background,
       }
@@ -134,6 +136,8 @@ export function buildSlide(chunk: SlideChunk, index: number): Slide {
           ascii: str(config.ascii),
           image: str(config.image),
           imageAlt: str(config.imageAlt),
+          maxHeight: str(config.maxHeight),
+          maxWidth: str(config.maxWidth),
           notes,
           background,
         }
@@ -151,6 +155,8 @@ export function buildSlide(chunk: SlideChunk, index: number): Slide {
         ascii: parsed.ascii,
         image: parsed.image,
         imageAlt: parsed.imageAlt,
+        maxHeight: parsed.maxHeight,
+        maxWidth: parsed.maxWidth,
         notes,
         background,
       }

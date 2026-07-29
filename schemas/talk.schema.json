@@ -236,6 +236,14 @@
         },
         "caption": {
           "type": "string"
+        },
+        "maxHeight": {
+          "type": "string",
+          "description": "Caps the rendered image's height, e.g. \"50%\" — see the `![alt](src) <h>% <w>%` syntax in parseImageBody."
+        },
+        "maxWidth": {
+          "type": "string",
+          "description": "Caps the rendered image's width, e.g. \"50%\" — see the `![alt](src) <h>% <w>%` syntax in parseImageBody."
         }
       },
       "required": [
@@ -328,6 +336,14 @@
         },
         "imageAlt": {
           "type": "string"
+        },
+        "maxHeight": {
+          "type": "string",
+          "description": "Caps the illustration image's rendered height, e.g. \"50%\"."
+        },
+        "maxWidth": {
+          "type": "string",
+          "description": "Caps the illustration image's rendered width, e.g. \"50%\"."
         }
       },
       "required": [
@@ -553,6 +569,14 @@
             },
             "position": {
               "$ref": "#/definitions/ImageBlockPosition"
+            },
+            "maxHeight": {
+              "type": "string",
+              "description": "Caps the rendered image's height, e.g. \"50%\"."
+            },
+            "maxWidth": {
+              "type": "string",
+              "description": "Caps the rendered image's width, e.g. \"50%\"."
             }
           },
           "required": [
@@ -572,7 +596,7 @@
         "left",
         "right"
       ],
-      "description": "Where an inline image sits relative to a mixed slide's other content — see the `![alt](src) <position>` syntax in parseMixedBody. Defaults to `under`."
+      "description": "Where an inline image sits relative to a mixed slide's other content — see the `![alt](src) <h>% <w>% <position>` syntax in parseMixedBody. Defaults to `under`."
     }
   }
 }

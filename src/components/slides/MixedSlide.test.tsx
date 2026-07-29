@@ -100,6 +100,28 @@ describe('MixedSlide', () => {
     expect(container.querySelector('img')).toBeDefined()
   })
 
+  it('applies maxHeight/maxWidth as inline style on an image block', () => {
+    const slide: MixedSlideData = {
+      id: 's1',
+      layout: 'mixed',
+      blocks: [
+        {
+          type: 'image',
+          src: 'a.png',
+          alt: 'A photo',
+          position: 'under',
+          maxHeight: '50%',
+          maxWidth: '30%',
+        },
+      ],
+    }
+    render(<MixedSlide slide={slide} />)
+
+    const img = screen.getByAltText('A photo')
+    expect(img.style.maxHeight).toBe('50%')
+    expect(img.style.maxWidth).toBe('30%')
+  })
+
   it('renders "left" and "right" images in separate columns flanking the main content', () => {
     const slide: MixedSlideData = {
       id: 's1',

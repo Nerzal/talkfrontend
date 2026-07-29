@@ -2,10 +2,12 @@ import type { Bullet, ContentBlock, ImageBlockPosition, TableRow, TableRowVarian
 import { isFenceBoundary } from './fence'
 
 const H1_PATTERN = /^#\s+(.+)$/m
-/** Trailing "background"/"left"/"right"/"under" position keyword is consumed but ignored here — only parseMixedBody's own image handling acts on it (background is already stripped by extractBackground before any layout parser runs). */
-const IMAGE_PATTERN = /!\[([^\]]*)\]\(([^)]+)\)(?:\s+(?:background|left|right|under))?/i
-/** A standalone image line in a "mixed" slide, e.g. "![alt](path) left" — the whole line must be just the image (+ optional position), so it isn't confused with an image mentioned mid-paragraph. */
-const MIXED_IMAGE_PATTERN = /^!\[([^\]]*)]\(([^)]+)\)(?:\s+(left|right|under))?$/i
+/** Trailing "<h>% <w>%" size (e.g. "50% 30%") and/or "background"/"left"/"right"/"under" position keyword, in that order, both optional. Only parseImageBody's/parseMixedBody's own image handling act on the captured groups here — background is already stripped by extractBackground before any layout parser runs. */
+const IMAGE_PATTERN =
+  /!\[([^\]]*)\]\(([^)]+)\)(?:\s+(\d{1,3})%\s+(\d{1,3})%)?(?:\s+(?:background|left|right|under))?/i
+/** A standalone image line in a "mixed" slide, e.g. "![alt](path) 50% 30% left" — the whole line must be just the image (+ optional size + optional position), so it isn't confused with an image mentioned mid-paragraph. */
+const MIXED_IMAGE_PATTERN =
+  /^!\[([^\]]*)]\(([^)]+)\)(?:\s+(\d{1,3})%\s+(\d{1,3})%)?(?:\s+(left|right|under))?$/i
 
 export interface TitleBody {
   title?: string
@@ -95,32 +97,42 @@ export interface ImageBody {
   src?: string
   alt?: string
   caption?: string
+  maxHeight?: string
+  maxWidth?: string
 }
 
-/** Optional "# Title" heading, a markdown image, then an optional caption line. */
+/**
+ * Optional "# Title" heading, a markdown image — optionally followed by
+ * "<h>% <w>%" to cap its rendered height/width (e.g. "50% 30%") — then an
+ * optional caption line.
+ */
 export function parseImageBody(body: string): ImageBody {
   const title = H1_PATTERN.exec(body)?.[1]?.trim()
   const imageMatch = IMAGE_PATTERN.exec(body)
   const alt = imageMatch?.[1]
   const src = imageMatch?.[2]
+  const maxHeight = imageMatch?.[3] ? `${imageMatch[3]}%` : undefined
+  const maxWidth = imageMatch?.[4] ? `${imageMatch[4]}%` : undefined
   const after = imageMatch ? body.slice(imageMatch.index + imageMatch[0].length) : ''
   const caption = after
     .split('\n')
     .map((line) => line.trim())
     .find((line) => line.length > 0)
     ?.replace(/^\*(.+)\*$/, '$1')
-  return { title, src, alt, caption }
+  return { title, src, alt, caption, maxHeight, maxWidth }
 }
 
 /**
  * Free-form Markdown → an ordered list of blocks (heading, bullets,
  * paragraph, fenced code, image), so a "mixed" slide can combine them in
- * any order. A standalone image line can carry a trailing position keyword
- * ("![alt](path) left"/"right"/"under", default "under") controlling where
- * MixedSlide.tsx places it relative to the rest of the slide's content — a
- * "background"-tagged image is never seen here, since extractBackground
- * strips it from the body before any layout parser runs. Fence-aware: lines
- * inside a code block are never read as headings, bullets, or images.
+ * any order. A standalone image line can carry an optional trailing size
+ * ("![alt](path) 50% 30%" caps height/width) and/or a trailing position
+ * keyword ("left"/"right"/"under", default "under", size first if both are
+ * given) controlling where MixedSlide.tsx places it relative to the rest of
+ * the slide's content — a "background"-tagged image is never seen here,
+ * since extractBackground strips it from the body before any layout parser
+ * runs. Fence-aware: lines inside a code block are never read as headings,
+ * bullets, or images.
  */
 export function parseMixedBody(body: string): ContentBlock[] {
   const lines = body.split('\n')
@@ -162,8 +174,17 @@ export function parseMixedBody(body: string): ContentBlock[] {
 
     const imageMatch = MIXED_IMAGE_PATTERN.exec(line)
     if (imageMatch) {
-      const position = (imageMatch[3]?.toLowerCase() as ImageBlockPosition | undefined) ?? 'under'
-      blocks.push({ type: 'image', src: imageMatch[2], alt: imageMatch[1], position })
+      const position = (imageMatch[5]?.toLowerCase() as ImageBlockPosition | undefined) ?? 'under'
+      const maxHeight = imageMatch[3] ? `${imageMatch[3]}%` : undefined
+      const maxWidth = imageMatch[4] ? `${imageMatch[4]}%` : undefined
+      blocks.push({
+        type: 'image',
+        src: imageMatch[2],
+        alt: imageMatch[1],
+        position,
+        maxHeight,
+        maxWidth,
+      })
       i++
       continue
     }
@@ -251,6 +272,8 @@ export interface TableBody {
   ascii?: string
   image?: string
   imageAlt?: string
+  maxHeight?: string
+  maxWidth?: string
 }
 
 /**
@@ -261,7 +284,8 @@ export interface TableBody {
  * "| 1 | Oma | highlight |", sets that row's `variant`; zero data rows
  * means `empty`), then either a Markdown image or a fenced code block
  * *after* the table becomes the illustration slot (`image`/`imageAlt` or
- * `ascii`), and any remaining prose becomes the `caption`.
+ * `ascii`), an optional trailing "<h>% <w>%" on the image line caps its
+ * rendered height/width, and any remaining prose becomes the `caption`.
  */
 export function parseTableBody(body: string): TableBody {
   const title = H1_PATTERN.exec(body)?.[1]?.trim()
@@ -323,6 +347,8 @@ export function parseTableBody(body: string): TableBody {
   const imageMatch = IMAGE_PATTERN.exec(otherText)
   const image = imageMatch?.[2]
   const imageAlt = imageMatch?.[1]
+  const maxHeight = imageMatch?.[3] ? `${imageMatch[3]}%` : undefined
+  const maxWidth = imageMatch?.[4] ? `${imageMatch[4]}%` : undefined
   const captionLines = otherLines
     .map((line) => line.trim())
     .filter((line) => line.length > 0 && !IMAGE_PATTERN.test(line))
@@ -338,6 +364,8 @@ export function parseTableBody(body: string): TableBody {
     ascii,
     image,
     imageAlt,
+    maxHeight,
+    maxWidth,
   }
 }
 

@@ -40,6 +40,10 @@ export interface ImageSlide extends SlideBase {
   src: string
   alt: string
   caption?: string
+  /** Caps the rendered image's height, e.g. "50%" — see the `![alt](src) <h>% <w>%` syntax in parseImageBody. */
+  maxHeight?: string
+  /** Caps the rendered image's width, e.g. "50%" — see the `![alt](src) <h>% <w>%` syntax in parseImageBody. */
+  maxWidth?: string
 }
 
 export interface BlankSlide extends SlideBase {
@@ -67,9 +71,13 @@ export interface TableSlide extends SlideBase {
   /** Replaces the ascii-art slot with a real image instead — mutually exclusive with `ascii` in practice, but both are independently optional. */
   image?: string
   imageAlt?: string
+  /** Caps the illustration image's rendered height, e.g. "50%". */
+  maxHeight?: string
+  /** Caps the illustration image's rendered width, e.g. "50%". */
+  maxWidth?: string
 }
 
-/** Where an inline image sits relative to a mixed slide's other content — see the `![alt](src) <position>` syntax in parseMixedBody. Defaults to `under`. */
+/** Where an inline image sits relative to a mixed slide's other content — see the `![alt](src) <h>% <w>% <position>` syntax in parseMixedBody. Defaults to `under`. */
 export type ImageBlockPosition = 'under' | 'left' | 'right'
 
 export type ContentBlock =
@@ -77,7 +85,16 @@ export type ContentBlock =
   | { type: 'bullets'; items: Bullet[] }
   | { type: 'paragraph'; text: string }
   | { type: 'code'; language: string; code: string }
-  | { type: 'image'; src: string; alt: string; position: ImageBlockPosition }
+  | {
+      type: 'image'
+      src: string
+      alt: string
+      position: ImageBlockPosition
+      /** Caps the rendered image's height, e.g. "50%". */
+      maxHeight?: string
+      /** Caps the rendered image's width, e.g. "50%". */
+      maxWidth?: string
+    }
 
 export interface MixedSlide extends SlideBase {
   layout: 'mixed'

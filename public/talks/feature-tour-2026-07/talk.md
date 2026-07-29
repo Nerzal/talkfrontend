@@ -258,6 +258,20 @@ func add(a, b int) int {
 - Erzeugt allein durch das `left` nach dem Bildpfad
 
 ---
+# Bildgröße: max-height/max-width in Prozent
+
+- Nach dem Bildpfad können zwei Prozentwerte stehen: `![Alt](pfad) 50% 30%`
+- Erster Wert ist die maximale Höhe, zweiter die maximale Breite
+- Funktioniert bei `image`-Folien und bei Bildern in `mixed`-Folien
+- Steht die Positions-Angabe (`left`/`right`/`under`) auch dabei, kommt sie danach: `50% 30% left`
+- Ohne Angabe bleibt die bisherige Standardgröße erhalten
+
+---
+# Live-Beispiel: Bildgröße
+![Ein Beispielfoto](assets/example.jpg) 40% 40%
+Dieses Bild ist auf 40% Höhe und 40% Breite begrenzt
+
+---
 # Click-Animationen: Fragments
 
 - `- ` zeigt einen Punkt sofort mit dem Rest der Folie

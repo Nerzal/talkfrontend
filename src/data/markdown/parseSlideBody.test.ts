@@ -171,6 +171,32 @@ func main() {}
       { type: 'paragraph', text: 'More prose.' },
     ])
   })
+
+  it('reads a trailing "<h>% <w>%" size off an image line', () => {
+    expect(parseMixedBody('![alt](a.png) 50% 30%')).toEqual([
+      {
+        type: 'image',
+        src: 'a.png',
+        alt: 'alt',
+        position: 'under',
+        maxHeight: '50%',
+        maxWidth: '30%',
+      },
+    ])
+  })
+
+  it('reads size and position together, size first', () => {
+    expect(parseMixedBody('![alt](a.png) 50% 30% left')).toEqual([
+      {
+        type: 'image',
+        src: 'a.png',
+        alt: 'alt',
+        position: 'left',
+        maxHeight: '50%',
+        maxWidth: '30%',
+      },
+    ])
+  })
 })
 
 describe('parseImageBody', () => {
@@ -193,6 +219,19 @@ describe('parseImageBody', () => {
       src: 'assets/photo.png',
       alt: 'alt text',
       caption: 'A caption',
+    })
+  })
+
+  it('reads a trailing "<h>% <w>%" size off the image line', () => {
+    const body = '![alt text](assets/photo.png) 50% 30%\nA caption'
+
+    expect(parseImageBody(body)).toEqual({
+      title: undefined,
+      src: 'assets/photo.png',
+      alt: 'alt text',
+      caption: 'A caption',
+      maxHeight: '50%',
+      maxWidth: '30%',
     })
   })
 })
@@ -286,6 +325,19 @@ o/
     const result = parseTableBody(body)
     expect(result.image).toBe('assets/wolf.png')
     expect(result.imageAlt).toBe('A wolf')
+  })
+
+  it('reads a trailing "<h>% <w>%" size off the illustration image', () => {
+    const body = `| id |
+|---|
+| 1 |
+![A wolf](assets/wolf.png) 10% 10%`
+
+    const result = parseTableBody(body)
+    expect(result.image).toBe('assets/wolf.png')
+    expect(result.imageAlt).toBe('A wolf')
+    expect(result.maxHeight).toBe('10%')
+    expect(result.maxWidth).toBe('10%')
   })
 })
 

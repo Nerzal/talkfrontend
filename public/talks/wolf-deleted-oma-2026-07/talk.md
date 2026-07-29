@@ -43,7 +43,7 @@ INSERT INTO personen VALUES (0, 'Großmutter', 'braucht Medizin', 'Omas Zuhause'
 |---|---|---|---|
 | 0 | Großmutter | braucht Medizin | Omas Zuhause | highlight |
 
-![Oma wurde created](assets/oma_created.webp)
+![Oma wurde created](assets/oma_created.webp) 90% 90%
 
 +++ notes
 - Es createte einmal eine Großmutter
@@ -64,7 +64,7 @@ INSERT INTO personen VALUES (1, 'Rotkäppchen', 'fröhlich', 'Zuhause')
 | 0 | Großmutter | braucht Medizin | Omas Zuhause |
 | 1 | Rotkäppchen | fröhlich | Zuhause | highlight |
 
-![Rotkäppchen wurde created](assets/rotkäppchen_create.webp)
+![Rotkäppchen wurde created](assets/rotkäppchen_create.webp) 90% 90%
 
 +++ notes
 - Es createte einmal ein Rotkäppchen
@@ -83,7 +83,7 @@ UPDATE personen SET status = 'Auftrag erhalten' WHERE id = 1
 | 0 | Großmutter | braucht Medizin | Omas Zuhause |
 | 1 | Rotkäppchen | Auftrag erhalten | Zuhause | highlight |
 
-![Rotkäppchen erhält auftrag](assets/rottkäppchen_update_auftrag.webp)
+![Rotkäppchen erhält auftrag](assets/rottkäppchen_update_auftrag.webp) 90% 90%
 
 +++ notes
  - Rottkäppchens mutter updated: status
@@ -101,7 +101,7 @@ INSERT INTO personen VALUES (2, 'Wolf', 'hungrig', 'Im Wald')
 | 1 | Rotkäppchen | Auftrag erhalten | Zuhause | 
 | 2 | Wolf | hungrig | Im Wald | highlight |
 
-![Wolf wurde created](assets/wolf_created.webp)
+![Wolf wurde created](assets/wolf_created.webp) 90% 90%
 
 +++ notes
 - Es createte alsbald ein Wolf
@@ -122,7 +122,7 @@ UPDATE personen SET status = 'unterwegs' and ort = 'Wald' WHERE id = 1
 | 1 | Rotkäppchen | unterwegs | Wald | 
 | 2 | Wolf | hungrig | Im Wald | 
 
-![Rotkäppchen läuft durch den Wald auf einen wartenden Wolf zu](assets/rottkäpchen_updated_position.webp)
+![Rotkäppchen läuft durch den Wald auf einen wartenden Wolf zu](assets/rottkäpchen_updated_position.webp) 90% 90%
 
 +++ notes
 - Bild kurz wirken lassen vor Caption.
@@ -174,7 +174,7 @@ DELETE FROM personen WHERE id = 0
 | 1 | Rotkäppchen | unterwegs | Wald | 
 | 2 | Wolf | unterwegs | Omas Haus | 
 
-![Wolf deleted Großmutter](assets/wolf_deleted_oma.webp)
+![Wolf deleted Großmutter](assets/wolf_deleted_oma.webp) 90% 90%
 
 +++ notes
 - Erster harter Cut – Ton kurz ernster.
@@ -225,7 +225,7 @@ SELECT augen, ohren, zaehne FROM personen WHERE id = 3
 | ohren | ungewöhnlich groß | warning |
 | zaehne | lebensgefährlich | danger |
 
-![Rotkäppchen reads Oma](assets/rottkäppchen_reads_attributes.webp)
+![Rotkäppchen reads Oma](assets/rottkäppchen_reads_attributes.webp) 90% 90%
 
 +++ notes
 - Cliffhanger – dramatische Pause vor "SPRUNG".
@@ -244,7 +244,7 @@ DELETE FROM personen WHERE id = 1
 | 1 | Rotkäppchen | erschrocken | Omas Zuhause | deleted | 
 | 2 | Großmutter | trägt Nachthemd | Bett | 
 
-![Rotkäppchen löst sich am Fußende des Betts in Pixel auf, der Wolf liegt als Oma verkleidet im Bett](assets/rotkäppchen_deleted.webp)
+![Rotkäppchen löst sich am Fußende des Betts in Pixel auf, der Wolf liegt als Oma verkleidet im Bett](assets/rotkäppchen_deleted.webp) 90% 90%
 
 +++ notes
 - Zweiter harter Cut.
@@ -265,7 +265,7 @@ INSERT INTO personen VALUES (4, 'Jäger', 'alarmiert', 'Vor Omas Zuhause');
 | 2 | Großmutter | trägt Nachthemd | Bett | 
 | 4 | Jäger | alarmiert | Vor Omas Zuhause | highlight |
 
-![Jäger wurde created](assets/jäger_created.webp)
+![Jäger wurde created](assets/jäger_created.webp) 90% 90%
 
 +++ notes
 - Es createte einmal eine Großmutter
@@ -311,7 +311,7 @@ DELETE FROM personen WHERE id = 2;
 
 ---
 # RESTORE?
-![Jäger sitzt panisch vor einer Data-Recovery-Konsole, die "BACKUP.OMA NOT FOUND" und "ALL RECOVERY PATHS LOST" meldet, der Wolf schaut ratlos zu](assets/oma_restore.webp)
+![Jäger sitzt panisch vor einer Data-Recovery-Konsole, die "BACKUP.OMA NOT FOUND" und "ALL RECOVERY PATHS LOST" meldet, der Wolf schaut ratlos zu](assets/oma_restore.webp) 90% 90%
 
 "Die Backups sind weg! Wie restore ich sie jetzt?" 
 Es gibt kein Backup. Es gibt kein Rollback. Es gibt nur CREATE.
@@ -418,7 +418,7 @@ SELECT * FROM ereignisse ORDER BY zeit
 
 ---
 # Event Sourcing
-![Jäger lächelt an einem Laptop, auf dem "REPLAYING EVENT STREAM... COMPLETED" steht, während eine leuchtende, wiederhergestellte Großmutter neben dem verdutzten Wolf erscheint](assets/oma_restored.webp)
+![Jäger lächelt an einem Laptop, auf dem "REPLAYING EVENT STREAM... COMPLETED" steht, während eine leuchtende, wiederhergestellte Großmutter neben dem verdutzten Wolf erscheint](assets/oma_restored.webp) 90% 90%
 
 "Easy! Dank Event Sourcing ist sie wieder da." 
 Kein Zauber – nur ein **Replay** des Ereignis-Logs von Anfang an. 
@@ -460,7 +460,7 @@ INSERT INTO personen VALUES (5, 'Clippy', 'hungrig', 'Im Wald')
 |---|---|---|---|
 | 5 | Clippy | hungrig | Im Wald | highlight |
 
-![Rotkäppchen wurde created](assets/clippy_created.webp)
+![Clippy wurde created](assets/clippy_created.webp) 90% 90%
 
 +++ notes
 - Überrascht tun

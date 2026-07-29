@@ -17,6 +17,7 @@ export function ImageSlide({ slide }: Props) {
         src={slide.src}
         alt={slide.alt}
         className="max-h-[40vh] sm:max-h-[60vh] max-w-full object-contain rounded-lg"
+        style={{ maxHeight: slide.maxHeight, maxWidth: slide.maxWidth }}
       />
       {slide.caption && (
         <p className="text-slate-400 text-xs sm:text-sm text-center">
